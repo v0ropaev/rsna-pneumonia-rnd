@@ -1,0 +1,63 @@
+# HW2 (I2): baseline + light augmentation. Full copy of configs/baseline.yaml; only aug.hflip/affine/rotate/intensity
+# and meta differ (asserted by tests/test_configs.py). decode.box_scale stays 1.0 here: it is tuned post hoc on VAL.
+meta:
+  experiment: rsna-pneumonia
+  parent: configs/baseline.yaml
+  changes:
+    - "aug.hflip: false -> true (p 0.5)"
+    - "aug.affine: false -> true (scale ±0.1, translate ±0.05)"
+    - "aug.rotate: 5.0 -> 0.0"
+    - "aug.intensity: false -> true (brightness/contrast/gamma 0.1)"
+  hypothesis: >-
+    Лёгкие аугментации (горизонтальный флип с p=0.5, масштаб ±10 %, сдвиг ±5 % стороны, яркость, контраст и
+    гамма ±0.1, без поворота) повысят val RSNA mAP относительно baseline; ожидаем небольшой плюс порядка
+    +0.005…0.02. Механизм: без аугментаций сеть за 6 эпох видит одни и те же 18.7 тыс. снимков и подгоняется под
+    конкретные положения, размеры и экспозицию; флип (лёгкие почти симметричны), сдвиг и масштаб размножают
+    положения и размеры очагов, а яркость и контраст имитируют разброс экспозиции портативных AP и стационарных PA
+    снимков. Это должно уменьшить разрыв train/val и улучшить обобщение. Поворот выключен: он раздувает
+    axis-aligned бокс (оболочка повёрнутых углов), а мы ожидаем, что боксы модели и так велики (research_notes
+    §3.2, §3.6; у 2-го места лучшей была heavy-аугментация без поворота). Риск: при фиксированных 6 эпохах
+    аугментация может замедлить сходимость, тогда эффект будет нулевым или отрицательным.
+data:
+  image_size: 256          # cache data/processed/images_256.npy
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true         # torchvision IMAGENET1K_V1
+  neck_channels: 128
+  head_channels: 128
+  cls_head: false          # image-level pneumonia logit (HW2 gating), off in baseline
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0          # used only when model.cls_head
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_steps: 300        # linear warmup, then cosine decay to 0
+  grad_clip: 10.0
+  num_workers: 0           # 0 = in-process batching from the RAM tensor (faster than spawn workers on macOS)
+  eval_batch_size: 64
+aug:
+  hflip: true              # CHANGED: lungs are near-symmetric; exact flip, boxes mirrored
+  hflip_p: 0.5
+  affine: true             # CHANGED: one bilinear warp per image, boxes transformed by the same matrix
+  scale: 0.1               # uniform in [1-s, 1+s]
+  translate: 0.05          # fraction of image side
+  rotate: 0.0              # CHANGED (5.0 -> 0.0): rotation inflates axis-aligned boxes
+  intensity: true          # CHANGED
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1               # log-gamma range
+decode:
+  topk: 10
+  nms_iou: 0.5             # null/0 disables NMS
+  box_scale: 1.0           # 1.0 = off; HW2 tunes it post hoc on VAL
+  score_mode: heatmap      # heatmap | heatmap_x_cls
+  min_score: 0.01          # stored prediction tables keep boxes with score >= 0.01

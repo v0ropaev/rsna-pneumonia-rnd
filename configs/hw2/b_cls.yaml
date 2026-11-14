@@ -1,0 +1,66 @@
+# HW2 (I1): baseline + image-level classification head trained multi-task + score gating at decode.
+# Full copy of configs/baseline.yaml; only model.cls_head, decode.score_mode and meta differ (asserted by
+# tests/test_configs.py). decode.box_scale stays 1.0 here: it is tuned post hoc on VAL.
+meta:
+  experiment: rsna-pneumonia
+  parent: configs/baseline.yaml
+  changes:
+    - "model.cls_head: false -> true (GAP(C5) -> Linear -> 1 logit)"
+    - "loss.cls_weight: 1.0 (same value as baseline, now active)"
+    - "decode.score_mode: heatmap -> heatmap_x_cls"
+  hypothesis: >-
+    Image-level голова (GAP(C5) -> Linear, BCE «на снимке есть пневмония») в multi-task обучении и умножение score
+    каждого бокса на P(pneumonia) повысят val RSNA mAP относительно baseline; ожидаем +0.01…0.03. Механизм: по
+    семантике метрики любой негативный снимок хотя бы с одним боксом выше порога добавляет 0 в числитель и 1 в
+    знаменатель (research_notes §1.5), а негативов 77 %; гипотеза — основная потеря mAP у baseline именно FP-боксы
+    на негативах (проверяется декомпозицией ошибок в val_metrics). Классификатор видит снимок целиком и должен
+    отделять негативы лучше, чем максимум локального heatmap; гейтинг гасит score боксов на уверенно негативных
+    снимках, и порог по score отсекает их, почти не задевая позитивы. Вклад multi-task-сигнала в признаки отдельно
+    оценивается post-hoc абляцией no_gating (тот же чекпойнт, score_mode=heatmap).
+data:
+  image_size: 256          # cache data/processed/images_256.npy
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true         # torchvision IMAGENET1K_V1
+  neck_channels: 128
+  head_channels: 128
+  cls_head: true           # CHANGED: image-level pneumonia logit from global-avg-pooled C5
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  # BCE (mean over the batch) is added as-is to the focal heatmap loss (normalised by #positive cells). Measured at
+  # init on 8 real train batches of 16 (CPU): hm 5.7, 0.1*wh 0.84, off 0.51, cls 0.56, so weight 1.0 makes cls ~8 %
+  # of the loss at the start and roughly a quarter once hm falls to ~1-1.5; it neither dominates the detector nor
+  # vanishes, so the default 1.0 is kept (no tuning budget: one run is ~1h45m).
+  cls_weight: 1.0
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_steps: 300        # linear warmup, then cosine decay to 0
+  grad_clip: 10.0
+  num_workers: 0           # 0 = in-process batching from the RAM tensor (faster than spawn workers on macOS)
+  eval_batch_size: 64
+aug:
+  hflip: false
+  hflip_p: 0.5
+  affine: false
+  scale: 0.1               # uniform in [1-s, 1+s]
+  translate: 0.05          # fraction of image side
+  rotate: 5.0              # degrees
+  intensity: false
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1               # log-gamma range
+decode:
+  topk: 10
+  nms_iou: 0.5             # null/0 disables NMS
+  box_scale: 1.0           # 1.0 = off; HW2 tunes it post hoc on VAL
+  score_mode: heatmap_x_cls  # CHANGED: box score = heatmap peak * sigmoid(cls); also drives best-epoch selection
+  min_score: 0.01          # stored prediction tables keep boxes with score >= 0.01

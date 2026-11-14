@@ -1,9 +1,10 @@
 """Evaluate a run on val/test, compare two runs (paired bootstrap), summarize seeds.
 
 CLI:
-  python -m rsna.evaluate --run results/<run> --split {val,test} [--threshold from_val|<float>] [--limit N] [--repredict]
-  python -m rsna.evaluate compare --a results/X --b results/Y --split val [--n-boot 2000]
-  python -m rsna.evaluate summarize --runs results/a results/b ... --split val [--out results/summary_x]
+  python -m rsna.evaluate --run results/<run> --split {val,test} [--variant NAME] [--threshold from_val|<float>]
+                          [--limit N] [--repredict]
+  python -m rsna.evaluate compare --a results/X[:variant] --b results/Y[:variant] --split val [--n-boot 2000]
+  python -m rsna.evaluate summarize --runs results/a[:variant] results/b ... --split val [--out results/summary_x]
 
 A "run directory" holds `<split>_predictions.csv` (patientId, score, x, y, width, height), `<split>_image_scores.csv`
 (patientId, image_score) and `threshold_sweep.csv` (the VAL sweep). The score threshold is always chosen on val
@@ -11,6 +12,13 @@ A "run directory" holds `<split>_predictions.csv` (patientId, score, x, y, width
 split=test predicts from runs/<run>/best.pt and is the only code path, besides `rsna.baselines --split test`,
 that reads test images. Outputs: results/<run>/<split>_metrics.json + .md (+ test_predictions.csv / image scores).
 `--limit N` (smoke) uses the first N images of the split and writes `<split>_lim<N>_*` files instead.
+
+Test predictions are made ONCE per training run as a RAW table (`test_predictions_raw.csv`: raw heatmap scores,
+box_scale 1.0, + `test_predictions_raw.json` with the run provenance; image table `test_image_scores.csv` with
+cls_prob); the main run and every post-hoc variant are offline transforms of it (rsna.posthoc.apply_posthoc).
+`--variant NAME` evaluates results/<run>/posthoc/NAME (created on val by `rsna.posthoc variant`) with the box_scale,
+score_mode and score threshold that were selected on VAL; outputs go to results/<run>/posthoc/NAME/.
+No test number feeds any selection: box_scale and threshold are read from val artifacts only.
 """
 from __future__ import annotations
 
@@ -27,6 +35,7 @@ import yaml
 from . import paths
 from .metric import (IMAGE_SCORE_DECIMALS, bootstrap_ci, image_level_metrics, image_scores_from_preds, load_gt,
                      matched_iou, paired_bootstrap_diff, preds_from_df, round_preds, rsna_map, threshold_sweep)
+from .posthoc import apply_posthoc, check_source, main_settings, read_variant, stored_mode, variant_dir
 
 AGE_BINS = [0, 20, 40, 60, 101]
 AGE_LABELS = ["<20", "20-40", "40-60", "60+"]
@@ -105,9 +114,9 @@ def _prefix(split: str, limit: int | None) -> str:
     return f"{split}_lim{limit}" if limit else split
 
 
-def predict_split(run: Path, ids: list[str], meta: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Predict `ids` with runs/<run>/best.pt; images come from the cache of the checkpoint's image_size."""
-    from .decode import predict, to_frames
+def predict_split(run: Path, ids: list[str], meta: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Predict `ids` with runs/<run>/best.pt (cache of the checkpoint's image_size) -> (configured, image, RAW) tables."""
+    from .decode import predict_frames
     from .model import load_checkpoint
     from .utils import get_device
 
@@ -118,8 +127,32 @@ def predict_split(run: Path, ids: list[str], meta: pd.DataFrame) -> tuple[pd.Dat
     order = np.argsort(pos)  # sorted reads from the memmap, then back to `ids` order
     arr = np.empty((len(pos), *images.shape[1:]), np.uint8)
     arr[order] = images[pos[order]]
-    dets, img_scores = predict(model, arr, cfg, device, cfg["train"].get("eval_batch_size", 64))
-    return to_frames(ids, dets, img_scores)
+    return predict_frames(model, arr, ids, cfg, device, cfg["train"].get("eval_batch_size", 64))
+
+
+def raw_tables(run: Path, split: str, meta: pd.DataFrame, limit: int | None = None,
+               repredict: bool = False) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
+    """RAW prediction table + image table of `split`, predicted once per training run and reused while fresh."""
+    prefix = _prefix(split, limit)
+    raw_path, img_path = run / f"{prefix}_predictions_raw.csv", run / f"{prefix}_image_scores.csv"
+    info_path = run / f"{prefix}_predictions_raw.json"
+    info = json.loads(info_path.read_text()) if info_path.exists() else {}
+    fresh = bool(info) and info.get("train_run") == provenance(run) and raw_path.exists() and img_path.exists()
+    if fresh and not repredict:
+        img_df = pd.read_csv(img_path, dtype={"patientId": str})
+        return read_preds(raw_path), img_df, img_df["patientId"].tolist()
+    ckpt = paths.RUNS / run.name / "best.pt"
+    if not ckpt.exists():
+        raise FileNotFoundError(f"{raw_path.name} missing or stale and no checkpoint {ckpt} to predict it")
+    ids = split_ids(meta, split, limit)
+    _, img_df, raw_df = predict_split(run, ids, meta)
+    raw_df.to_csv(raw_path, index=False)
+    img_df.to_csv(img_path, index=False, float_format=f"%.{IMAGE_SCORE_DECIMALS}f")
+    info = {"run": run.name, "split": split, "n_images": len(ids), "n_boxes": len(raw_df), "train_run": provenance(run),
+            "content": "raw heatmap scores (score_mode heatmap), box_scale 1.0; min_score/top-K/NMS on the raw score",
+            "created": pd.Timestamp.now().isoformat(timespec="seconds")}
+    info_path.write_text(json.dumps(_jsonable(info), indent=2))
+    return raw_df, img_df, ids
 
 
 def write_preds(pred: pd.DataFrame, img: pd.DataFrame, out: Path, prefix: str) -> None:
@@ -270,14 +303,20 @@ def write_report(mt: dict[str, Any], out: Path, prefix: str, title: str) -> str:
 # ----------------------------------------------------------------------------- commands
 
 def run_eval(run: Path, split: str, threshold: str | float = "from_val", limit: int | None = None,
-             repredict: bool = False, n_boot: int = 2000) -> dict[str, Any]:
+             repredict: bool = False, n_boot: int = 2000, variant: str | None = None) -> dict[str, Any]:
+    if variant:
+        return run_variant(run, variant, split, threshold, limit, repredict, n_boot)
     meta = load_meta(run_split_file(run))
     thr, thr_src = resolve_threshold(run, threshold)
     prefix = _prefix(split, limit)
     ckpt = paths.RUNS / run.name / "best.pt"
-    if repredict or (split == "test" and ckpt.exists()) or not (run / f"{split}_predictions.csv").exists():
+    if split == "test" and (ckpt.exists() or (run / f"{prefix}_predictions_raw.csv").exists()):
+        raw_df, img_df, ids = raw_tables(run, split, meta, limit, repredict)
+        pred_df = apply_posthoc(raw_df, img_df, *main_settings(run))  # == online decode with the run's config
+        write_preds(pred_df, img_df, run, prefix)
+    elif repredict or not (run / f"{split}_predictions.csv").exists():
         ids = split_ids(meta, split, limit)
-        pred_df, img_df = predict_split(run, ids, meta)
+        pred_df, img_df, _ = predict_split(run, ids, meta)
         write_preds(pred_df, img_df, run, prefix)
     else:  # stored val predictions of the best epoch, on the image set they were made for
         img_df = pd.read_csv(run / f"{split}_image_scores.csv", dtype={"patientId": str}).iloc[:limit]
@@ -293,39 +332,98 @@ def run_eval(run: Path, split: str, threshold: str | float = "from_val", limit: 
     return mt
 
 
-def per_image_scores(run: Path, split: str, ids: list[str] | None = None) -> tuple[pd.Series, float, list[str]]:
-    if split != "val":  # val tables are written by train itself; other splits by run_eval (with provenance)
-        mpath = run / f"{split}_metrics.json"
-        check_fresh(run, json.loads(mpath.read_text()) if mpath.exists() else {}, f"{split}_predictions.csv")
-    img = pd.read_csv(run / f"{split}_image_scores.csv", dtype={"patientId": str})
+def run_variant(run: Path, name: str, split: str, threshold: str | float = "from_val", limit: int | None = None,
+                repredict: bool = False, n_boot: int = 2000) -> dict[str, Any]:
+    """Evaluate post-hoc variant `name` of `run`: its val-selected box_scale / score_mode / threshold applied to the
+    run's stored val table (split=val) or to the RAW test table (split=test). Writes into posthoc/<name>/."""
+    spec = read_variant(run, name)
+    check_fresh(run, spec, f"variant {name}")
+    vdir = variant_dir(run, name)
+    meta = load_meta(run_split_file(run))
+    thr, thr_src = resolve_threshold(vdir, threshold)
+    prefix = _prefix(split, limit)
+    if split == "val":
+        img_df = pd.read_csv(run / "val_image_scores.csv", dtype={"patientId": str}).iloc[:limit]
+        ids = img_df["patientId"].tolist()
+        src = read_preds(run / "val_predictions.csv")
+        src = src[src["patientId"].isin(set(ids))]
+    else:
+        src, img_df, ids = raw_tables(run, split, meta, limit, repredict)
+    check_source(run, src, spec["score_mode"], raw_table=split != "val")
+    assert set(meta.set_index("patientId").loc[ids, "split"]) == {split}, f"ids outside split={split}"
+    mode = stored_mode(run, spec["score_mode"]) if split == "val" else spec["score_mode"]  # test: RAW table
+    pred_df = apply_posthoc(src, img_df, spec["box_scale"], mode)
+    write_preds(pred_df, img_df, vdir, prefix)
+    mt, _ = evaluate_predictions(pred_df, img_df, ids, meta, thr, n_boot=n_boot)
+    label = f"{run.name}:{name}"
+    mt = {"run": label, "split": split,
+          "variant": {k: spec[k] for k in ("name", "box_scale", "box_scale_source", "score_mode", "val_thr")},
+          "threshold_source": thr_src.replace("results/<run>/", f"results/<run>/posthoc/{name}/"), "limit": limit,
+          "train_run": provenance(run), "note": "box_scale and threshold chosen on val: selection-biased" if split == "val"
+          else "box_scale, score_mode and threshold were selected on val", **mt}
+    md = write_report(mt, vdir, prefix, f"{label} — {split}")
+    print(md)
+    print(f"-> {vdir / f'{prefix}_metrics.json'}")
+    return mt
+
+
+def parse_target(spec: str | Path) -> tuple[Path, str | None]:
+    """'results/<run>' or 'results/<run>:<variant>' -> (run dir, variant name or None)."""
+    s = str(spec)
+    head, sep, tail = s.rpartition(":")
+    if sep and tail and "/" not in tail:
+        return Path(head), tail
+    return Path(s), None
+
+
+def target_dir(run: Path, variant: str | None) -> Path:
+    return variant_dir(run, variant) if variant else run
+
+
+def target_label(run: Path, variant: str | None) -> str:
+    return f"{run.name}:{variant}" if variant else run.name
+
+
+def per_image_scores(run: Path, split: str, ids: list[str] | None = None,
+                     variant: str | None = None) -> tuple[pd.Series, float, list[str]]:
+    d = target_dir(run, variant)
+    if split != "val" or variant:  # stored val tables are written by train itself; the rest with provenance
+        mpath = d / f"{split}_metrics.json"
+        check_fresh(run, json.loads(mpath.read_text()) if mpath.exists() else {}, f"{d.name}/{split}_predictions.csv")
+    img = pd.read_csv(d / f"{split}_image_scores.csv", dtype={"patientId": str})
     ids = ids if ids is not None else img["patientId"].tolist()
-    thr = val_threshold(run)
+    thr = val_threshold(d)
     gt = load_gt(paths.BOXES, ids)
-    _, s = rsna_map(gt, preds_from_df(read_preds(run / f"{split}_predictions.csv")), ids, thr, return_per_image=True)
+    _, s = rsna_map(gt, preds_from_df(read_preds(d / f"{split}_predictions.csv")), ids, thr, return_per_image=True)
     return s, thr, ids
 
 
-def compare(a: Path, b: Path, split: str, n_boot: int = 2000, out_dir: Path | None = None) -> dict[str, Any]:
-    """Paired bootstrap of mAP(a) - mAP(b) on the images both runs were evaluated on; each run uses its val threshold."""
-    ids_a = pd.read_csv(a / f"{split}_image_scores.csv", dtype={"patientId": str})["patientId"].tolist()
-    ids_b = set(pd.read_csv(b / f"{split}_image_scores.csv", dtype={"patientId": str})["patientId"])
+def compare(a: str | Path, b: str | Path, split: str, n_boot: int = 2000, out_dir: Path | None = None) -> dict[str, Any]:
+    """Paired bootstrap of mAP(a) - mAP(b) on the images both were evaluated on; each uses its own val threshold.
+
+    a, b: run directories or 'results/<run>:<variant>' post-hoc variants.
+    """
+    (ra, va), (rb, vb) = parse_target(a), parse_target(b)
+    la, lb = target_label(ra, va), target_label(rb, vb)
+    ids_a = pd.read_csv(target_dir(ra, va) / f"{split}_image_scores.csv", dtype={"patientId": str})["patientId"].tolist()
+    ids_b = set(pd.read_csv(target_dir(rb, vb) / f"{split}_image_scores.csv", dtype={"patientId": str})["patientId"])
     ids = [i for i in ids_a if i in ids_b]
     if not ids:
         raise ValueError("no common images")
-    sa, ta, _ = per_image_scores(a, split, ids)
-    sb, tb, _ = per_image_scores(b, split, ids)
-    res = {"a": a.name, "b": b.name, "split": split, "n_common": len(ids),
+    sa, ta, _ = per_image_scores(ra, split, ids, va)
+    sb, tb, _ = per_image_scores(rb, split, ids, vb)
+    res = {"a": la, "b": lb, "split": split, "n_common": len(ids),
            "n_only_a": len(ids_a) - len(ids), "n_only_b": len(ids_b) - len(ids), "thr_a": ta, "thr_b": tb,
            "map_a": float(np.nanmean(sa)), "map_b": float(np.nanmean(sb)),
            **paired_bootstrap_diff(sa, sb, n_boot=n_boot)}
     md = (f"| A | B | split | n | mAP A | mAP B | A−B | 95% CI | P(A−B≤0) |\n|---|---|---|---|---|---|---|---|---|\n"
-          f"| {a.name} (thr {ta:.2f}) | {b.name} (thr {tb:.2f}) | {split} | {len(ids)} | {_f(res['map_a'])} | "
+          f"| {la} (thr {ta:.2f}) | {lb} (thr {tb:.2f}) | {split} | {len(ids)} | {_f(res['map_a'])} | "
           f"{_f(res['map_b'])} | {_f(res['diff'])} | [{_f(res['lo'])}, {_f(res['hi'])}] | {_f(res['p_diff_le_0'], 3)} |\n")
     if res["n_only_a"] or res["n_only_b"]:
         md += f"\nCompared on the {len(ids)} common images only (A-only {res['n_only_a']}, B-only {res['n_only_b']}).\n"
     out_dir = out_dir or paths.RESULTS / "comparisons"
     out_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"{a.name}__vs__{b.name}__{split}"
+    stem = f"{la}__vs__{lb}__{split}".replace(":", "@")
     (out_dir / f"{stem}.json").write_text(json.dumps(_jsonable(res), indent=2))
     (out_dir / f"{stem}.md").write_text(md)
     print(md)
@@ -333,14 +431,15 @@ def compare(a: Path, b: Path, split: str, n_boot: int = 2000, out_dir: Path | No
     return res
 
 
-def summarize(runs: list[Path], split: str, out: Path | None = None) -> pd.DataFrame:
-    """Mean ± std over seeds of the `<split>_metrics.json` written by run_eval."""
+def summarize(runs: list[str | Path], split: str, out: Path | None = None) -> pd.DataFrame:
+    """Mean ± std over seeds of the `<split>_metrics.json` written by run_eval (runs may be 'results/<run>:<variant>')."""
     keys = ["map", "ci_lo", "ci_hi", "threshold", "image_roc_auc", "sensitivity", "specificity", "matched_iou"]
     rows = []
-    for r in runs:
-        mt = json.loads((r / f"{split}_metrics.json").read_text())
-        check_fresh(r, mt, f"{split}_metrics.json")
-        rows.append({"run": r.name, **{k: mt[k] for k in keys}, "fp_image_rate": mt["errors"]["fp_image_rate"]})
+    for spec in runs:
+        r, v = parse_target(spec)
+        mt = json.loads((target_dir(r, v) / f"{split}_metrics.json").read_text())
+        check_fresh(r, mt, f"{target_label(r, v)} {split}_metrics.json")
+        rows.append({"run": target_label(r, v), **{k: mt[k] for k in keys}, "fp_image_rate": mt["errors"]["fp_image_rate"]})
     df = pd.DataFrame(rows)
     num = df.drop(columns="run")
     df = pd.concat([df, pd.DataFrame([{"run": "mean", **num.mean()}, {"run": "std", **num.std(ddof=1)}])])
@@ -365,17 +464,19 @@ def main(argv: list[str] | None = None) -> None:
         ap.add_argument("--run", type=Path, required=True)
         ap.add_argument("--threshold", default="from_val")
         ap.add_argument("--limit", type=int, help="smoke: first N images of the split; writes <split>_lim<N>_* files")
-        ap.add_argument("--repredict", action="store_true", help="val: predict the full split from best.pt")
+        ap.add_argument("--repredict", action="store_true",
+                        help="val: predict the full split from best.pt; test: re-make the RAW test table")
+        ap.add_argument("--variant", help="post-hoc variant results/<run>/posthoc/<name> (see rsna.posthoc)")
         a = ap.parse_args(argv)
-        run_eval(a.run, a.split, a.threshold, a.limit, a.repredict, a.n_boot)
+        run_eval(a.run, a.split, a.threshold, a.limit, a.repredict, a.n_boot, a.variant)
     elif cmd == "compare":
-        ap.add_argument("--a", type=Path, required=True)
-        ap.add_argument("--b", type=Path, required=True)
+        ap.add_argument("--a", required=True, help="results/<run> or results/<run>:<variant>")
+        ap.add_argument("--b", required=True, help="results/<run> or results/<run>:<variant>")
         ap.add_argument("--out", type=Path)
         a = ap.parse_args(argv[1:])
         compare(a.a, a.b, a.split, a.n_boot, a.out)
     else:
-        ap.add_argument("--runs", type=Path, nargs="+", required=True)
+        ap.add_argument("--runs", nargs="+", required=True, help="results/<run>[:<variant>] ...")
         ap.add_argument("--out", type=Path)
         a = ap.parse_args(argv[1:])
         summarize(a.runs, a.split, a.out)

@@ -77,3 +77,30 @@ def test_git_revision_sees_staged_and_untracked_code(tmp_path: Path, monkeypatch
     _git(tmp_path, "commit", "-qm", "c2")
     (tmp_path / "src" / "new.py").write_text("")  # untracked code
     assert utils.git_revision().endswith("-dirty")
+
+
+@pytest.mark.parametrize("cfg_name", ["configs/baseline.yaml", "configs/hw2/full.yaml"])
+def test_validate_logs_no_gating_map_only_for_cls_models(cfg_name: str) -> None:
+    """cls models also report the epoch's val mAP WITHOUT gating (to size the no_gating epoch-selection bias);
+    baseline validation is unchanged (no extra key)."""
+    from types import SimpleNamespace
+
+    import numpy as np
+    import pandas as pd
+    import torch
+
+    from rsna.model import build_model
+    from rsna.train import load_config, validate
+
+    cfg = load_config(Path(__file__).resolve().parents[1] / cfg_name)
+    cfg = {**cfg, "model": {**cfg["model"], "pretrained": False}}
+    torch.manual_seed(0)
+    model = build_model(cfg)
+    n = 6
+    meta = pd.DataFrame({"patientId": [f"i{k}" for k in range(n)], "target": [1, 0, 1, 0, 1, 0]})
+    data = SimpleNamespace(meta=meta, images=torch.randint(0, 255, (n, 64, 64), dtype=torch.uint8))
+    gt = {f"i{k}": (np.array([[300.0, 300.0, 300.0, 300.0]]) if k % 2 == 0 else np.zeros((0, 4))) for k in range(n)}
+    v = validate(model, data, np.arange(n), cfg, torch.device("cpu"), gt)
+    assert ("val_map_heatmap" in v) == bool(cfg["model"]["cls_head"])
+    if "val_map_heatmap" in v:
+        assert 0.0 <= v["val_map_heatmap"] <= 1.0

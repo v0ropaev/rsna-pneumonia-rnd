@@ -1,6 +1,7 @@
 """Small shared helpers: seeding, device, config IO, git sha."""
 from __future__ import annotations
 
+import os
 import random
 import subprocess
 from pathlib import Path
@@ -23,6 +24,16 @@ def seed_everything(seed: int) -> torch.Generator:
 
 
 def get_device() -> torch.device:
+    """Env RSNA_DEVICE=cpu|mps|cuda forces a device (e.g. CPU smoke runs while the GPU is busy); else mps > cuda > cpu."""
+    forced = os.environ.get("RSNA_DEVICE", "").strip().lower()
+    if forced:
+        if forced not in ("cpu", "mps", "cuda"):
+            raise ValueError(f"RSNA_DEVICE must be cpu|mps|cuda, got {forced!r}")
+        if forced == "mps" and not torch.backends.mps.is_available():
+            raise RuntimeError("RSNA_DEVICE=mps but MPS is not available")
+        if forced == "cuda" and not torch.cuda.is_available():
+            raise RuntimeError("RSNA_DEVICE=cuda but CUDA is not available")
+        return torch.device(forced)
     if torch.backends.mps.is_available():
         return torch.device("mps")
     if torch.cuda.is_available():

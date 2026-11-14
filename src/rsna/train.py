@@ -35,7 +35,7 @@ from sklearn.metrics import roc_auc_score
 from . import paths
 from .augment import augment_batch
 from .dataset import Data, RSNADataset, collate, iterate_batches, load_data
-from .decode import predict, to_frames
+from .decode import configured_frame, predict_frames
 from .evaluate import write_preds
 from .metric import load_gt, preds_from_df, threshold_sweep
 from .model import build_model, centernet_loss, save_checkpoint
@@ -94,14 +94,18 @@ def validate(model: torch.nn.Module, data: Data, idx: np.ndarray, cfg: dict[str,
              gt: dict[str, np.ndarray]) -> dict[str, Any]:
     t0 = time.time()
     ids = data.meta.loc[idx, "patientId"].tolist()
-    dets, img_scores = predict(model, data.images[torch.from_numpy(idx)], cfg, device, cfg["train"]["eval_batch_size"])
-    pred_df, img_df = to_frames(ids, dets, img_scores)
+    pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+                                             cfg["train"]["eval_batch_size"])  # raw_score/cls_prob kept for rsna.posthoc
     sweep = threshold_sweep(gt, preds_from_df(pred_df), ids)
     best = sweep.loc[sweep["map"].idxmax()]
     y = data.meta.loc[idx, "target"].to_numpy()
     auc = roc_auc_score(y, img_df["image_score"]) if 0 < y.sum() < len(y) else float("nan")
-    return {"val_map": float(best["map"]), "val_thr": float(best["thr"]), "val_auc": float(auc),
-            "sweep": sweep, "pred": pred_df, "img": img_df, "val_sec": time.time() - t0}
+    res = {"val_map": float(best["map"]), "val_thr": float(best["thr"]), "val_auc": float(auc),
+           "sweep": sweep, "pred": pred_df, "img": img_df, "val_sec": time.time() - t0}
+    if "cls_prob" in img_df:  # cls head: this epoch scored WITHOUT gating; logged only, never used for selection
+        no_gate = configured_frame(raw_df, img_df, {"decode": {**cfg["decode"], "score_mode": "heatmap"}})
+        res["val_map_heatmap"] = float(threshold_sweep(gt, preds_from_df(no_gate), ids)["map"].max())  # see rsna.report
+    return res
 
 
 def plot_curves(hist: pd.DataFrame, path: Path) -> None:
@@ -205,7 +209,8 @@ def train(cfg: dict[str, Any], seed: int, run_name: str, max_steps: int | None =
             t_train += ep_sec
             v = validate(model, data, va_idx, cfg, device, gt)
             row = {"epoch": epoch, "steps": step, **ep_loss, "val_map": v["val_map"], "val_thr": v["val_thr"],
-                   "val_auc": v["val_auc"], "lr": sched.get_last_lr()[0], "epoch_sec": round(ep_sec, 1),
+                   "val_auc": v["val_auc"], **({"val_map_heatmap": v["val_map_heatmap"]} if "val_map_heatmap" in v else {}),
+                   "lr": sched.get_last_lr()[0], "epoch_sec": round(ep_sec, 1),
                    "val_sec": round(v["val_sec"], 1), "it_per_sec": round(len(parts_acc) / ep_sec, 2)}
             hist.append(row)
             tracker.log_metrics({k: val for k, val in row.items() if k != "epoch"}, step=epoch)

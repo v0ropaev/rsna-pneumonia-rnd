@@ -1,0 +1,66 @@
+# HW2 Full = baseline + I1 (cls head + gating) + I2 (light augmentation). Full copy of configs/baseline.yaml; only
+# the keys of b_cls.yaml and b_aug.yaml (and meta) differ (asserted by tests/test_configs.py). I3 (box_scale) is
+# post hoc: decode.box_scale stays 1.0 here and is tuned on VAL from the checkpoint on a two-sided grid
+# (0.80-1.30: the HW1 claim "boxes are too large" is tested in both directions).
+meta:
+  experiment: rsna-pneumonia
+  parent: configs/baseline.yaml
+  changes:
+    - "model.cls_head: false -> true (GAP(C5) -> Linear -> 1 logit)"
+    - "loss.cls_weight: 1.0 (same value as baseline, now active)"
+    - "decode.score_mode: heatmap -> heatmap_x_cls"
+    - "aug.hflip: false -> true (p 0.5)"
+    - "aug.affine: false -> true (scale ±0.1, translate ±0.05)"
+    - "aug.rotate: 5.0 -> 0.0"
+    - "aug.intensity: false -> true (brightness/contrast/gamma 0.1)"
+  hypothesis: >-
+    Сочетание image-level головы с гейтингом score (I1) и лёгких аугментаций (I2) даст наибольший val RSNA mAP
+    из 2x2-плана, выше baseline примерно на +0.015…0.04, и эффекты будут близки к аддитивным. Механизм: они бьют по
+    разным источникам ошибки. Гейтинг убирает FP-боксы на негативных снимках (77 % выборки; каждый такой снимок
+    даёт 0 в mAP), а аугментации улучшают обобщение и детектора, и классификатора; классификатор, который
+    переобучается легче детектора (один логит на снимок), от аугментаций может выиграть особенно. Взаимодействие
+    проверяется 2x2-планом (B, B+aug, B+cls, Full); post-hoc абляции на тех же чекпойнтах: no_gating
+    (score_mode=heatmap) и no_boxscale (box_scale=1.0).
+data:
+  image_size: 256          # cache data/processed/images_256.npy
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true         # torchvision IMAGENET1K_V1
+  neck_channels: 128
+  head_channels: 128
+  cls_head: true           # CHANGED: image-level pneumonia logit from global-avg-pooled C5
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0          # BCE added as-is; see b_cls.yaml for the measured loss balance
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_steps: 300        # linear warmup, then cosine decay to 0
+  grad_clip: 10.0
+  num_workers: 0           # 0 = in-process batching from the RAM tensor (faster than spawn workers on macOS)
+  eval_batch_size: 64
+aug:
+  hflip: true              # CHANGED
+  hflip_p: 0.5
+  affine: true             # CHANGED
+  scale: 0.1               # uniform in [1-s, 1+s]
+  translate: 0.05          # fraction of image side
+  rotate: 0.0              # CHANGED (5.0 -> 0.0): rotation inflates axis-aligned boxes
+  intensity: true          # CHANGED
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1               # log-gamma range
+decode:
+  topk: 10
+  nms_iou: 0.5             # null/0 disables NMS
+  box_scale: 1.0           # 1.0 = off; HW2 tunes it post hoc on VAL
+  score_mode: heatmap_x_cls  # CHANGED: box score = heatmap peak * sigmoid(cls); also drives best-epoch selection
+  min_score: 0.01          # stored prediction tables keep boxes with score >= 0.01
