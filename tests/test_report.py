@@ -136,6 +136,10 @@ def test_contrast_single_pair_equals_paired_bootstrap() -> None:
     p = paired_bootstrap_diff(a, b, n_boot=500, seed=3)
     assert c["diff"] == pytest.approx(p["diff"]) and c["lo"] == pytest.approx(p["lo"]) and c["hi"] == pytest.approx(p["hi"])
     assert c["p_diff_le_0"] == pytest.approx(p["p_diff_le_0"])
+    g = pd.Series([f"p{k // 4}" for k in range(len(a))], index=a.index)  # 4 images per patient
+    cg = contrast_bootstrap([[(1.0, a), (-1.0, b)]], n_boot=500, seed=3, clusters=g)
+    pg = paired_bootstrap_diff(a, b, n_boot=500, seed=3, groups=g)
+    assert cg["lo"] == pytest.approx(pg["lo"]) and cg["hi"] == pytest.approx(pg["hi"]) and cg["n_units"] == 75
 
 
 def test_contrast_seed_mean_and_identity() -> None:

@@ -312,3 +312,13 @@ def test_cls_run_without_raw_scores_refuses_mode_switch(fake_run: Path) -> None:
         posthoc_main(["tune", "--run", str(fake_run), "--score-mode", "heatmap", "--grid", "0.9:1.0:0.1"])
     posthoc_main(["tune", "--run", str(fake_run), "--grid", "0.9:1.0:0.1"])  # keep (box_scale only) is fine
     assert (fake_run / "posthoc" / "box_scale.json").exists()
+
+
+def test_val_halves_are_patient_disjoint() -> None:
+    from rsna.posthoc import val_halves
+    ids = [f"img{k}" for k in range(40)]
+    groups = pd.Series([f"p{k // 3}" for k in range(40)], index=ids)
+    h0, h1 = val_halves(ids, groups=groups)
+    assert sorted(h0 + h1) == sorted(ids) and not set(h0) & set(h1)
+    assert not set(groups[h0]) & set(groups[h1])
+    assert val_halves(ids, groups=groups) == [h0, h1]  # deterministic

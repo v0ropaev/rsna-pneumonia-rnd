@@ -399,3 +399,42 @@ def test_rounded_predictions_survive_csv_round_trip(tmp_path):
     np.testing.assert_array_equal(disk_img["image_score"].to_numpy(), img["image_score"].to_numpy())
     pd.testing.assert_frame_equal(threshold_sweep(gt, preds_from_df(pred), ids),
                                   threshold_sweep(gt, preds_from_df(disk), ids))
+
+
+# ----------------------------------------------------------------------------- cluster (NIH patient) bootstrap
+
+def _per_image(n: int = 300, seed: int = 1) -> pd.Series:
+    rng = np.random.default_rng(seed)
+    x = rng.random(n)
+    x[rng.random(n) < 0.3] = np.nan  # excluded images
+    return pd.Series(x, index=[f"i{k}" for k in range(n)])
+
+
+def test_cluster_bootstrap_singletons_equal_image_bootstrap():
+    s = _per_image()
+    singletons = pd.Series(s.index, index=s.index)
+    assert bootstrap_ci(s, n_boot=300) == bootstrap_ci(s, n_boot=300, groups=singletons)
+    t = _per_image(seed=2)
+    a, b = paired_bootstrap_diff(s, t, n_boot=300), paired_bootstrap_diff(s, t, n_boot=300, groups=singletons)
+    assert (a["lo"], a["hi"], a["diff"]) == (b["lo"], b["hi"], b["diff"])
+    assert b["n_units"] == len(s)
+
+
+def test_cluster_bootstrap_of_duplicated_images_equals_image_bootstrap():
+    """Each image duplicated inside its own cluster: cluster sums double numerator and denominator, so the
+    cluster bootstrap of the doubled data must equal the image bootstrap of the original (same draws)."""
+    s = _per_image()
+    dup = pd.concat([s, s.rename(lambda i: i + "_b")])
+    groups = pd.Series([i.removesuffix("_b") for i in dup.index], index=dup.index)
+    m0, lo0, hi0 = bootstrap_ci(s, n_boot=300)
+    m1, lo1, hi1 = bootstrap_ci(dup, n_boot=300, groups=groups)
+    assert m0 == pytest.approx(m1) and lo0 == pytest.approx(lo1) and hi0 == pytest.approx(hi1)
+    # a plain image bootstrap of the duplicated data is too narrow (it treats copies as independent)
+    _, lo2, hi2 = bootstrap_ci(dup, n_boot=300)
+    assert hi2 - lo2 < 0.85 * (hi1 - lo1)
+
+
+def test_cluster_bootstrap_requires_a_group_for_every_image():
+    s = _per_image(10)
+    with pytest.raises(ValueError):
+        bootstrap_ci(s, groups=pd.Series({"i0": "p0"}))

@@ -46,6 +46,29 @@ PRED_COLS = ["patientId", "score", "x", "y", "width", "height"]
 
 # ----------------------------------------------------------------------------- data access
 
+BOOTSTRAP_UNIT = "nih_patient"  # resampling unit of every CI: images of one NIH patient are correlated
+
+
+def patient_groups(meta: pd.DataFrame | None = None) -> pd.Series | None:
+    """patientId -> NIH patient id (the bootstrap cluster), from `meta` or data/processed/metadata.csv.
+
+    None (plain image bootstrap) only when no nih_patient column is available (synthetic test fixtures).
+    """
+    if meta is None:
+        if not paths.METADATA.exists():
+            return None
+        meta = pd.read_csv(paths.METADATA, usecols=lambda c: c in ("patientId", "nih_patient"),
+                           dtype={"patientId": str, "nih_patient": str})
+    if "nih_patient" not in meta.columns:
+        return None
+    g = meta.set_index("patientId")["nih_patient"]
+    return g.fillna(pd.Series(g.index, index=g.index))  # an unmapped image is its own cluster
+
+
+def unit_name(groups: pd.Series | None) -> str:
+    return "image" if groups is None else BOOTSTRAP_UNIT
+
+
 def load_meta(split_file: str | Path | None = None) -> pd.DataFrame:
     """metadata.csv + split column + slice columns (age_bucket, n_boxes capped at '3+').
 
@@ -163,8 +186,8 @@ def write_preds(pred: pd.DataFrame, img: pd.DataFrame, out: Path, prefix: str) -
 
 # ----------------------------------------------------------------------------- analysis
 
-def _ci(per_image: pd.Series, n_boot: int, seed: int = 0) -> dict[str, float]:
-    m, lo, hi = bootstrap_ci(per_image, n_boot=n_boot, seed=seed)
+def _ci(per_image: pd.Series, n_boot: int, seed: int = 0, groups: pd.Series | None = None) -> dict[str, float]:
+    m, lo, hi = bootstrap_ci(per_image, n_boot=n_boot, seed=seed, groups=groups)
     return {"map": m, "ci_lo": lo, "ci_hi": hi}
 
 
@@ -214,6 +237,7 @@ def evaluate_predictions(pred_df: pd.DataFrame, img_df: pd.DataFrame | None, ids
     `meta` needs patientId, target and the SLICES columns (see load_meta); `gt` defaults to data/processed/boxes.csv.
     """
     gt = load_gt(paths.BOXES, ids) if gt is None else gt
+    groups = patient_groups(meta)
     pred = preds_from_df(pred_df)
     score, per_image = rsna_map(gt, pred, ids, score_threshold=thr, return_per_image=True)
     m = meta.set_index("patientId").loc[ids]
@@ -224,7 +248,8 @@ def evaluate_predictions(pred_df: pd.DataFrame, img_df: pd.DataFrame | None, ids
     image_lvl = image_level_metrics(target.to_numpy(), img_score.to_numpy())
     pos, neg = target == 1, target == 0
     out: dict[str, Any] = {
-        "n_images": len(ids), "threshold": thr, **_ci(per_image, n_boot), "n_scored": int(per_image.notna().sum()),
+        "n_images": len(ids), "threshold": thr, **_ci(per_image, n_boot, groups=groups),
+        "bootstrap_unit": unit_name(groups), "n_scored": int(per_image.notna().sum()),
         "image_roc_auc": image_lvl["roc_auc"], "image_pr_auc": image_lvl["pr_auc"],
         "sensitivity": float(has_pred[pos].mean()) if pos.any() else float("nan"),  # image has >=1 box at thr
         "specificity": float((~has_pred[neg]).mean()) if neg.any() else float("nan"),
@@ -242,7 +267,7 @@ def evaluate_predictions(pred_df: pd.DataFrame, img_df: pd.DataFrame | None, ids
             pi = per_image.loc[sid]
             e = error_decomposition(pi, g["target"], has_pred.loc[sid])
             rows.append({"slice": col, "value": str(val), "n": len(sid), "n_pos": e["n_pos"],
-                         **_ci(pi, slice_boot), "n_scored": e["n_scored"], "map_pos": e["map_pos"],
+                         **_ci(pi, slice_boot, groups=groups), "n_scored": e["n_scored"], "map_pos": e["map_pos"],
                          "fp_image_rate": e["fp_image_rate"] if e["n_neg"] else float("nan"),
                          "sensitivity": e["pos_with_boxes_rate"]})
         out["slices"][col] = rows
@@ -260,7 +285,8 @@ def _f(x: Any, nd: int = 4) -> str:
 def to_markdown(mt: dict[str, Any], title: str) -> str:
     e, o = mt["errors"], mt["oracle_gating"]
     lines = [f"### {title}", "",
-             f"mAP **{_f(mt['map'])}** [{_f(mt['ci_lo'])}, {_f(mt['ci_hi'])}] (bootstrap 95% CI) at score thr "
+             f"mAP **{_f(mt['map'])}** [{_f(mt['ci_lo'])}, {_f(mt['ci_hi'])}] (bootstrap 95% CI, resampling unit: "
+             f"{mt.get('bootstrap_unit', 'image')}) at score thr "
              f"{mt['threshold']:.2f}; images {mt['n_images']}, scored {mt['n_scored']}", "",
              "| metric | value |", "|---|---|"]
     for k in ["image_roc_auc", "image_pr_auc", "sensitivity", "specificity", "matched_iou"]:
@@ -410,15 +436,18 @@ def compare(a: str | Path, b: str | Path, split: str, n_boot: int = 2000, out_di
     ids = [i for i in ids_a if i in ids_b]
     if not ids:
         raise ValueError("no common images")
+    groups = patient_groups()
     sa, ta, _ = per_image_scores(ra, split, ids, va)
     sb, tb, _ = per_image_scores(rb, split, ids, vb)
     res = {"a": la, "b": lb, "split": split, "n_common": len(ids),
            "n_only_a": len(ids_a) - len(ids), "n_only_b": len(ids_b) - len(ids), "thr_a": ta, "thr_b": tb,
            "map_a": float(np.nanmean(sa)), "map_b": float(np.nanmean(sb)),
-           **paired_bootstrap_diff(sa, sb, n_boot=n_boot)}
+           **paired_bootstrap_diff(sa, sb, n_boot=n_boot, groups=groups)}
+    res["bootstrap_unit"] = unit_name(groups)
     md = (f"| A | B | split | n | mAP A | mAP B | A−B | 95% CI | P(A−B≤0) |\n|---|---|---|---|---|---|---|---|---|\n"
           f"| {la} (thr {ta:.2f}) | {lb} (thr {tb:.2f}) | {split} | {len(ids)} | {_f(res['map_a'])} | "
           f"{_f(res['map_b'])} | {_f(res['diff'])} | [{_f(res['lo'])}, {_f(res['hi'])}] | {_f(res['p_diff_le_0'], 3)} |\n")
+    md += f"\nPaired bootstrap ({res['n_boot']} replicates), resampling unit: {res['bootstrap_unit']} (n = {res['n_units']}).\n"
     if res["n_only_a"] or res["n_only_b"]:
         md += f"\nCompared on the {len(ids)} common images only (A-only {res['n_only_a']}, B-only {res['n_only_b']}).\n"
     out_dir = out_dir or paths.RESULTS / "comparisons"

@@ -21,8 +21,9 @@ images; val deltas of a tuned unit against an untuned one are flagged (Full − 
 the selection-free estimates are the cross-fitted gain of `rsna.posthoc tune` and the test rows. B is the HW1 baseline
 as trained (box_scale 1.0), so "Full − all (vs B)" includes I3 by design. The 2×2 aug × cls factorial uses the
 as-trained tables of all four configs (box_scale 1.0 everywhere), so the post-hoc I3 never leaks into it.
-Ablation deltas are paired bootstraps over val images, seed-matched; the pooled estimate averages the per-seed
-differences and resamples images jointly for all seeds (image noise only; seed spread is shown by the per-seed points).
+Ablation deltas are paired cluster bootstraps (unit: NIH patient, all images of a patient drawn together), seed-matched;
+the pooled estimate averages the per-seed differences and resamples patients jointly for all seeds (data noise only;
+seed spread is shown by the per-seed points).
 Test numbers come only from existing `test_metrics.json` (written by rsna.evaluate); test labels are read only with
 --with-test (paired test deltas of Full vs every other config and vs its post-hoc ablations; reported, never used for
 decisions). image AUC = ROC-AUC of the unit's own max box score (the score that decides sens/spec, so it differs between
@@ -48,9 +49,9 @@ import pandas as pd
 import yaml
 
 from . import paths
-from .evaluate import check_fresh, error_decomposition, load_meta, read_preds
-from .metric import (_chunks, image_level_metrics, load_gt, paired_bootstrap_diff, preds_from_df, rsna_map,
-                     threshold_sweep)
+from .evaluate import check_fresh, error_decomposition, load_meta, patient_groups, read_preds
+from .metric import (bootstrap_codes, bootstrap_ratio_replicates, image_level_metrics, load_gt, paired_bootstrap_diff,
+                     preds_from_df, rsna_map, threshold_sweep)
 
 # ----------------------------------------------------------------------------- design of the HW2 study
 
@@ -297,13 +298,14 @@ def load_test_metrics(u: Unit) -> dict[str, Any] | None:
 # ----------------------------------------------------------------------------- paired statistics
 
 def contrast_bootstrap(groups: list[list[tuple[float, pd.Series]]], n_boot: int = 2000, seed: int = 0,
-                       alpha: float = 0.05) -> dict[str, Any]:
+                       alpha: float = 0.05, clusters: pd.Series | None = None) -> dict[str, Any]:
     """Bootstrap of a linear contrast of mAPs, averaged over groups (seeds), images resampled jointly.
 
     groups[g] = [(coef, per-image AP series), ...]; statistic = mean_g sum_t coef * mAP_t, mAP = nanmean (excluded
     images are NaN, as in metric.paired_bootstrap_diff). All series are restricted to their common image ids; each
     replicate draws ONE image resample used for every term and seed (pairing). A single group [(1, a), (-1, b)] on
-    equal ids reproduces metric.paired_bootstrap_diff(a, b) exactly (same seed).
+    equal ids reproduces metric.paired_bootstrap_diff(a, b) exactly (same seed and clusters).
+    `clusters` (image id -> NIH patient) resamples whole patients; None = plain image bootstrap.
     """
     terms = [t for g in groups for t in g]
     if not terms:
@@ -313,22 +315,14 @@ def contrast_bootstrap(groups: list[list[tuple[float, pd.Series]]], n_boot: int 
         idx = idx.intersection(s.index, sort=False)
     n = len(idx)
     arr = [(c / len(groups), s.reindex(idx).to_numpy(np.float64)) for c, s in terms]
-    x0 = [(c, np.where(np.isnan(x), 0.0, x), ~np.isnan(x)) for c, x in arr]
     point = float(sum(c * (np.nanmean(x) if (~np.isnan(x)).any() else np.nan) for c, x in arr))
-    rng = np.random.default_rng(seed)
-    out = []
-    for m in _chunks(n_boot, n):
-        r = rng.integers(0, n, (m, n))
-        stat = np.zeros(m)
-        with np.errstate(invalid="ignore", divide="ignore"):
-            for c, v, ok in x0:
-                stat += c * v[r].sum(1) / ok[r].sum(1)
-        out.append(stat)
-    d = np.concatenate(out)
+    codes, k = bootstrap_codes(idx, clusters)
+    d = bootstrap_ratio_replicates(arr, codes, k, n_boot, seed)
     d = d[~np.isnan(d)]
     lo, hi = np.quantile(d, [alpha / 2, 1 - alpha / 2]) if len(d) else (np.nan, np.nan)
     return {"diff": point, "lo": float(lo), "hi": float(hi), "p_diff_le_0": float((d <= 0).mean()) if len(d) else np.nan,
-            "n_images": n, "n_groups": len(groups), "n_boot": len(d)}
+            "n_images": n, "n_groups": len(groups), "n_boot": len(d),
+            "bootstrap_unit": "image" if clusters is None else "nih_patient", "n_units": k}
 
 
 def seed_pairs(ref: dict[int, Any], other: dict[int, Any]) -> list[tuple[int, Any, Any]]:
@@ -337,7 +331,7 @@ def seed_pairs(ref: dict[int, Any], other: dict[int, Any]) -> list[tuple[int, An
 
 
 def ablation_rows(ref: dict[int, Evaluated], others: dict[str, dict[int, Evaluated]], n_boot: int,
-                  split: str = "val") -> list[dict[str, Any]]:
+                  split: str = "val", clusters: pd.Series | None = None) -> list[dict[str, Any]]:
     """Δ = mAP(ref) − mAP(ablation): per seed (paired bootstrap) and pooled over matched seeds."""
     rows = []
     for name, ev in others.items():
@@ -347,17 +341,19 @@ def ablation_rows(ref: dict[int, Evaluated], others: dict[str, dict[int, Evaluat
         per_seed = []
         for s, a, b in pairs:
             ids = a.per_image.index.intersection(b.per_image.index, sort=False)
-            d = paired_bootstrap_diff(a.per_image.loc[ids], b.per_image.loc[ids], n_boot=n_boot)
+            d = paired_bootstrap_diff(a.per_image.loc[ids], b.per_image.loc[ids], n_boot=n_boot, groups=clusters)
             per_seed.append({"seed": s, "diff": d["diff"], "lo": d["lo"], "hi": d["hi"],
                              "ref": a.unit.key, "abl": b.unit.key})
-        pooled = contrast_bootstrap([[(1.0, a.per_image), (-1.0, b.per_image)] for _, a, b in pairs], n_boot=n_boot)
+        pooled = contrast_bootstrap([[(1.0, a.per_image), (-1.0, b.per_image)] for _, a, b in pairs], n_boot=n_boot,
+                                    clusters=clusters)
         biased = split == "val" and any(tuned_on_val(a.unit) and not tuned_on_val(b.unit) for _, a, b in pairs)
         rows.append({"ablation": name, "label": ABLATION_LABEL.get(name, f"Full vs {name}"), "split": split,
                      "seeds": [s for s, _, _ in pairs], **pooled, "per_seed": per_seed, "box_scale_selection": biased})
     return rows
 
 
-def factorial_rows(ev: dict[str, dict[int, Evaluated]], n_boot: int) -> list[dict[str, Any]]:
+def factorial_rows(ev: dict[str, dict[int, Evaluated]], n_boot: int,
+                   clusters: pd.Series | None = None) -> list[dict[str, Any]]:
     """2x2 (aug × cls) main effects and interaction on seeds where all four configs exist.
 
     `ev` must hold comparable cells (build() passes the as-trained units: box_scale 1.0 in every cell); mixing tuned
@@ -372,7 +368,8 @@ def factorial_rows(ev: dict[str, dict[int, Evaluated]], n_boot: int) -> list[dic
              "cls main effect": {"b_cls": .5, "full": .5, "baseline": -.5, "b_aug": -.5},
              "interaction aug×cls": {"full": 1, "baseline": 1, "b_aug": -1, "b_cls": -1}}
     return [{"effect": k, "seeds": seeds, **contrast_bootstrap(
-        [[(c, ev[cfg][s].per_image) for cfg, c in w.items()] for s in seeds], n_boot=n_boot)} for k, w in coefs.items()]
+        [[(c, ev[cfg][s].per_image) for cfg, c in w.items()] for s in seeds], n_boot=n_boot, clusters=clusters)}
+        for k, w in coefs.items()]
 
 
 # ----------------------------------------------------------------------------- ledger, summary, markdown
@@ -505,7 +502,7 @@ def deltas_md(rows: list[dict]) -> str:
             f"[{r['lo']:+.4f}, {r['hi']:+.4f}]", _f(r["p_diff_le_0"], 3),
             "; ".join(f"s{p['seed']}: {p['diff']:+.4f} [{p['lo']:+.4f}, {p['hi']:+.4f}]" for p in r["per_seed"])]
            for r in rows]
-    return md_table(["ablation (Δ = Full − ablated)", "split", "seeds", "Δ mAP (seed mean)", "95% CI (paired bootstrap)",
+    return md_table(["ablation (Δ = Full − ablated)", "split", "seeds", "Δ mAP (seed mean)", "95% CI (paired patient bootstrap)",
                      "P(Δ≤0)", "per seed Δ [95% CI]"], out)
 
 
@@ -610,7 +607,7 @@ def fig_deltas(rows: list[dict], path: Path) -> None:
     ax.set_xlim(lo - 0.1 * (hi - lo + 1e-3), hi + 0.6 * (hi - lo + 1e-3))
     ax.set_ylim(-0.8, len(rows) - 0.4)
     ax.set_xlabel("Δ mAP = Full − ablated  (> 0: the removed component helps)")
-    ax.set_title("Ablations vs Full: diamond = seed-mean Δ, 95% paired-bootstrap CI over images only (seed variance\n"
+    ax.set_title("Ablations vs Full: diamond = seed-mean Δ, 95% paired patient-bootstrap CI (seed variance\n"
                  "not included; small markers = per seed). † = val Δ includes box_scale selection on the same images",
                  fontsize=8.5)
     if not rows:
@@ -702,6 +699,7 @@ def build(results_dirs: list[Path], primary_variant: str | None = None, with_tes
     groups = group_by_config(runs)
     missing = missing_report(runs, groups, primary_variant)
     meta = load_meta()
+    clusters = patient_groups(meta)
     target = meta.set_index("patientId")["target"]
     val_ids = meta.loc[meta["split"] == "val", "patientId"].tolist()
     gt = load_gt(paths.BOXES, val_ids)
@@ -741,8 +739,8 @@ def build(results_dirs: list[Path], primary_variant: str | None = None, with_tes
         others = dict(sorted(others.items(), key=lambda kv: ["b_cls", "b_aug", "baseline"].index(kv[0])
                              if kv[0] in ("b_cls", "b_aug", "baseline") else 9))
         others.update({k.split("/", 1)[1]: v for k, v in variants.items() if k.startswith(REF_CONFIG + "/")})
-        deltas = ablation_rows(primary[REF_CONFIG], others, n_boot)
-    factorial = factorial_rows(as_trained, n_boot)
+        deltas = ablation_rows(primary[REF_CONFIG], others, n_boot, clusters=clusters)
+    factorial = factorial_rows(as_trained, n_boot, clusters=clusters)
     if with_test:
         deltas += final_test_deltas(groups, primary_variant, n_boot, notes)
     i3_lines, gating_lines = crossfit_lines(groups), gating_epoch_lines(groups)
@@ -884,7 +882,7 @@ def final_test_deltas(groups: dict[str, dict[int, Run]], primary_variant: str | 
     order = [BASE_CONFIG, "b_aug", "b_cls"]
     others = {k: v for k, v in sorted(ev.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else 9)
               if k != REF_CONFIG}
-    return ablation_rows(ev[REF_CONFIG], others, n_boot, split="test")
+    return ablation_rows(ev[REF_CONFIG], others, n_boot, split="test", clusters=patient_groups(meta))
 
 
 def main(argv: list[str] | None = None) -> None:

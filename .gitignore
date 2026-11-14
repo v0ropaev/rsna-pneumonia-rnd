@@ -4,6 +4,7 @@ data/*
 !data/external/
 data/external/*
 !data/external/nih_mapping.csv
+!data/external/kaggle_evaluation_page.md
 # heavy run artifacts (checkpoints); small results live in results/, tracking in mlflow.db
 runs/
 mlruns/

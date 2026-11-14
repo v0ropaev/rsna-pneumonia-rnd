@@ -186,27 +186,64 @@ def threshold_sweep(gt: dict[str, np.ndarray], pred: Preds, image_ids: list[str]
     return pd.DataFrame({"thr": thr, "map": maps, "n_scored": n_scored})
 
 
+def bootstrap_codes(index: pd.Index, groups: pd.Series | None) -> tuple[np.ndarray, int]:
+    """Resampling unit per image: codes 0..k-1 (image i belongs to cluster codes[i]) and k.
+
+    groups=None: every image is its own unit (plain image bootstrap). Otherwise `groups` maps image id ->
+    cluster label (here: NIH patient, because images of one patient are correlated and the split is grouped
+    by it); every image in `index` must have a label.
+    """
+    if groups is None:
+        return np.arange(len(index)), len(index)
+    g = groups.reindex(index)
+    if g.isna().any():
+        raise ValueError(f"{int(g.isna().sum())} of {len(index)} images have no bootstrap group")
+    codes, uniq = pd.factorize(g, sort=False)
+    return codes.astype(np.int64), len(uniq)
+
+
+def bootstrap_ratio_replicates(terms: list[tuple[float, np.ndarray]], codes: np.ndarray, k: int,
+                               n_boot: int, seed: int = 0) -> np.ndarray:
+    """Replicates of sum_t coef_t * nanmean(x_t) under a (cluster) bootstrap.
+
+    terms: (coef, per-image values with NaN = excluded image), all aligned with `codes`. Each replicate draws
+    k clusters with replacement, ONE draw shared by all terms (pairing), and computes every term as
+    sum(values) / sum(scored indicator) over the drawn clusters: exactly how the metric averages, with the
+    scored-image denominator varying across replicates. Replicates with an empty denominator are NaN.
+    With one cluster per image this is the plain image bootstrap (identical draws for the same seed).
+    """
+    sums = []
+    for c, x in terms:
+        ok = ~np.isnan(x)
+        sums.append((c, np.bincount(codes, np.where(ok, x, 0.0), k), np.bincount(codes, ok.astype(np.float64), k)))
+    rng = np.random.default_rng(seed)
+    out = []
+    for m in _chunks(n_boot, k):
+        r = rng.integers(0, k, (m, k))
+        stat = np.zeros(m)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            for c, s, n in sums:
+                stat += c * s[r].sum(1) / n[r].sum(1)
+        out.append(stat)
+    return np.concatenate(out) if out else np.zeros(0)
+
+
 def bootstrap_ci(per_image: pd.Series, n_boot: int = 2000, seed: int = 0,
-                 alpha: float = 0.05) -> tuple[float, float, float]:
+                 alpha: float = 0.05, groups: pd.Series | None = None) -> tuple[float, float, float]:
     """(mean, lo, hi): percentile bootstrap CI of the mAP.
 
     Same scheme as ``paired_bootstrap_diff``: resample ALL evaluated images (excluded ones are
     NaN) and take the nanmean in each replicate, so the scored-image denominator varies as it
     does for the real metric. To first order this equals resampling scored images only.
+    `groups` (image id -> NIH patient) switches to a cluster bootstrap: whole patients are resampled.
     Replicates with no scored image are dropped.
     """
     x = np.asarray(per_image, dtype=np.float64)
     ok = ~np.isnan(x)
     if not ok.any():
         return float("nan"), float("nan"), float("nan")
-    x0 = np.where(ok, x, 0.0)
-    rng = np.random.default_rng(seed)
-    boots = []
-    for n in _chunks(n_boot, len(x)):
-        r = rng.integers(0, len(x), (n, len(x)))
-        with np.errstate(invalid="ignore", divide="ignore"):
-            boots.append(x0[r].sum(1) / ok[r].sum(1))
-    b = np.concatenate(boots)
+    codes, k = bootstrap_codes(per_image.index, groups)
+    b = bootstrap_ratio_replicates([(1.0, x)], codes, k, n_boot, seed)
     lo, hi = np.quantile(b[~np.isnan(b)], [alpha / 2, 1 - alpha / 2])
     return float(x[ok].mean()), float(lo), float(hi)
 
@@ -217,7 +254,7 @@ def _chunks(n_boot: int, n: int, budget: int = 4_000_000) -> list[int]:
 
 
 def paired_bootstrap_diff(per_image_a: pd.Series, per_image_b: pd.Series, n_boot: int = 2000,
-                          seed: int = 0, alpha: float = 0.05) -> dict:
+                          seed: int = 0, alpha: float = 0.05, groups: pd.Series | None = None) -> dict:
     """Paired bootstrap of mAP(a) - mAP(b) on the same images.
 
     Exclusion handling: both series are aligned on the UNION of their indices (missing ==
@@ -225,26 +262,21 @@ def paired_bootstrap_diff(per_image_a: pd.Series, per_image_b: pd.Series, n_boot
     each model's mean over its own scored images in the replicate, i.e. exactly how the
     metric itself is computed. So an image excluded for A (no GT, A predicted nothing) but
     scored 0 for B (B predicted a FP) is kept and penalizes B, as in the real score.
+    `groups` (image id -> NIH patient) resamples whole patients instead of images.
     The point estimate equals rsna_map(a) - rsna_map(b).
     """
     idx = per_image_a.index.union(per_image_b.index)
     a = per_image_a.reindex(idx).to_numpy(np.float64)
     b = per_image_b.reindex(idx).to_numpy(np.float64)
     ma, mb = ~np.isnan(a), ~np.isnan(b)
-    a0, b0 = np.where(ma, a, 0.0), np.where(mb, b, 0.0)
-    rng = np.random.default_rng(seed)
-    diffs = []
-    for n in _chunks(n_boot, len(idx)):
-        r = rng.integers(0, len(idx), (n, len(idx)))
-        with np.errstate(invalid="ignore", divide="ignore"):
-            diffs.append(a0[r].sum(1) / ma[r].sum(1) - b0[r].sum(1) / mb[r].sum(1))
-    d = np.concatenate(diffs)
+    codes, k = bootstrap_codes(idx, groups)
+    d = bootstrap_ratio_replicates([(1.0, a), (-1.0, b)], codes, k, n_boot, seed)
     d = d[~np.isnan(d)]
     lo, hi = np.quantile(d, [alpha / 2, 1 - alpha / 2]) if len(d) else (np.nan, np.nan)
     return {"diff": _nanmean(a) - _nanmean(b), "lo": float(lo), "hi": float(hi),
             "p_diff_le_0": float((d <= 0).mean()) if len(d) else float("nan"),
             "n_images": len(idx), "n_scored_a": int(ma.sum()), "n_scored_b": int(mb.sum()),
-            "n_boot": len(d)}
+            "n_boot": len(d), "bootstrap_unit": "image" if groups is None else "group", "n_units": k}
 
 
 # ----------------------------------------------------------------------------- IO helpers

@@ -1,0 +1,68 @@
+{
+  "label_rows": 30227,
+  "class_info_rows": 30227,
+  "rows_partial_nan_box": 0,
+  "rows_target_box_mismatch": 0,
+  "patients_mixed_target": 0,
+  "duplicate_label_rows": 0,
+  "class_info_duplicate_rows": 3543,
+  "class_info_conflicting_patients": 0,
+  "patients_missing_class": 0,
+  "target_class_inconsistent": 0,
+  "unique_patients": 26684,
+  "boxes": 9555,
+  "non_positive_box_size": 0,
+  "boxes_out_of_bounds": 0,
+  "dicom_files": 26684,
+  "labels_without_dicom": 0,
+  "dicom_without_labels": 0,
+  "nonstandard_images": [],
+  "pixel_spacing_row_ne_col": 0,
+  "n_images": 26684,
+  "positives": 6012,
+  "class_counts": {
+    "No Lung Opacity / Not Normal": 11821,
+    "Normal": 8851,
+    "Lung Opacity": 6012
+  },
+  "view_counts": {
+    "PA": 14511,
+    "AP": 12173
+  },
+  "sex_counts": {
+    "M": 15166,
+    "F": 11518
+  },
+  "n_boxes_counts": {
+    "0": 20672,
+    "1": 2614,
+    "2": 3266,
+    "3": 119,
+    "4": 13
+  },
+  "age_min": 1,
+  "age_max": 155,
+  "age_over_100": 5,
+  "age_over_100_values": [
+    148,
+    150,
+    151,
+    153,
+    155
+  ],
+  "pixel_spacing_range": [
+    0.115,
+    0.1988
+  ],
+  "sizes": [
+    256,
+    384
+  ],
+  "file_mb": {
+    "metadata.csv": 2.4,
+    "boxes.csv": 0.6,
+    "images_256.npy": 1667.8,
+    "images_384.npy": 3752.4
+  },
+  "runtime_s": 45.7
+}

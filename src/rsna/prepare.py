@@ -1,7 +1,7 @@
 """Decode the RSNA training DICOMs once and build the processed-data contract.
 
 Outputs (see SPEC): data/processed/metadata.csv, boxes.csv, images_{S}.npy (uint8 [N, S, S],
-area-resized with PIL BOX), plus prepare_report.json with validation results.
+area-resized with PIL BOX), plus prepare_report.json with validation results (also copied to reports/).
 
     python -m rsna.prepare --sizes 256 384 [--workers 8]
 """
@@ -21,7 +21,8 @@ import pydicom
 from PIL import Image
 from tqdm import tqdm
 
-from .paths import BOXES, CLASS_INFO, METADATA, ORIG_SIZE, PROCESSED, TRAIN_DICOM_DIR, TRAIN_LABELS, image_cache
+from .paths import (BOXES, CLASS_INFO, METADATA, ORIG_SIZE, PROCESSED, REPORTS, TRAIN_DICOM_DIR, TRAIN_LABELS,
+                    image_cache)
 
 EXPECTED_LABEL_ROWS = 30227
 EXPECTED_IMAGES = 26684
@@ -167,7 +168,10 @@ def build(sizes: list[int], workers: int) -> dict[str, Any]:
         runtime_s=round(time.time() - t0, 1),
     )
     rep = {k: (int(v) if isinstance(v, np.integer) else v) for k, v in rep.items()}
-    (PROCESSED / "prepare_report.json").write_text(json.dumps(rep, indent=2, default=int))
+    text = json.dumps(rep, indent=2, default=int)
+    (PROCESSED / "prepare_report.json").write_text(text)
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    (REPORTS / "prepare_report.json").write_text(text)  # committed copy (data/ is gitignored)
     return rep
 
 

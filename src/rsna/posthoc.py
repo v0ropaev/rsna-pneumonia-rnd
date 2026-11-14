@@ -8,8 +8,8 @@ CLI (VAL only; TEST is touched solely by `rsna.evaluate --split test [--variant 
   python -m rsna.posthoc tune --run results/<run> [--grid 0.80:1.30:0.025] [--score-mode keep|heatmap|heatmap_x_cls]
       for each box_scale: threshold sweep on val, best (thr, mAP); pick the max val mAP, tie -> closer to 1.0.
       The grid is two-sided (I3 is tested in both directions); a selection on the grid edge is flagged.
-      box_scale.json also holds a 2-fold cross-fitted gain (select (box_scale, thr) on one random half of the val
-      images, score the other half against box_scale 1.0 at its own half-selected thr): an estimate of the I3 effect
+      box_scale.json also holds a 2-fold cross-fitted gain (select (box_scale, thr) on one random patient-disjoint
+      half of the val images, score the other half against box_scale 1.0 at its own half-selected thr): an estimate of the I3 effect
       that is not inflated by the selection, unlike val_map - val_map_box_scale_1 (>= 0 by construction).
       -> results/<run>/posthoc/box_scale_tuning.csv, box_scale.json, box_scale.png
          (suffix _<mode> when --score-mode differs from the run's configured decode.score_mode)
@@ -171,10 +171,20 @@ def select_box_scale(table: pd.DataFrame) -> pd.Series:
     return cand.loc[(cand["box_scale"] - 1.0).abs().sort_values(kind="stable").index[0]]
 
 
-def val_halves(ids: list[str], seed: int = 0) -> list[list[str]]:
-    """Two disjoint random halves of the val image set (fixed seed) for the cross-fitted box_scale estimate."""
-    perm = np.random.default_rng(seed).permutation(len(ids))
-    return [[ids[k] for k in sorted(perm[: len(ids) // 2])], [ids[k] for k in sorted(perm[len(ids) // 2:])]]
+def val_halves(ids: list[str], seed: int = 0, groups: pd.Series | None = None) -> list[list[str]]:
+    """Two disjoint random halves of the val image set (fixed seed) for the cross-fitted box_scale estimate.
+
+    With `groups` (image id -> NIH patient) the halves split patients, not images, so no patient is on both sides.
+    """
+    rng = np.random.default_rng(seed)
+    if groups is None:
+        perm = rng.permutation(len(ids))
+        return [[ids[k] for k in sorted(perm[: len(ids) // 2])], [ids[k] for k in sorted(perm[len(ids) // 2:])]]
+    g = groups.reindex(ids)
+    g = g.fillna(pd.Series(ids, index=g.index)).to_numpy()
+    uniq = pd.unique(g)
+    first = set(uniq[rng.permutation(len(uniq))[: len(uniq) // 2]])
+    return [[i for i, gi in zip(ids, g) if gi in first], [i for i, gi in zip(ids, g) if gi not in first]]
 
 
 def crossfit_gain(half_sweeps: dict[float, list[pd.DataFrame]]) -> dict[str, Any]:
@@ -197,7 +207,7 @@ def crossfit_gain(half_sweeps: dict[float, list[pd.DataFrame]]) -> dict[str, Any
 
 def tune(run: Path, grid: str = DEFAULT_GRID, score_mode: str = "keep") -> dict[str, Any]:
     from . import paths
-    from .evaluate import _jsonable, provenance
+    from .evaluate import _jsonable, patient_groups, provenance
     from .metric import load_gt, preds_from_df, threshold_sweep
 
     mode = resolve_mode(run, score_mode)
@@ -205,7 +215,7 @@ def tune(run: Path, grid: str = DEFAULT_GRID, score_mode: str = "keep") -> dict[
     check_source(run, pred, mode)
     gt = load_gt(paths.BOXES, ids)
     rows, sweeps, half_sweeps = [], {}, {}
-    halves = val_halves(ids)
+    halves = val_halves(ids, groups=patient_groups())  # patient-disjoint halves
     grid_vals = parse_grid(grid)
     for s in grid_vals:
         p = preds_from_df(apply_posthoc(pred, img, float(s), stored_mode(run, mode)))
