@@ -1,0 +1,50 @@
+# HW1 baseline: CenterNet-lite (ResNet-18, ImageNet) on 256 px, no augmentation, no image-level head.
+meta:
+  experiment: rsna-pneumonia
+  hypothesis: >-
+    Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite) на 256 px локализует очаги
+    существенно лучше тривиального prior-box baseline по RSNA mAP на локальной валидации, потому что
+    ImageNet-признаки переносятся на текстуру консолидаций.
+data:
+  image_size: 256          # cache data/processed/images_256.npy
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true         # torchvision IMAGENET1K_V1
+  neck_channels: 128
+  head_channels: 128
+  cls_head: false          # image-level pneumonia logit (HW2 gating), off in baseline
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0          # used only when model.cls_head
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_steps: 300        # linear warmup, then cosine decay to 0
+  grad_clip: 10.0
+  num_workers: 0           # 0 = in-process batching from the RAM tensor (faster than spawn workers on macOS)
+  eval_batch_size: 64
+aug:
+  hflip: false
+  hflip_p: 0.5
+  affine: false
+  scale: 0.1               # uniform in [1-s, 1+s]
+  translate: 0.05          # fraction of image side
+  rotate: 5.0              # degrees
+  intensity: false
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1               # log-gamma range
+decode:
+  topk: 10
+  nms_iou: 0.5             # null/0 disables NMS
+  box_scale: 1.0           # 1.0 = off
+  score_mode: heatmap      # heatmap | heatmap_x_cls
+  min_score: 0.01          # stored prediction tables keep boxes with score >= 0.01

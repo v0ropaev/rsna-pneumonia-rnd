@@ -1,0 +1,393 @@
+{
+  "scope": "dataset_* = all 26684 labeled images (descriptive); train_* = split==train only (informs modelling)",
+  "figures": [
+    "reports/figures/eda_class_distribution.png",
+    "reports/figures/eda_positive_rate_view_sex.png",
+    "reports/figures/eda_age_by_target.png",
+    "reports/figures/eda_age_positive_rate.png",
+    "reports/figures/eda_boxes_per_image.png",
+    "reports/figures/eda_box_sizes.png",
+    "reports/figures/eda_box_centers.png",
+    "reports/figures/eda_examples.png"
+  ],
+  "dataset": {
+    "n_images": 26684,
+    "n_positive": 6012,
+    "prevalence": 0.2253,
+    "class_counts": {
+      "No Lung Opacity / Not Normal": 11821,
+      "Normal": 8851,
+      "Lung Opacity": 6012
+    },
+    "n_boxes_counts": {
+      "0": 20672,
+      "1": 2614,
+      "2": 3266,
+      "3": 119,
+      "4": 13
+    },
+    "n_boxes_total": 9555,
+    "view_counts": {
+      "PA": 14511,
+      "AP": 12173
+    },
+    "sex_counts": {
+      "M": 15166,
+      "F": 11518
+    },
+    "age": {
+      "mean": 47.0,
+      "min": 1.0,
+      "p1": 9.0,
+      "p5": 18.0,
+      "p25": 34.0,
+      "p50": 49.0,
+      "p75": 59.0,
+      "p95": 72.0,
+      "p99": 80.0,
+      "max": 92.0,
+      "n_over_100": 5,
+      "values_over_100": [
+        148,
+        150,
+        151,
+        153,
+        155
+      ]
+    },
+    "pixel_spacing_range": [
+      0.115,
+      0.1988
+    ],
+    "image_size": [
+      "1024x1024"
+    ]
+  },
+  "dataset_positive_rate_by_view": {
+    "AP": {
+      "n": 12173,
+      "positives": 4664,
+      "rate": 0.3831,
+      "ci95": [
+        0.3745,
+        0.3918
+      ]
+    },
+    "PA": {
+      "n": 14511,
+      "positives": 1348,
+      "rate": 0.0929,
+      "ci95": [
+        0.0883,
+        0.0977
+      ]
+    }
+  },
+  "dataset_positive_rate_by_sex": {
+    "F": {
+      "n": 11518,
+      "positives": 2502,
+      "rate": 0.2172,
+      "ci95": [
+        0.2098,
+        0.2248
+      ]
+    },
+    "M": {
+      "n": 15166,
+      "positives": 3510,
+      "rate": 0.2314,
+      "ci95": [
+        0.2248,
+        0.2382
+      ]
+    }
+  },
+  "dataset_positive_rate_by_age_bucket": {
+    "0-17": {
+      "n": 1276,
+      "positives": 385,
+      "rate": 0.3017,
+      "ci95": [
+        0.2772,
+        0.3275
+      ]
+    },
+    "18-39": {
+      "n": 7248,
+      "positives": 1757,
+      "rate": 0.2424,
+      "ci95": [
+        0.2327,
+        0.2524
+      ]
+    },
+    "40-59": {
+      "n": 11612,
+      "positives": 2522,
+      "rate": 0.2172,
+      "ci95": [
+        0.2098,
+        0.2248
+      ]
+    },
+    "60-79": {
+      "n": 6251,
+      "positives": 1279,
+      "rate": 0.2046,
+      "ci95": [
+        0.1948,
+        0.2148
+      ]
+    },
+    "80-100": {
+      "n": 292,
+      "positives": 69,
+      "rate": 0.2363,
+      "ci95": [
+        0.1912,
+        0.2883
+      ]
+    },
+    "invalid": {
+      "n": 5,
+      "positives": 0,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.4345
+      ]
+    }
+  },
+  "dataset_class_by_view_pct": {
+    "AP": {
+      "Lung Opacity": 38.31,
+      "No Lung Opacity / Not Normal": 48.24,
+      "Normal": 13.45
+    },
+    "PA": {
+      "Lung Opacity": 9.29,
+      "No Lung Opacity / Not Normal": 41.0,
+      "Normal": 49.71
+    }
+  },
+  "view_shortcut": {
+    "ap_over_pa_rate_ratio": 4.12,
+    "train_roc_auc_view_only": 0.7064,
+    "train_positive_rate_by_view": {
+      "AP": {
+        "n": 8520,
+        "positives": 3268,
+        "rate": 0.3836,
+        "ci95": [
+          0.3733,
+          0.3939
+        ]
+      },
+      "PA": {
+        "n": 10158,
+        "positives": 944,
+        "rate": 0.0929,
+        "ci95": [
+          0.0874,
+          0.0987
+        ]
+      }
+    },
+    "note": "AP (bedside, sicker patients) has ~4x the prevalence of PA; a model can exploit view without looking at the lungs. Use view only for stratification and per-slice metrics, not as a feature."
+  },
+  "nih_patients": {
+    "n_nih_patients": 11452,
+    "images_per_patient": {
+      "mean": 2.3,
+      "min": 1.0,
+      "p1": 1.0,
+      "p5": 1.0,
+      "p25": 1.0,
+      "p50": 1.0,
+      "p75": 2.0,
+      "p95": 7.0,
+      "p99": 17.0,
+      "max": 65.0
+    },
+    "patients_with_gt1_image": 4355,
+    "share_images_from_multi_image_patients": 0.734,
+    "patients_with_mixed_target": 1726,
+    "note": "split is grouped by nih_patient: all images of one person are in one split"
+  },
+  "split_sizes": {
+    "train": {
+      "n": 18678,
+      "prevalence": 0.2255
+    },
+    "val": {
+      "n": 4002,
+      "prevalence": 0.2249
+    },
+    "test": {
+      "n": 4004,
+      "prevalence": 0.2248
+    }
+  },
+  "train_boxes": {
+    "n_boxes": 6696,
+    "n_positive_images": 4212,
+    "boxes_per_positive_image": {
+      "1": 1832,
+      "2": 2284,
+      "3": 88,
+      "4": 8
+    },
+    "width": {
+      "mean": 218.7,
+      "min": 40.0,
+      "p1": 94.0,
+      "p5": 125.0,
+      "p25": 178.0,
+      "p50": 217.0,
+      "p75": 259.0,
+      "p95": 317.0,
+      "p99": 360.0,
+      "max": 528.0
+    },
+    "height": {
+      "mean": 329.3,
+      "min": 45.0,
+      "p1": 86.0,
+      "p5": 122.0,
+      "p25": 202.0,
+      "p50": 297.0,
+      "p75": 439.0,
+      "p95": 623.0,
+      "p99": 721.2,
+      "max": 942.0
+    },
+    "sqrt_area": {
+      "mean": 263.4,
+      "min": 48.2,
+      "p1": 99.4,
+      "p5": 132.6,
+      "p25": 194.2,
+      "p50": 253.9,
+      "p75": 326.7,
+      "p95": 425.4,
+      "p99": 480.4,
+      "max": 609.2
+    },
+    "aspect_h_over_w": {
+      "mean": 1.5,
+      "min": 0.23,
+      "p1": 0.5,
+      "p5": 0.68,
+      "p25": 1.04,
+      "p50": 1.45,
+      "p75": 1.9,
+      "p95": 2.54,
+      "p99": 2.96,
+      "max": 4.56
+    },
+    "center_x": {
+      "mean": 503.1,
+      "min": 87.5,
+      "p1": 191.5,
+      "p5": 240.0,
+      "p25": 313.5,
+      "p50": 413.8,
+      "p75": 710.0,
+      "p95": 788.5,
+      "p99": 839.5,
+      "max": 899.5
+    },
+    "center_y": {
+      "mean": 533.9,
+      "min": 151.0,
+      "p1": 258.5,
+      "p5": 343.5,
+      "p25": 458.0,
+      "p50": 533.5,
+      "p75": 612.0,
+      "p95": 719.5,
+      "p99": 791.5,
+      "max": 924.5
+    },
+    "share_centers_left_half_image": 0.5363,
+    "median_wh_by_view": {
+      "AP": {
+        "width": 220.0,
+        "height": 325.0
+      },
+      "PA": {
+        "width": 203.0,
+        "height": 211.0
+      }
+    },
+    "width_in_256px_input": {
+      "mean": 54.7,
+      "min": 10.0,
+      "p1": 23.5,
+      "p5": 31.2,
+      "p25": 44.5,
+      "p50": 54.2,
+      "p75": 64.8,
+      "p95": 79.2,
+      "p99": 90.0,
+      "max": 132.0
+    },
+    "height_in_256px_input": {
+      "mean": 82.3,
+      "min": 11.2,
+      "p1": 21.5,
+      "p5": 30.5,
+      "p25": 50.5,
+      "p50": 74.2,
+      "p75": 109.8,
+      "p95": 155.8,
+      "p99": 180.3,
+      "max": 235.5
+    },
+    "width_in_384px_input": {
+      "mean": 82.0,
+      "min": 15.0,
+      "p1": 35.2,
+      "p5": 46.9,
+      "p25": 66.8,
+      "p50": 81.4,
+      "p75": 97.1,
+      "p95": 118.9,
+      "p99": 135.0,
+      "max": 198.0
+    },
+    "height_in_384px_input": {
+      "mean": 123.5,
+      "min": 16.9,
+      "p1": 32.2,
+      "p5": 45.8,
+      "p25": 75.8,
+      "p50": 111.4,
+      "p75": 164.6,
+      "p95": 233.6,
+      "p99": 270.4,
+      "max": 353.2
+    }
+  },
+  "exact_duplicate_images": {
+    "n_images_in_duplicate_groups": 2,
+    "n_groups": 1,
+    "groups_crossing_splits": 0,
+    "groups_with_label_conflict": 0,
+    "groups_within_one_nih_patient": 1,
+    "patientIds": [
+      "08d88a60-146c-49a7-9450-45293024cf46",
+      "8f96ca8e-ff76-41bc-bf03-da5b031cabee"
+    ]
+  },
+  "label_noise_notes": [
+    "Train boxes were drawn by a single radiologist per image (Shih et al. 2019); the Kaggle test was read by three and merged by intersection, so official test boxes are smaller. Our val/test come from the single-read train pool: no train/test reader shift internally, but the labels are themselves noisy.",
+    "About 2,500 triple-read images (stage-1 test + 1,500 others) are mixed into stage-2 train and cannot be identified.",
+    "'No Lung Opacity / Not Normal' (other abnormalities) is target=0: hard negatives that look abnormal; boxes exist only for 'Lung Opacity'.",
+    "Box extents are subjective (opacity boundaries are diffuse): L1-trained boxes tend to be too large; top Kaggle teams shrank predicted boxes by ~12-17%.",
+    "stage_2_detailed_class_info.csv has 3,543 duplicate rows (removed); no conflicting class/target labels.",
+    "PatientAge has 5 values > 100 (header errors); kept raw in metadata, bucketed as 'invalid' here.",
+    "Source NIH labels (orig_labels / subset_init_label in the mapping JSON) are NLP-mined and must not be used as features."
+  ]
+}

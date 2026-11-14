@@ -1,0 +1,20 @@
+{
+  "a": "prior_boxes_ap",
+  "b": "prior_boxes",
+  "split": "val",
+  "n_common": 4002,
+  "n_only_a": 0,
+  "n_only_b": 0,
+  "thr_a": 0.05,
+  "thr_b": 0.05,
+  "map_a": 0.03468,
+  "map_b": 0.021681,
+  "diff": 0.012999,
+  "lo": 0.010489,
+  "hi": 0.015681,
+  "p_diff_le_0": 0.0,
+  "n_images": 4002,
+  "n_scored_a": 2028,
+  "n_scored_b": 4002,
+  "n_boot": 2000
+}

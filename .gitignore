@@ -1,0 +1,20 @@
+# data (download with scripts/download_data.sh); versioned: fixed split + NIH patient mapping
+data/*
+!data/splits/
+!data/external/
+data/external/*
+!data/external/nih_mapping.csv
+# heavy run artifacts (checkpoints); small results live in results/, tracking in mlflow.db
+runs/
+mlruns/
+*.pt
+*.pth
+# python / tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+.idea/
+.env
