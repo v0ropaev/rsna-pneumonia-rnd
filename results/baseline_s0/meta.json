@@ -1,0 +1,23 @@
+{
+  "run_name": "baseline_s0",
+  "git_sha": "7d837c7",
+  "seed": 0,
+  "device": "mps",
+  "torch": "2.15.0",
+  "python": "3.11.15",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "start": "2026-11-14T12:53:15",
+  "end": "2026-11-14T14:49:21",
+  "train_seconds": 6513.7,
+  "wall_seconds": 6966.7,
+  "n_train": 18678,
+  "n_val": 4002,
+  "total_steps": 7002,
+  "mlflow_run_id": "8a123f7326bb46aba2c74f86f3e5f1de",
+  "best_epoch": 4,
+  "val_map": 0.18647,
+  "val_thr": 0.25,
+  "val_auc": 0.87813,
+  "train_min": 108.56,
+  "determinism": "MPS kernels are not bit-deterministic; same-seed reruns match only approximately"
+}

@@ -22,3 +22,4 @@ __pycache__/
 # local logs
 *.log
 logs_local/
+logs/
