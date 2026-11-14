@@ -1,6 +1,6 @@
 ### empty — val
 
-mAP **0.0000** [0.0000, 0.0000] (bootstrap 95% CI) at score thr 0.05; images 4002, scored 900
+mAP **0.0000** [0.0000, 0.0000] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.05; images 4002, scored 900
 
 | metric | value |
 |---|---|

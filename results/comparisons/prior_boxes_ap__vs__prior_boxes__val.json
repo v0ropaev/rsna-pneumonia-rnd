@@ -10,11 +10,13 @@
   "map_a": 0.03468,
   "map_b": 0.021681,
   "diff": 0.012999,
-  "lo": 0.010489,
-  "hi": 0.015681,
+  "lo": 0.009676,
+  "hi": 0.01618,
   "p_diff_le_0": 0.0,
   "n_images": 4002,
   "n_scored_a": 2028,
   "n_scored_b": 4002,
-  "n_boot": 2000
+  "n_boot": 2000,
+  "bootstrap_unit": "nih_patient",
+  "n_units": 1718
 }

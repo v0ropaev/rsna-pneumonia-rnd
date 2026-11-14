@@ -165,9 +165,9 @@ IoU ровно 0.5 при t=0.5 даёт FN+FP, а не TP.
 - Сам факт маппинга упоминается в Shih et al. 2019 [S6] (*"A mapping of the 30 000 examination
   dataset unique identifiers to the original NIH dataset is provided"*). Там же дана ссылка на
   страницу https://rsna.org/challenge-datasets/2018 (мы её не открывали).
-- Копии лежат в `data/external/`. Это не версионируется, потому что `.gitignore` содержит
-  `data/*`. Для воспроизводимости шаг скачивания стоит добавить в `scripts/download_data.sh`
-  или закоммитить `nih_mapping.csv` (1.6 MB). Решение за оркестратором.
+- Исходный JSON лежит в `data/external/` и не версионируется (`data/external/*` в `.gitignore`).
+  `scripts/download_data.sh` скачивает его, проверяет SHA-256 и пересобирает
+  `data/external/nih_mapping.csv`. Сам `nih_mapping.csv` (1.6 MB) закоммичен как исключение в `.gitignore`.
 
 ### 2.2 Формат [проверено]
 

@@ -1,0 +1,61 @@
+meta:
+  experiment: rsna-pneumonia
+  hypothesis: Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite)
+    на 256 px локализует очаги существенно лучше тривиального prior-box baseline по
+    RSNA mAP на локальной валидации, потому что ImageNet-признаки переносятся на текстуру
+    консолидаций.
+data:
+  image_size: 256
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true
+  neck_channels: 128
+  head_channels: 128
+  cls_head: false
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_steps: 300
+  grad_clip: 10.0
+  num_workers: 0
+  eval_batch_size: 64
+aug:
+  hflip: false
+  hflip_p: 0.5
+  affine: false
+  scale: 0.1
+  translate: 0.05
+  rotate: 5.0
+  intensity: false
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1
+decode:
+  topk: 10
+  nms_iou: 0.5
+  box_scale: 1.0
+  score_mode: heatmap
+  min_score: 0.01
+run:
+  name: baseline_s2
+  seed: 2
+  config_path: configs/baseline.yaml
+  overrides: []
+  max_steps: null
+  limit_train: null
+  limit_val: null
+  smoke: false
+  n_train: 18678
+  n_val: 4002
+  total_steps: 7002

@@ -216,7 +216,9 @@ def error_decomposition(per_image: pd.Series, target: pd.Series, has_pred: pd.Se
 
 
 def oracle_gating(gt: dict[str, np.ndarray], pred: dict, ids: list[str], target: pd.Series, thr: float) -> dict[str, Any]:
-    """Upper bound for a perfect image-level classifier: keep boxes only on GT-positive images.
+    """Ceiling for HARD gating of these boxes by a perfect image-level classifier at one global threshold:
+    keep boxes only on GT-positive images. Soft gating (score × P) acts as a per-image threshold, so it is
+    not strictly bounded by this number.
 
     Reported at the run's own threshold and at the best threshold of the gated predictions on THIS split
     (an oracle quantity by construction; never use it for model selection).

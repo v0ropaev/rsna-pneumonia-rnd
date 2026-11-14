@@ -1,0 +1,22 @@
+{
+  "a": "baseline_s1",
+  "b": "baseline_s0",
+  "split": "val",
+  "n_common": 4002,
+  "n_only_a": 0,
+  "n_only_b": 0,
+  "thr_a": 0.25,
+  "thr_b": 0.25,
+  "map_a": 0.182855,
+  "map_b": 0.186469,
+  "diff": -0.003615,
+  "lo": -0.014307,
+  "hi": 0.00796,
+  "p_diff_le_0": 0.733,
+  "n_images": 4002,
+  "n_scored_a": 1471,
+  "n_scored_b": 1494,
+  "n_boot": 2000,
+  "bootstrap_unit": "nih_patient",
+  "n_units": 1718
+}
