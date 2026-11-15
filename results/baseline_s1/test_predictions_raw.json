@@ -1,0 +1,13 @@
+{
+  "run": "baseline_s1",
+  "split": "test",
+  "n_images": 4004,
+  "n_boxes": 31696,
+  "train_run": {
+    "start": "2026-11-14T14:49:30",
+    "mlflow_run_id": "1bbb2ec5304b462b83de63dbe5aeefef",
+    "git_sha": "1f61980"
+  },
+  "content": "raw heatmap scores (score_mode heatmap), box_scale 1.0; min_score/top-K/NMS on the raw score",
+  "created": "2026-11-15T11:08:03"
+}

@@ -1,0 +1,75 @@
+meta:
+  experiment: rsna-pneumonia
+  parent: configs/baseline.yaml
+  changes:
+  - 'aug.hflip: false -> true (p 0.5)'
+  - 'aug.affine: false -> true (scale ±0.1, translate ±0.05)'
+  - 'aug.rotate: 5.0 -> 0.0'
+  - 'aug.intensity: false -> true (brightness/contrast/gamma 0.1)'
+  hypothesis: 'Лёгкие аугментации (горизонтальный флип с p=0.5, масштаб ±10 %, сдвиг
+    ±5 % стороны, яркость, контраст и гамма ±0.1, без поворота) повысят val RSNA mAP
+    относительно baseline; ожидаем небольшой плюс порядка +0.005…0.02. Механизм: без
+    аугментаций сеть за 6 эпох видит одни и те же 18.7 тыс. снимков и подгоняется
+    под конкретные положения, размеры и экспозицию; флип (лёгкие почти симметричны),
+    сдвиг и масштаб размножают положения и размеры очагов, а яркость и контраст имитируют
+    разброс экспозиции портативных AP и стационарных PA снимков. Это должно уменьшить
+    разрыв train/val и улучшить обобщение. Поворот выключен: он раздувает axis-aligned
+    бокс (оболочка повёрнутых углов), а мы ожидаем, что боксы модели и так велики
+    (research_notes §3.2, §3.6; у 2-го места лучшей была heavy-аугментация без поворота).
+    Риск: при фиксированных 6 эпохах аугментация может замедлить сходимость, тогда
+    эффект будет нулевым или отрицательным.'
+data:
+  image_size: 256
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true
+  neck_channels: 128
+  head_channels: 128
+  cls_head: false
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_steps: 300
+  grad_clip: 10.0
+  num_workers: 0
+  eval_batch_size: 64
+aug:
+  hflip: true
+  hflip_p: 0.5
+  affine: true
+  scale: 0.1
+  translate: 0.05
+  rotate: 0.0
+  intensity: true
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1
+decode:
+  topk: 10
+  nms_iou: 0.5
+  box_scale: 1.0
+  score_mode: heatmap
+  min_score: 0.01
+run:
+  name: b_aug_s0
+  seed: 0
+  config_path: configs/hw2/b_aug.yaml
+  overrides: []
+  max_steps: null
+  limit_train: null
+  limit_val: null
+  smoke: false
+  n_train: 18678
+  n_val: 4002
+  total_steps: 7002

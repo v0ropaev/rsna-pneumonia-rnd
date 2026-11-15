@@ -1,0 +1,38 @@
+{
+  "run": "full_s0",
+  "split": "val",
+  "score_mode": "heatmap",
+  "grid": "0.80:1.30:0.025",
+  "n_images": 4002,
+  "box_scale": 1.0,
+  "thr": 0.25,
+  "val_map": 0.211734,
+  "val_map_box_scale_1": 0.211734,
+  "thr_box_scale_1": 0.25,
+  "selection": "argmax val mAP over box_scale (each at its own best val threshold); tie -> closest to 1.0",
+  "at_grid_edge": false,
+  "crossfit_gain": 0.0,
+  "crossfit_folds": [
+    {
+      "select_on": 0,
+      "box_scale": 1.0,
+      "thr": 0.25,
+      "heldout_map": 0.213975,
+      "heldout_map_box_scale_1": 0.213975
+    },
+    {
+      "select_on": 1,
+      "box_scale": 1.0,
+      "thr": 0.25,
+      "heldout_map": 0.208944,
+      "heldout_map_box_scale_1": 0.208944
+    }
+  ],
+  "note": "selected on val: val_map - val_map_box_scale_1 is >= 0 by construction; crossfit_gain (select on one val half, score the other) is the selection-free val estimate of the box_scale effect",
+  "train_run": {
+    "start": "2026-11-14T17:29:39",
+    "mlflow_run_id": "99e78e6c01be449fb95a97e6e70b6558",
+    "git_sha": "bdb29d2"
+  },
+  "created": "2026-11-14T19:01:55"
+}

@@ -1,0 +1,73 @@
+meta:
+  experiment: rsna-pneumonia
+  parent: configs/baseline.yaml
+  changes:
+  - 'model.cls_head: false -> true (GAP(C5) -> Linear -> 1 logit)'
+  - 'loss.cls_weight: 1.0 (same value as baseline, now active)'
+  - 'decode.score_mode: heatmap -> heatmap_x_cls'
+  hypothesis: 'Image-level голова (GAP(C5) -> Linear, BCE «на снимке есть пневмония»)
+    в multi-task обучении и умножение score каждого бокса на P(pneumonia) повысят
+    val RSNA mAP относительно baseline; ожидаем +0.01…0.03. Механизм: по семантике
+    метрики любой негативный снимок хотя бы с одним боксом выше порога добавляет 0
+    в числитель и 1 в знаменатель (research_notes §1.5), а негативов 77 %; гипотеза
+    — основная потеря mAP у baseline именно FP-боксы на негативах (проверяется декомпозицией
+    ошибок в val_metrics). Классификатор видит снимок целиком и должен отделять негативы
+    лучше, чем максимум локального heatmap; гейтинг гасит score боксов на уверенно
+    негативных снимках, и порог по score отсекает их, почти не задевая позитивы. Вклад
+    multi-task-сигнала в признаки отдельно оценивается post-hoc абляцией no_gating
+    (тот же чекпойнт, score_mode=heatmap).'
+data:
+  image_size: 256
+  split_file: data/splits/split_v1.csv
+model:
+  arch: resnet18
+  pretrained: true
+  neck_channels: 128
+  head_channels: 128
+  cls_head: true
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_steps: 300
+  grad_clip: 10.0
+  num_workers: 0
+  eval_batch_size: 64
+aug:
+  hflip: false
+  hflip_p: 0.5
+  affine: false
+  scale: 0.1
+  translate: 0.05
+  rotate: 5.0
+  intensity: false
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1
+decode:
+  topk: 10
+  nms_iou: 0.5
+  box_scale: 1.0
+  score_mode: heatmap_x_cls
+  min_score: 0.01
+run:
+  name: b_cls_s1
+  seed: 1
+  config_path: configs/hw2/b_cls.yaml
+  overrides: []
+  max_steps: null
+  limit_train: null
+  limit_val: null
+  smoke: false
+  n_train: 18678
+  n_val: 4002
+  total_steps: 7002

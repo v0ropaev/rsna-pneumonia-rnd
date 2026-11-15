@@ -1,0 +1,15 @@
+{
+  "run": "full_s0",
+  "name": "tuned",
+  "box_scale": 1.0,
+  "box_scale_source": "tuned on val (box_scale.json)",
+  "score_mode": "heatmap_x_cls",
+  "val_thr": 0.1,
+  "source": "val_predictions.csv (best epoch)",
+  "train_run": {
+    "start": "2026-11-14T17:29:39",
+    "mlflow_run_id": "99e78e6c01be449fb95a97e6e70b6558",
+    "git_sha": "bdb29d2"
+  },
+  "created": "2026-11-14T19:01:45"
+}

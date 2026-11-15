@@ -18,15 +18,16 @@ Inputs (all optional, partial results are fine; what is missing is printed):
 Every val number uses the run's VAL-selected score threshold (argmax of its sweep), so val mAP is selection-biased.
 Units whose box_scale was tuned on val (variant.json box_scale_source "tuned ...") carry one more selection on the same
 images; val deltas of a tuned unit against an untuned one are flagged (Full − box_scale is >= 0 by construction) and
-the selection-free estimates are the cross-fitted gain of `rsna.posthoc tune` and the test rows. B is the HW1 baseline
-as trained (box_scale 1.0), so "Full − all (vs B)" includes I3 by design. The 2×2 aug × cls factorial uses the
-as-trained tables of all four configs (box_scale 1.0 everywhere), so the post-hoc I3 never leaks into it.
+the selection-free estimates are the cross-fitted gain of `rsna.posthoc tune` and the test rows. Config-vs-config
+contrasts (the ablations vs Full, the decision table vs B and the 2×2 aug × cls factorial) all use the as-trained tables
+of both sides (box_scale 1.0 everywhere), so the post-hoc I3 never leaks into them; only Full's own post-hoc
+ablations (no_gating, no_boxscale) are taken against Full's primary unit.
 Ablation deltas are paired cluster bootstraps (unit: NIH patient, all images of a patient drawn together), seed-matched;
 the pooled estimate averages the per-seed differences and resamples patients jointly for all seeds (data noise only;
 seed spread is shown by the per-seed points).
 Test numbers come only from existing `test_metrics.json` (written by rsna.evaluate); test labels are read only with
---with-test (paired test deltas of Full vs every other config and vs its post-hoc ablations; reported, never used for
-decisions). image AUC = ROC-AUC of the unit's own max box score (the score that decides sens/spec, so it differs between
+--with-test (paired test deltas of Full vs every other config and vs its post-hoc ablations, and the decision-table
+contrasts vs B on test; descriptive, never used for decisions). image AUC = ROC-AUC of the unit's own max box score (the score that decides sens/spec, so it differs between
 post-hoc variants); cls AUC = ROC-AUC of the cls head probability (cls models only; identical across their variants).
 """
 from __future__ import annotations
@@ -65,6 +66,11 @@ ABLATION_LABEL = {"b_cls": "Full − aug  (vs B+cls)", "b_aug": "Full − cls he
                   "no_boxscale": "Full − box_scale  (post hoc, same ckpt)",
                   "as_trained": "Full − box_scale tuning  (as trained, same ckpt)"}
 TRIVIAL = ["prior_boxes", "prior_boxes_ap"]
+# decision threshold of README §5.5 / RQ4 (2·SE of the difference of seed means, seed std 0.0066, 2 seeds per side),
+# committed with the hw1 tag (87944cd, 2026-11-14 17:55: full_s0 was in its first epoch, no HW2 contrast existed yet).
+# It is a significance-level threshold, not an 80 %-power MDE; the name follows README. A config "has an effect" only
+# if seed-mean Δ vs B > MDE AND the pooled paired CI > 0 (symmetrically for harm).
+MDE = 0.013
 
 # light chart theme (dataviz reference palette); baseline is the neutral reference
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3de"
@@ -350,6 +356,45 @@ def ablation_rows(ref: dict[int, Evaluated], others: dict[str, dict[int, Evaluat
         rows.append({"ablation": name, "label": ABLATION_LABEL.get(name, f"Full vs {name}"), "split": split,
                      "seeds": [s for s, _, _ in pairs], **pooled, "per_seed": per_seed, "box_scale_selection": biased})
     return rows
+
+
+def decision_verdict(diff: float, lo: float, hi: float, mde: float = MDE) -> str:
+    """Rule of README §5.5: an effect only if seed-mean Δ > MDE and the pooled paired CI excludes 0; same for harm."""
+    if diff > mde and lo > 0:
+        return "эффект"
+    if diff < -mde and hi < 0:
+        return "ухудшение"
+    if lo > 0:
+        return "CI > 0, но Δ ≤ MDE: не отличить от шума обучения"
+    if hi < 0:
+        return "CI < 0, но |Δ| ≤ MDE: не отличить от шума обучения"
+    if abs(diff) > mde:
+        return "|Δ| > MDE, но CI содержит 0: не обнаружен"
+    return "не обнаружен"
+
+
+def decision_rows(units: dict[str, dict[int, Evaluated]], n_boot: int, split: str = "val",
+                  clusters: pd.Series | None = None) -> list[dict[str, Any]]:
+    """Every config against B (seed-matched, paired patient bootstrap) with the pre-registered verdict."""
+    if BASE_CONFIG not in units:
+        return []
+    rows = []
+    for c in [c for c in CONFIG_ORDER if c != BASE_CONFIG and c in units] + sorted(
+            c for c in units if c not in CONFIG_ORDER):
+        r = ablation_rows(units[c], {BASE_CONFIG: units[BASE_CONFIG]}, n_boot, split=split, clusters=clusters)
+        if r:
+            rows.append({**{k: v for k, v in r[0].items() if k != "ablation"}, "config": c, "reference": BASE_CONFIG,
+                         "label": f"{CONFIG_LABEL.get(c, c)} − B",
+                         "verdict": decision_verdict(r[0]["diff"], r[0]["lo"], r[0]["hi"])})
+    return rows
+
+
+def decision_md(rows: list[dict]) -> str:
+    out = [[r["label"], ",".join(map(str, r["seeds"])), f"{r['diff']:+.4f}", f"[{r['lo']:+.4f}, {r['hi']:+.4f}]",
+            "; ".join(f"s{p['seed']}: {p['diff']:+.4f}" for p in r["per_seed"]),
+            "да" if r["diff"] > MDE else "нет", r["verdict"]] for r in rows]
+    return md_table(["contrast", "seeds", "Δ mAP (seed mean)", "95% CI (pooled, paired patient bootstrap)", "per seed Δ",
+                     f"Δ > MDE {MDE}", "verdict"], out)
 
 
 def factorial_rows(ev: dict[str, dict[int, Evaluated]], n_boot: int,
@@ -732,17 +777,20 @@ def build(results_dirs: list[Path], primary_variant: str | None = None, with_tes
                     tests.setdefault(f"{c}/{vu.variant}", {})[s] = load_test_metrics(vu)
     all_units = {**primary, **{k: v for k, v in sorted(variants.items())}}
 
-    # ablations vs Full: other configs (seed-matched) and Full's own post-hoc variants (same checkpoint)
-    deltas: list[dict] = []
-    if REF_CONFIG in primary:
-        others = {c: primary[c] for c in primary if c != REF_CONFIG}
-        others = dict(sorted(others.items(), key=lambda kv: ["b_cls", "b_aug", "baseline"].index(kv[0])
-                             if kv[0] in ("b_cls", "b_aug", "baseline") else 9))
-        others.update({k.split("/", 1)[1]: v for k, v in variants.items() if k.startswith(REF_CONFIG + "/")})
-        deltas = ablation_rows(primary[REF_CONFIG], others, n_boot, clusters=clusters)
+    # ablations vs Full: other configs on the as-trained tables of both sides (seed-matched, box_scale 1.0 everywhere:
+    # no val selection of box_scale on either side), and Full's own post-hoc variants against Full's primary unit
+    # (same checkpoint)
+    deltas = ablation_set(as_trained, primary, variants, n_boot, "val", clusters)
     factorial = factorial_rows(as_trained, n_boot, clusters=clusters)
+    decision = decision_rows(as_trained, n_boot, clusters=clusters)
+    decision_test: list[dict] = []
+    # the pre-registered contrast of run_hw2.sh: Full's primary unit (tuned) vs B as trained, pooled over seeds
+    prereg = prereg_rows(primary, as_trained, n_boot, "val", clusters)
     if with_test:
-        deltas += final_test_deltas(groups, primary_variant, n_boot, notes)
+        t_as, t_prim, t_var = test_units(groups, primary_variant, notes)
+        deltas += ablation_set(t_as, t_prim, t_var, n_boot, "test", clusters)
+        decision_test = decision_rows(t_as, n_boot, split="test", clusters=clusters)
+        prereg += prereg_rows(t_prim, t_as, n_boot, "test", clusters)
     i3_lines, gating_lines = crossfit_lines(groups), gating_epoch_lines(groups)
 
     trivial = trivial_refs(results_dirs)
@@ -770,9 +818,25 @@ def build(results_dirs: list[Path], primary_variant: str | None = None, with_tes
           "## Журнал запусков (ledger)", "", ledger_md(ledger), "",
           "## Сводка по конфигам (среднее ± std по сидам, ddof=1)", "", summary_md(srows), "",
           "Тривиальные ориентиры (val): " + (", ".join(f"{k} {v:.4f}" for k, v in trivial.items()) or "–"), "",
+          "## Решение по правилу §5.5: каждый конфиг против B (val, как обучены)", "",
+          f"Правило — README §5.5 (тег hw1, коммит 87944cd, 2026-11-14 17:55: через 26 минут после старта full_s0, до "
+          f"первого HW2-контраста): эффект заявляется, только если среднее по сидам Δ > MDE = {MDE} "
+          "и пулированный парный CI не содержит 0 (ухудшение — симметрично). Обе стороны — таблицы как обучены (box_scale 1.0, порог из своего "
+          "val-свипа), пары по совпадающему seed. CI отражает только шум выборки пациентов; шум обучения учтён через "
+          "MDE.", "",
+          decision_md(decision) if decision else "_нет B или нет пар по seed_", "",
+          *(["Те же контрасты на test — описательно: заранее зарегистрирован только test-контраст Full (tuned) − B "
+             "(`results/comparisons/full_s*@tuned__vs__baseline_s*__test.*`), в решениях test не участвует.", "",
+             decision_md(decision_test), ""] if decision_test else []),
+          "## Заранее зарегистрированный контраст: Full (основная единица) − B", "",
+          "Тот контраст, который `scripts/run_hw2.sh` с самого начала считал на test (`rsna.evaluate compare "
+          "--a results/full_s<seed>:<primary> --b results/baseline_s<seed>`), пулированный по сидам. Full взят в "
+          "основном варианте (у tuned box_scale подобран на val), B — как обучен; на val Δ поэтому включает подбор "
+          "box_scale (†). Строка «Full − B» в таблице решений выше — контраст «как обучены» с обеих сторон.", "",
+          deltas_md(prereg) if prereg else "_нет Full или B_", "",
           "## Абляции: парные разности против Full", "",
-          "Δ = mAP(Full) − mAP(абляция) на одних и тех же снимках; для конфигов пары по совпадающему seed, для post-hoc "
-          "вариантов это тот же чекпойнт. Seed-mean Δ: CI учитывает только шум выборки снимков (общий ресэмпл для всех "
+          "Δ = mAP(Full) − mAP(абляция) на одних и тех же снимках; для конфигов пары по совпадающему seed и обе стороны "
+          "как обучены (box_scale 1.0), для post-hoc вариантов это тот же чекпойнт против основной единицы Full. Seed-mean Δ: CI учитывает только шум выборки снимков (общий ресэмпл для всех "
           "сидов), разброс между сидами виден по per-seed значениям.", "",
           deltas_md(deltas) if deltas else "_нет пар (нужны прогоны Full и хотя бы одна абляция с тем же seed)_", "",
           "† val Δ включает подбор box_scale на тех же снимках только у Full (смещение в пользу Full).", "",
@@ -799,12 +863,15 @@ def build(results_dirs: list[Path], primary_variant: str | None = None, with_tes
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_md.write_text("\n".join(md))
     summary_frame(srows).to_csv(out_md.with_name(out_md.stem + "_summary.csv"), index=False, float_format="%.5f")
-    pd.DataFrame([{k: v for k, v in r.items() if k != "per_seed"} for r in deltas]).to_csv(
+    pd.DataFrame([{k: v for k, v in r.items() if k != "per_seed"} for r in deltas + prereg]).to_csv(
         out_md.with_name(out_md.stem + "_deltas.csv"), index=False, float_format="%.5f")
+    pd.DataFrame([{k: v for k, v in r.items() if k != "per_seed"} for r in decision + decision_test]).to_csv(
+        out_md.with_name(out_md.stem + "_decision.csv"), index=False, float_format="%.5f")
     print("\n".join(md))
     print(f"-> {out_md}\n-> " + "\n-> ".join(map(str, figs.values())))
     return {"runs": runs, "groups": groups, "missing": missing, "summary": srows, "deltas": deltas,
-            "factorial": factorial, "figures": figs}
+            "factorial": factorial, "decision": decision, "decision_test": decision_test, "prereg": prereg,
+            "figures": figs}
 
 
 def crossfit_lines(groups: dict[str, dict[int, Run]]) -> list[str]:
@@ -846,14 +913,38 @@ def gating_epoch_lines(groups: dict[str, dict[int, Run]]) -> list[str]:
     return out
 
 
-def final_test_deltas(groups: dict[str, dict[int, Run]], primary_variant: str | None, n_boot: int,
-                      notes: list[str]) -> list[dict]:
-    """TEST paired Δ of Full against every other config and against its post-hoc ablations (same checkpoint).
+def ablation_set(as_trained: dict[str, dict[int, Evaluated]], primary: dict[str, dict[int, Evaluated]],
+                 variants: dict[str, dict[int, Evaluated]], n_boot: int, split: str,
+                 clusters: pd.Series | None) -> list[dict]:
+    """Ablations vs Full: configs as trained on both sides; Full's post-hoc variants vs Full's primary unit."""
+    rows: list[dict] = []
+    order = ["b_cls", "b_aug", BASE_CONFIG]
+    if REF_CONFIG in as_trained:
+        others = {c: as_trained[c] for c in sorted(as_trained, key=lambda c: order.index(c) if c in order else 9)
+                  if c != REF_CONFIG}
+        rows += ablation_rows(as_trained[REF_CONFIG], others, n_boot, split=split, clusters=clusters)
+    if REF_CONFIG in primary:
+        own = {k.split("/", 1)[1]: v for k, v in sorted(variants.items()) if k.startswith(REF_CONFIG + "/")}
+        rows += ablation_rows(primary[REF_CONFIG], own, n_boot, split=split, clusters=clusters)
+    return rows
 
-    Reported once at the end and never used for selection (the pre-registered contrast is Full − B); every unit
-    uses its VAL threshold / box_scale and needs fresh test tables (rsna.evaluate --split test [--variant])."""
-    if REF_CONFIG not in groups:
+
+def prereg_rows(primary: dict[str, dict[int, Evaluated]], as_trained: dict[str, dict[int, Evaluated]], n_boot: int,
+                split: str, clusters: pd.Series | None) -> list[dict]:
+    """Full's primary unit vs B as trained (the contrast run_hw2.sh compares per seed), pooled over matched seeds."""
+    if REF_CONFIG not in primary or BASE_CONFIG not in as_trained:
         return []
+    rows = ablation_rows(primary[REF_CONFIG], {BASE_CONFIG: as_trained[BASE_CONFIG]}, n_boot, split=split,
+                         clusters=clusters)
+    return [{**r, "ablation": "prereg_full_vs_b", "label": "Full (primary) − B (pre-registered)"} for r in rows]
+
+
+def test_units(groups: dict[str, dict[int, Run]], primary_variant: str | None, notes: list[str]
+               ) -> tuple[dict[str, dict[int, Evaluated]], dict[str, dict[int, Evaluated]], dict[str, dict[int, Evaluated]]]:
+    """TEST tables (as trained / primary / Full's post-hoc variants); each uses its VAL threshold and box_scale.
+
+    Reported once at the end and never used for selection (the pre-registered contrast is Full (tuned) − B, written by
+    `rsna.evaluate compare`); needs fresh test tables (rsna.evaluate --split test [--variant])."""
     meta = load_meta()
     target = meta.set_index("patientId")["target"]
     test_ids = meta.loc[meta["split"] == "test", "patientId"].tolist()
@@ -866,23 +957,27 @@ def final_test_deltas(groups: dict[str, dict[int, Run]], primary_variant: str | 
                      + (f" --variant {u.variant})" if u.dir != u.run.dir else ")"))
         return None
 
-    ev: dict[str, dict[int, Evaluated]] = {}
+    as_trained: dict[str, dict[int, Evaluated]] = {}
+    primary: dict[str, dict[int, Evaluated]] = {}
+    variants: dict[str, dict[int, Evaluated]] = {}
     for c, seeds in groups.items():
         for s, r in seeds.items():
-            e = ev_test(primary_unit(r, primary_variant))
+            e = ev_test(Unit(r, "", r.dir))
             if e:
-                ev.setdefault(c, {})[s] = e
+                as_trained.setdefault(c, {})[s] = e
             if c == REF_CONFIG:
+                pu = primary_unit(r, primary_variant)
+                pe = e if not pu.variant else ev_test(pu)
+                if pe:
+                    primary.setdefault(c, {})[s] = pe
                 for vu in posthoc_units(r, primary_variant):
-                    ve = ev_test(vu)
+                    if vu.dir == r.dir:  # the as-trained output listed as a variant: already evaluated
+                        ve = e
+                    else:
+                        ve = ev_test(vu)
                     if ve:
-                        ev.setdefault(vu.variant, {})[s] = ve
-    if REF_CONFIG not in ev:
-        return []
-    order = [BASE_CONFIG, "b_aug", "b_cls"]
-    others = {k: v for k, v in sorted(ev.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else 9)
-              if k != REF_CONFIG}
-    return ablation_rows(ev[REF_CONFIG], others, n_boot, split="test", clusters=patient_groups(meta))
+                        variants.setdefault(f"{c}/{vu.variant}", {})[s] = ve
+    return as_trained, primary, variants
 
 
 def main(argv: list[str] | None = None) -> None:

@@ -1,0 +1,255 @@
+{
+  "run": "full_s2:no_boxscale",
+  "split": "val",
+  "variant": {
+    "name": "no_boxscale",
+    "box_scale": 1.0,
+    "box_scale_source": "manual",
+    "score_mode": "heatmap_x_cls",
+    "val_thr": 0.15
+  },
+  "threshold_source": "from_val (argmax of results/<run>/posthoc/no_boxscale/threshold_sweep.csv)",
+  "limit": null,
+  "train_run": {
+    "start": "2026-11-15T00:02:50",
+    "mlflow_run_id": "b096efc5b4a74b799cb3b432de29a559",
+    "git_sha": "87944cd"
+  },
+  "note": "box_scale and threshold chosen on val: selection-biased",
+  "n_images": 4002,
+  "threshold": 0.15,
+  "map": 0.218289,
+  "ci_lo": 0.187429,
+  "ci_hi": 0.248576,
+  "bootstrap_unit": "nih_patient",
+  "n_scored": 1089,
+  "image_roc_auc": 0.895104,
+  "image_pr_auc": 0.725563,
+  "sensitivity": 0.57,
+  "specificity": 0.939072,
+  "matched_iou": 0.646958,
+  "errors": {
+    "n_pos": 900,
+    "n_neg": 3102,
+    "n_fp_neg_images": 189,
+    "n_scored": 1089,
+    "fp_image_rate": 0.060928,
+    "pos_with_boxes_rate": 0.57,
+    "map_pos": 0.26413,
+    "loss_fp_neg": 0.173554,
+    "loss_missed_pos": 0.355372,
+    "loss_loc_pos": 0.252785
+  },
+  "oracle_gating": {
+    "map_at_run_thr": 0.26413,
+    "best_thr": 0.05,
+    "map_at_best_thr": 0.32124
+  },
+  "slices": {
+    "view": [
+      {
+        "slice": "view",
+        "value": "AP",
+        "n": 1826,
+        "n_pos": 698,
+        "map": 0.245244,
+        "ci_lo": 0.206787,
+        "ci_hi": 0.277197,
+        "n_scored": 848,
+        "map_pos": 0.297947,
+        "fp_image_rate": 0.132979,
+        "sensitivity": 0.648997
+      },
+      {
+        "slice": "view",
+        "value": "PA",
+        "n": 2176,
+        "n_pos": 202,
+        "map": 0.123444,
+        "ci_lo": 0.086569,
+        "ci_hi": 0.160598,
+        "n_scored": 241,
+        "map_pos": 0.147277,
+        "fp_image_rate": 0.019757,
+        "sensitivity": 0.29703
+      }
+    ],
+    "sex": [
+      {
+        "slice": "sex",
+        "value": "F",
+        "n": 1730,
+        "n_pos": 376,
+        "map": 0.227716,
+        "ci_lo": 0.173859,
+        "ci_hi": 0.272923,
+        "n_scored": 461,
+        "map_pos": 0.279194,
+        "fp_image_rate": 0.062777,
+        "sensitivity": 0.577128
+      },
+      {
+        "slice": "sex",
+        "value": "M",
+        "n": 2272,
+        "n_pos": 524,
+        "map": 0.211369,
+        "ci_lo": 0.175254,
+        "ci_hi": 0.250343,
+        "n_scored": 628,
+        "map_pos": 0.25332,
+        "fp_image_rate": 0.059497,
+        "sensitivity": 0.564885
+      }
+    ],
+    "age_bucket": [
+      {
+        "slice": "age_bucket",
+        "value": "<20",
+        "n": 337,
+        "n_pos": 125,
+        "map": 0.305928,
+        "ci_lo": 0.207431,
+        "ci_hi": 0.384483,
+        "n_scored": 149,
+        "map_pos": 0.364667,
+        "fp_image_rate": 0.113208,
+        "sensitivity": 0.76
+      },
+      {
+        "slice": "age_bucket",
+        "value": "20-40",
+        "n": 1087,
+        "n_pos": 265,
+        "map": 0.219367,
+        "ci_lo": 0.168205,
+        "ci_hi": 0.27083,
+        "n_scored": 321,
+        "map_pos": 0.265723,
+        "fp_image_rate": 0.068127,
+        "sensitivity": 0.562264
+      },
+      {
+        "slice": "age_bucket",
+        "value": "40-60",
+        "n": 1598,
+        "n_pos": 334,
+        "map": 0.235152,
+        "ci_lo": 0.187704,
+        "ci_hi": 0.286627,
+        "n_scored": 401,
+        "map_pos": 0.282323,
+        "fp_image_rate": 0.053006,
+        "sensitivity": 0.583832
+      },
+      {
+        "slice": "age_bucket",
+        "value": "60+",
+        "n": 980,
+        "n_pos": 176,
+        "map": 0.125784,
+        "ci_lo": 0.081467,
+        "ci_hi": 0.156931,
+        "n_scored": 218,
+        "map_pos": 0.1558,
+        "fp_image_rate": 0.052239,
+        "sensitivity": 0.420455
+      }
+    ],
+    "cls": [
+      {
+        "slice": "cls",
+        "value": "Lung Opacity",
+        "n": 900,
+        "n_pos": 900,
+        "map": 0.26413,
+        "ci_lo": 0.229919,
+        "ci_hi": 0.298541,
+        "n_scored": 900,
+        "map_pos": 0.26413,
+        "fp_image_rate": null,
+        "sensitivity": 0.57
+      },
+      {
+        "slice": "cls",
+        "value": "No Lung Opacity / Not Normal",
+        "n": 1771,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 188,
+        "map_pos": null,
+        "fp_image_rate": 0.106155,
+        "sensitivity": null
+      },
+      {
+        "slice": "cls",
+        "value": "Normal",
+        "n": 1331,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 1,
+        "map_pos": null,
+        "fp_image_rate": 0.000751,
+        "sensitivity": null
+      }
+    ],
+    "n_boxes": [
+      {
+        "slice": "n_boxes",
+        "value": "0",
+        "n": 3102,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 189,
+        "map_pos": null,
+        "fp_image_rate": 0.060928,
+        "sensitivity": null
+      },
+      {
+        "slice": "n_boxes",
+        "value": "1",
+        "n": 392,
+        "n_pos": 392,
+        "map": 0.15912,
+        "ci_lo": 0.132601,
+        "ci_hi": 0.188264,
+        "n_scored": 392,
+        "map_pos": 0.15912,
+        "fp_image_rate": null,
+        "sensitivity": 0.420918
+      },
+      {
+        "slice": "n_boxes",
+        "value": "2",
+        "n": 490,
+        "n_pos": 490,
+        "map": 0.351726,
+        "ci_lo": 0.299774,
+        "ci_hi": 0.399782,
+        "n_scored": 490,
+        "map_pos": 0.351726,
+        "fp_image_rate": null,
+        "sensitivity": 0.681633
+      },
+      {
+        "slice": "n_boxes",
+        "value": "3+",
+        "n": 18,
+        "n_pos": 18,
+        "map": 0.166435,
+        "ci_lo": 0.084601,
+        "ci_hi": 0.255898,
+        "n_scored": 18,
+        "map_pos": 0.166435,
+        "fp_image_rate": null,
+        "sensitivity": 0.777778
+      }
+    ]
+  }
+}

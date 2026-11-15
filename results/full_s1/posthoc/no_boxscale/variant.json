@@ -1,0 +1,15 @@
+{
+  "run": "full_s1",
+  "name": "no_boxscale",
+  "box_scale": 1.0,
+  "box_scale_source": "manual",
+  "score_mode": "heatmap_x_cls",
+  "val_thr": 0.15,
+  "source": "val_predictions.csv (best epoch)",
+  "train_run": {
+    "start": "2026-11-14T21:29:06",
+    "mlflow_run_id": "f5ec1f6f531d4cba906ad4be4a615b16",
+    "git_sha": "87944cd"
+  },
+  "created": "2026-11-14T22:32:20"
+}

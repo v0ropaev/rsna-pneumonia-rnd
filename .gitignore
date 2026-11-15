@@ -23,4 +23,7 @@ __pycache__/
 # local logs
 *.log
 logs_local/
-logs/
+/logs/
+# HW2: copies of the queue/training logs are versioned as evidence for reports/HW2.md (§4, §8)
+!results/logs/
+!results/logs/*.log

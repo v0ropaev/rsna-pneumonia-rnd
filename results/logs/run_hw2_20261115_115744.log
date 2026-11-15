@@ -1,0 +1,650 @@
+[hw2 11:57:44] log logs/run_hw2_20261115_115744.log; queue: full:0 b_cls:0 b_aug:0 full:1 b_cls:1 b_aug:1 full:2; device: auto; EVAL_TEST=1 DRY_RUN=0
+[hw2 11:57:44] === full_s0 (configs/hw2/full.yaml) ===
+[hw2 11:57:44] skip (results/full_s0/meta.json exists)
+[hw2 11:57:44] skip (results/full_s0/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s0/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/full_s0/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s0/posthoc/box_scale_heatmap.json exists)
+[hw2 11:57:44] skip (results/full_s0/posthoc/no_gating/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s0/posthoc/no_boxscale/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/full_s0__vs__baseline_s0__val.json exists)
+[hw2 11:57:44] skip (results/comparisons/full_s0@tuned__vs__baseline_s0__val.json exists)
+[hw2 11:57:44] === b_cls_s0 (configs/hw2/b_cls.yaml) ===
+[hw2 11:57:44] skip (results/b_cls_s0/meta.json exists)
+[hw2 11:57:44] skip (results/b_cls_s0/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_cls_s0/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/b_cls_s0/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_cls_s0/posthoc/box_scale_heatmap.json exists)
+[hw2 11:57:44] skip (results/b_cls_s0/posthoc/no_gating/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_cls_s0/posthoc/no_boxscale/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/b_cls_s0__vs__baseline_s0__val.json exists)
+[hw2 11:57:44] === b_aug_s0 (configs/hw2/b_aug.yaml) ===
+[hw2 11:57:44] skip (results/b_aug_s0/meta.json exists)
+[hw2 11:57:44] skip (results/b_aug_s0/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_aug_s0/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/b_aug_s0/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/b_aug_s0__vs__baseline_s0__val.json exists)
+[hw2 11:57:44] === full_s1 (configs/hw2/full.yaml) ===
+[hw2 11:57:44] skip (results/full_s1/meta.json exists)
+[hw2 11:57:44] skip (results/full_s1/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s1/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/full_s1/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s1/posthoc/box_scale_heatmap.json exists)
+[hw2 11:57:44] skip (results/full_s1/posthoc/no_gating/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s1/posthoc/no_boxscale/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/full_s1__vs__baseline_s1__val.json exists)
+[hw2 11:57:44] skip (results/comparisons/full_s1@tuned__vs__baseline_s1__val.json exists)
+[hw2 11:57:44] === b_cls_s1 (configs/hw2/b_cls.yaml) ===
+[hw2 11:57:44] skip (results/b_cls_s1/meta.json exists)
+[hw2 11:57:44] skip (results/b_cls_s1/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_cls_s1/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/b_cls_s1/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_cls_s1/posthoc/box_scale_heatmap.json exists)
+[hw2 11:57:44] skip (results/b_cls_s1/posthoc/no_gating/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_cls_s1/posthoc/no_boxscale/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/b_cls_s1__vs__baseline_s1__val.json exists)
+[hw2 11:57:44] === b_aug_s1 (configs/hw2/b_aug.yaml) ===
+[hw2 11:57:44] skip (results/b_aug_s1/meta.json exists)
+[hw2 11:57:44] skip (results/b_aug_s1/val_metrics.json exists)
+[hw2 11:57:44] skip (results/b_aug_s1/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/b_aug_s1/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/b_aug_s1__vs__baseline_s1__val.json exists)
+[hw2 11:57:44] === full_s2 (configs/hw2/full.yaml) ===
+[hw2 11:57:44] skip (results/full_s2/meta.json exists)
+[hw2 11:57:44] skip (results/full_s2/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s2/posthoc/box_scale.json exists)
+[hw2 11:57:44] skip (results/full_s2/posthoc/tuned/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s2/posthoc/box_scale_heatmap.json exists)
+[hw2 11:57:44] skip (results/full_s2/posthoc/no_gating/val_metrics.json exists)
+[hw2 11:57:44] skip (results/full_s2/posthoc/no_boxscale/val_metrics.json exists)
+[hw2 11:57:44] skip (results/comparisons/full_s2__vs__baseline_s2__val.json exists)
+[hw2 11:57:44] skip (results/comparisons/full_s2@tuned__vs__baseline_s2__val.json exists)
+[hw2 11:57:44] === val summaries ===
+[hw2 11:57:44] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_aug_s0 results/b_aug_s1 --split val --out results/hw2_summary/b_aug
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_aug_s0 | 0.2129 | 0.1847 | 0.2407 | 0.3000 | 0.8865 | 0.6289 | 0.9004 | 0.6475 | 0.0996 |
+| b_aug_s1 | 0.2093 | 0.1796 | 0.2395 | 0.3000 | 0.8869 | 0.5667 | 0.9294 | 0.6504 | 0.0706 |
+| mean | 0.2111 | 0.1822 | 0.2401 | 0.3000 | 0.8867 | 0.5978 | 0.9149 | 0.6490 | 0.0851 |
+| std | 0.0025 | 0.0036 | 0.0009 | 0.0000 | 0.0003 | 0.0440 | 0.0205 | 0.0020 | 0.0205 |
+[hw2 11:57:44]   done in 0 min 0 s
+[hw2 11:57:44] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_aug_s0:tuned results/b_aug_s1:tuned --split val --out results/hw2_summary/b_aug@tuned
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_aug_s0:tuned | 0.2153 | 0.1860 | 0.2439 | 0.3000 | 0.8865 | 0.6289 | 0.9004 | 0.6435 | 0.0996 |
+| b_aug_s1:tuned | 0.2099 | 0.1796 | 0.2403 | 0.3000 | 0.8869 | 0.5667 | 0.9294 | 0.6460 | 0.0706 |
+| mean | 0.2126 | 0.1828 | 0.2421 | 0.3000 | 0.8867 | 0.5978 | 0.9149 | 0.6448 | 0.0851 |
+| std | 0.0038 | 0.0045 | 0.0026 | 0.0000 | 0.0003 | 0.0440 | 0.0205 | 0.0017 | 0.0205 |
+[hw2 11:57:44]   done in 0 min 0 s
+[hw2 11:57:44] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0 results/b_cls_s1 --split val --out results/hw2_summary/b_cls
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0 | 0.1960 | 0.1670 | 0.2242 | 0.2000 | 0.8836 | 0.5811 | 0.9194 | 0.6319 | 0.0806 |
+| b_cls_s1 | 0.1957 | 0.1666 | 0.2233 | 0.1500 | 0.8868 | 0.5856 | 0.9255 | 0.6346 | 0.0745 |
+| mean | 0.1959 | 0.1668 | 0.2237 | 0.1750 | 0.8852 | 0.5833 | 0.9225 | 0.6332 | 0.0775 |
+| std | 0.0002 | 0.0003 | 0.0007 | 0.0354 | 0.0022 | 0.0031 | 0.0043 | 0.0019 | 0.0043 |
+[hw2 11:57:44]   done in 0 min 0 s
+[hw2 11:57:44] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0:tuned results/b_cls_s1:tuned --split val --out results/hw2_summary/b_cls@tuned
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0:tuned | 0.1961 | 0.1671 | 0.2241 | 0.2000 | 0.8836 | 0.5811 | 0.9194 | 0.6358 | 0.0806 |
+| b_cls_s1:tuned | 0.1957 | 0.1666 | 0.2233 | 0.1500 | 0.8868 | 0.5856 | 0.9255 | 0.6346 | 0.0745 |
+| mean | 0.1959 | 0.1668 | 0.2237 | 0.1750 | 0.8852 | 0.5833 | 0.9225 | 0.6352 | 0.0775 |
+| std | 0.0003 | 0.0004 | 0.0006 | 0.0354 | 0.0022 | 0.0031 | 0.0043 | 0.0009 | 0.0043 |
+[hw2 11:57:45]   done in 0 min 1 s
+[hw2 11:57:45] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0:no_gating results/b_cls_s1:no_gating --split val --out results/hw2_summary/b_cls@no_gating
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0:no_gating | 0.1912 | 0.1648 | 0.2167 | 0.3000 | 0.8836 | 0.6878 | 0.8556 | 0.6319 | 0.1444 |
+| b_cls_s1:no_gating | 0.1921 | 0.1672 | 0.2167 | 0.2500 | 0.8868 | 0.7411 | 0.8288 | 0.6326 | 0.1712 |
+| mean | 0.1916 | 0.1660 | 0.2167 | 0.2750 | 0.8852 | 0.7144 | 0.8422 | 0.6323 | 0.1578 |
+| std | 0.0006 | 0.0017 | 0.0001 | 0.0354 | 0.0022 | 0.0377 | 0.0189 | 0.0005 | 0.0189 |
+[hw2 11:57:45]   done in 0 min 0 s
+[hw2 11:57:45] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0:no_boxscale results/b_cls_s1:no_boxscale --split val --out results/hw2_summary/b_cls@no_boxscale
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0:no_boxscale | 0.1960 | 0.1670 | 0.2242 | 0.2000 | 0.8836 | 0.5811 | 0.9194 | 0.6319 | 0.0806 |
+| b_cls_s1:no_boxscale | 0.1957 | 0.1666 | 0.2233 | 0.1500 | 0.8868 | 0.5856 | 0.9255 | 0.6346 | 0.0745 |
+| mean | 0.1959 | 0.1668 | 0.2237 | 0.1750 | 0.8852 | 0.5833 | 0.9225 | 0.6332 | 0.0775 |
+| std | 0.0002 | 0.0003 | 0.0007 | 0.0354 | 0.0022 | 0.0031 | 0.0043 | 0.0019 | 0.0043 |
+[hw2 11:57:45]   done in 0 min 0 s
+[hw2 11:57:45] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0 results/full_s1 results/full_s2 --split val --out results/hw2_summary/full
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0 | 0.2200 | 0.1916 | 0.2465 | 0.1000 | 0.8926 | 0.6467 | 0.9104 | 0.6400 | 0.0896 |
+| full_s1 | 0.2194 | 0.1900 | 0.2478 | 0.1500 | 0.8938 | 0.5756 | 0.9329 | 0.6449 | 0.0671 |
+| full_s2 | 0.2183 | 0.1874 | 0.2486 | 0.1500 | 0.8951 | 0.5700 | 0.9391 | 0.6470 | 0.0609 |
+| mean | 0.2192 | 0.1897 | 0.2476 | 0.1333 | 0.8938 | 0.5974 | 0.9275 | 0.6440 | 0.0725 |
+| std | 0.0009 | 0.0021 | 0.0010 | 0.0289 | 0.0013 | 0.0428 | 0.0151 | 0.0036 | 0.0151 |
+[hw2 11:57:45]   done in 0 min 0 s
+[hw2 11:57:45] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0:tuned results/full_s1:tuned results/full_s2:tuned --split val --out results/hw2_summary/full@tuned
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0:tuned | 0.2200 | 0.1916 | 0.2465 | 0.1000 | 0.8926 | 0.6467 | 0.9104 | 0.6400 | 0.0896 |
+| full_s1:tuned | 0.2196 | 0.1900 | 0.2490 | 0.1500 | 0.8938 | 0.5756 | 0.9329 | 0.6416 | 0.0671 |
+| full_s2:tuned | 0.2183 | 0.1874 | 0.2486 | 0.1500 | 0.8951 | 0.5700 | 0.9391 | 0.6470 | 0.0609 |
+| mean | 0.2193 | 0.1897 | 0.2480 | 0.1333 | 0.8938 | 0.5974 | 0.9275 | 0.6429 | 0.0725 |
+| std | 0.0009 | 0.0021 | 0.0013 | 0.0289 | 0.0013 | 0.0428 | 0.0151 | 0.0036 | 0.0151 |
+[hw2 11:57:45]   done in 0 min 0 s
+[hw2 11:57:45] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0:no_gating results/full_s1:no_gating results/full_s2:no_gating --split val --out results/hw2_summary/full@no_gating
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0:no_gating | 0.2117 | 0.1860 | 0.2370 | 0.2500 | 0.8926 | 0.7122 | 0.8582 | 0.6405 | 0.1418 |
+| full_s1:no_gating | 0.2115 | 0.1814 | 0.2405 | 0.3000 | 0.8938 | 0.5633 | 0.9242 | 0.6452 | 0.0758 |
+| full_s2:no_gating | 0.2160 | 0.1897 | 0.2414 | 0.2500 | 0.8951 | 0.7233 | 0.8511 | 0.6441 | 0.1489 |
+| mean | 0.2131 | 0.1857 | 0.2396 | 0.2667 | 0.8938 | 0.6663 | 0.8778 | 0.6433 | 0.1222 |
+| std | 0.0025 | 0.0041 | 0.0023 | 0.0289 | 0.0013 | 0.0893 | 0.0404 | 0.0024 | 0.0404 |
+[hw2 11:57:46]   done in 0 min 1 s
+[hw2 11:57:46] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0:no_boxscale results/full_s1:no_boxscale results/full_s2:no_boxscale --split val --out results/hw2_summary/full@no_boxscale
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0:no_boxscale | 0.2200 | 0.1916 | 0.2465 | 0.1000 | 0.8926 | 0.6467 | 0.9104 | 0.6400 | 0.0896 |
+| full_s1:no_boxscale | 0.2194 | 0.1900 | 0.2478 | 0.1500 | 0.8938 | 0.5756 | 0.9329 | 0.6449 | 0.0671 |
+| full_s2:no_boxscale | 0.2183 | 0.1874 | 0.2486 | 0.1500 | 0.8951 | 0.5700 | 0.9391 | 0.6470 | 0.0609 |
+| mean | 0.2192 | 0.1897 | 0.2476 | 0.1333 | 0.8938 | 0.5974 | 0.9275 | 0.6440 | 0.0725 |
+| std | 0.0009 | 0.0021 | 0.0010 | 0.0289 | 0.0013 | 0.0428 | 0.0151 | 0.0036 | 0.0151 |
+[hw2 11:57:46]   done in 0 min 0 s
+[hw2 11:57:46] $ .venv/bin/python -m rsna.report --primary-variant tuned
+# Журнал экспериментов
+_Сгенерировано `python -m rsna.report` 2026-11-15 11:57; источники: results; primary variant: tuned._
+
+Все val-числа посчитаны при пороге score, выбранном на VAL (argmax свипа), поэтому смещены вверх. У единиц с box_scale, подобранным на VAL (вариант tuned), есть ещё один выбор на тех же снимках, так что их val-смещение больше, чем у B (B взят как обучен, box_scale 1.0). Строки, где tuned сравнивается с неподобранной единицей, помечены †: их val Δ включает выигрыш от подбора (у «Full − box_scale» он ≥ 0 по построению). Несмещённые проверки I3: cross-fit оценка ниже и test-строки. Test в решениях не участвует.
+
+## Чего не хватает
+
+- ничего
+
+## Журнал запусков (ledger)
+
+| run | date | git sha | config | seed | hypothesis (short) | best ep | val mAP | val thr | val AUC | train min | status |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| baseline_s0 | 2026-11-14 12:53 | 7d837c7 | baseline | 0 | Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite… | 4 | 0.1865 | 0.25 | 0.878 | 108.6 | ok |
+| baseline_s1 | 2026-11-14 14:49 | 1f61980 | baseline | 1 | Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite… | 3 | 0.1829 | 0.25 | 0.881 | 69.0 | ok |
+| baseline_s2 | 2026-11-14 16:04 | bdb29d2 | baseline | 2 | Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite… | 3 | 0.1956 | 0.25 | 0.884 | 79.6 | ok |
+| full_s0 | 2026-11-14 17:29 | bdb29d2 | full | 0 | Сочетание image-level головы с гейтингом score (I1) и лёгких аугмента… | 6 | 0.2200 | 0.10 | 0.893 | 85.5 | ok |
+| b_cls_s0 | 2026-11-14 19:02 | 87944cd | b_cls | 0 | Image-level голова (GAP(C5) -> Linear, BCE «на снимке есть пневмония»… | 3 | 0.1960 | 0.20 | 0.884 | 74.7 | ok |
+| b_aug_s0 | 2026-11-14 20:25 | 87944cd | b_aug | 0 | Лёгкие аугментации (горизонтальный флип с p=0.5, масштаб ±10 %, сдвиг… | 5 | 0.2129 | 0.30 | 0.886 | 58.7 | ok |
+| full_s1 | 2026-11-14 21:29 | 87944cd | full | 1 | Сочетание image-level головы с гейтингом score (I1) и лёгких аугмента… | 6 | 0.2193 | 0.15 | 0.894 | 59.2 | ok |
+| b_cls_s1 | 2026-11-14 22:32 | 87944cd | b_cls | 1 | Image-level голова (GAP(C5) -> Linear, BCE «на снимке есть пневмония»… | 3 | 0.1957 | 0.15 | 0.887 | 33.4 | ok |
+| b_aug_s1 | 2026-11-14 23:08 | 87944cd | b_aug | 1 | Лёгкие аугментации (горизонтальный флип с p=0.5, масштаб ±10 %, сдвиг… | 6 | 0.2094 | 0.30 | 0.887 | 50.5 | ok |
+| full_s2 | 2026-11-15 00:02 | 87944cd | full | 2 | Сочетание image-level головы с гейтингом score (I1) и лёгких аугмента… | 6 | 0.2183 | 0.15 | 0.895 | 50.3 | ok |
+
+## Сводка по конфигам (среднее ± std по сидам, ddof=1)
+
+| config | n seeds | seeds (/variant) | val mAP | val thr | AUC max-box | AUC cls | sens | spec | FP-img rate | mAP pos | test mAP |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| B | 3 | 0, 1, 2 | 0.1883 ± 0.0066 | 0.25 ± 0.00 | 0.881 ± 0.003 | – | 0.732 ± 0.047 | 0.832 ± 0.034 | 0.168 ± 0.034 | 0.2972 ± 0.0133 | 0.1908 ± 0.0109 (n=3) |
+| B+aug | 2 | 0/tuned, 1/tuned | 0.2126 ± 0.0038 | 0.30 ± 0.00 | 0.887 ± 0.000 | – | 0.598 ± 0.044 | 0.915 ± 0.021 | 0.085 ± 0.021 | 0.2751 ± 0.0199 | 0.2157 ± 0.0011 (n=2) |
+| B+cls | 2 | 0/tuned, 1/tuned | 0.1959 ± 0.0003 | 0.17 ± 0.04 | 0.886 ± 0.004 | 0.885 ± 0.002 | 0.583 ± 0.003 | 0.922 ± 0.004 | 0.078 ± 0.004 | 0.2482 ± 0.0032 | 0.1964 ± 0.0060 (n=2) |
+| Full | 3 | 0/tuned, 1/tuned, 2/tuned | 0.2193 ± 0.0009 | 0.13 ± 0.03 | 0.894 ± 0.001 | 0.894 ± 0.001 | 0.597 ± 0.043 | 0.927 ± 0.015 | 0.073 ± 0.015 | 0.2742 ± 0.0124 | 0.2201 ± 0.0029 (n=3) |
+| B+aug / no_boxscale | 2 | 0/no_boxscale, 1/no_boxscale | 0.2111 ± 0.0025 | 0.30 ± 0.00 | 0.887 ± 0.000 | – | 0.598 ± 0.044 | 0.915 ± 0.021 | 0.085 ± 0.021 | 0.2731 ± 0.0181 | 0.2159 ± 0.0005 (n=2) |
+| B+cls / no_boxscale | 2 | 0/no_boxscale, 1/no_boxscale | 0.1959 ± 0.0002 | 0.17 ± 0.04 | 0.886 ± 0.004 | 0.885 ± 0.002 | 0.583 ± 0.003 | 0.922 ± 0.004 | 0.078 ± 0.004 | 0.2482 ± 0.0032 | 0.1966 ± 0.0056 (n=2) |
+| B+cls / no_gating | 2 | 0/no_gating, 1/no_gating | 0.1916 ± 0.0006 | 0.28 ± 0.04 | 0.878 ± 0.008 | 0.885 ± 0.002 | 0.714 ± 0.038 | 0.842 ± 0.019 | 0.158 ± 0.019 | 0.2959 ± 0.0134 | 0.1903 ± 0.0086 (n=2) |
+| Full / no_boxscale | 3 | 0/no_boxscale, 1/no_boxscale, 2/no_boxscale | 0.2192 ± 0.0009 | 0.13 ± 0.03 | 0.894 ± 0.001 | 0.894 ± 0.001 | 0.597 ± 0.043 | 0.927 ± 0.015 | 0.073 ± 0.015 | 0.2740 ± 0.0124 | 0.2207 ± 0.0032 (n=3) |
+| Full / no_gating | 3 | 0/no_gating, 1/no_gating, 2/no_gating | 0.2131 ± 0.0025 | 0.27 ± 0.03 | 0.886 ± 0.001 | 0.894 ± 0.001 | 0.666 ± 0.089 | 0.878 ± 0.040 | 0.122 ± 0.040 | 0.3030 ± 0.0319 | 0.2144 ± 0.0028 (n=3) |
+
+Тривиальные ориентиры (val): prior_boxes 0.0217, prior_boxes_ap 0.0347
+
+## Решение по правилу §5.5: каждый конфиг против B (val, как обучены)
+
+Правило — README §5.5 (тег hw1, коммит 87944cd, 2026-11-14 17:55: через 26 минут после старта full_s0, до первого HW2-контраста): эффект заявляется, только если среднее по сидам Δ > MDE = 0.013 и пулированный парный CI не содержит 0 (ухудшение — симметрично). Обе стороны — таблицы как обучены (box_scale 1.0, порог из своего val-свипа), пары по совпадающему seed. CI отражает только шум выборки пациентов; шум обучения учтён через MDE.
+
+| contrast | seeds | Δ mAP (seed mean) | 95% CI (pooled, paired patient bootstrap) | per seed Δ | Δ > MDE 0.013 | verdict |
+|---|---|---|---|---|---|---|
+| B+aug − B | 0,1 | +0.0264 | [+0.0134, +0.0387] | s0: +0.0264; s1: +0.0265 | да | эффект |
+| B+cls − B | 0,1 | +0.0112 | [-0.0009, +0.0231] | s0: +0.0095; s1: +0.0129 | нет | не обнаружен |
+| Full − B | 0,1,2 | +0.0309 | [+0.0196, +0.0420] | s0: +0.0335; s1: +0.0365; s2: +0.0227 | да | эффект |
+
+## Заранее зарегистрированный контраст: Full (основная единица) − B
+
+Тот контраст, который `scripts/run_hw2.sh` с самого начала считал на test (`rsna.evaluate compare --a results/full_s<seed>:<primary> --b results/baseline_s<seed>`), пулированный по сидам. Full взят в основном варианте (у tuned box_scale подобран на val), B — как обучен; на val Δ поэтому включает подбор box_scale (†). Строка «Full − B» в таблице решений выше — контраст «как обучены» с обеих сторон.
+
+| ablation (Δ = Full − ablated) | split | seeds | Δ mAP (seed mean) | 95% CI (paired patient bootstrap) | P(Δ≤0) | per seed Δ [95% CI] |
+|---|---|---|---|---|---|---|
+| Full (primary) − B (pre-registered) † | val | 0,1,2 | +0.0310 | [+0.0197, +0.0423] | 0.000 | s0: +0.0335 [+0.0206, +0.0467]; s1: +0.0368 [+0.0204, +0.0525]; s2: +0.0227 [+0.0072, +0.0388] |
+
+## Абляции: парные разности против Full
+
+Δ = mAP(Full) − mAP(абляция) на одних и тех же снимках; для конфигов пары по совпадающему seed и обе стороны как обучены (box_scale 1.0), для post-hoc вариантов это тот же чекпойнт против основной единицы Full. Seed-mean Δ: CI учитывает только шум выборки снимков (общий ресэмпл для всех сидов), разброс между сидами виден по per-seed значениям.
+
+| ablation (Δ = Full − ablated) | split | seeds | Δ mAP (seed mean) | 95% CI (paired patient bootstrap) | P(Δ≤0) | per seed Δ [95% CI] |
+|---|---|---|---|---|---|---|
+| Full − aug  (vs B+cls) | val | 0,1 | +0.0238 | [+0.0132, +0.0343] | 0.000 | s0: +0.0240 [+0.0123, +0.0355]; s1: +0.0236 [+0.0104, +0.0373] |
+| Full − cls head & gating  (vs B+aug) | val | 0,1 | +0.0086 | [-0.0004, +0.0176] | 0.030 | s0: +0.0071 [-0.0041, +0.0188]; s1: +0.0100 [+0.0001, +0.0208] |
+| Full − all  (vs B) | val | 0,1,2 | +0.0309 | [+0.0196, +0.0420] | 0.000 | s0: +0.0335 [+0.0206, +0.0467]; s1: +0.0365 [+0.0202, +0.0516]; s2: +0.0227 [+0.0072, +0.0388] |
+| Full − box_scale  (post hoc, same ckpt) † | val | 0,1,2 | +0.0001 | [-0.0005, +0.0008] | 0.386 | s0: +0.0000 [+0.0000, +0.0000]; s1: +0.0003 [-0.0016, +0.0023]; s2: +0.0000 [+0.0000, +0.0000] |
+| Full − gating  (post hoc, same ckpt) | val | 0,1,2 | +0.0062 | [-0.0018, +0.0144] | 0.063 | s0: +0.0083 [-0.0013, +0.0177]; s1: +0.0081 [-0.0012, +0.0179]; s2: +0.0023 [-0.0098, +0.0151] |
+
+† val Δ включает подбор box_scale на тех же снимках только у Full (смещение в пользу Full).
+
+### I3 (box_scale): cross-fit оценка на val
+
+Масштаб и порог выбираются на одной случайной половине val, выигрыш против box_scale 1.0 меряется на другой (2 фолда, среднее); в отличие от «Full − box_scale» эта оценка не завышена выбором.
+
+- B+aug s0: выбран ×0.95 (val 0.2153 против 0.2129 при ×1.0, выигрыш ≥ 0 по построению); cross-fit +0.0022 (масштабы по фолдам 0.95, 0.95)
+- B+aug s1: выбран ×0.975 (val 0.2099 против 0.2093 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0018 (масштабы по фолдам 1.025, 0.95)
+- B+cls s0: выбран ×1.05 (val 0.1961 против 0.1960 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0016 (масштабы по фолдам 1.075, 1.0)
+- B+cls s1: выбран ×1.0 (val 0.1957 против 0.1957 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0009 (масштабы по фолдам 1.025, 1.0)
+- Full s0: выбран ×1.0 (val 0.2200 против 0.2200 при ×1.0, выигрыш ≥ 0 по построению); cross-fit +0.0000 (масштабы по фолдам 1.0, 1.0)
+- Full s1: выбран ×0.975 (val 0.2196 против 0.2194 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0001 (масштабы по фолдам 1.0, 0.975)
+- Full s2: выбран ×1.0 (val 0.2183 против 0.2183 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0021 (масштабы по фолдам 1.025, 0.975)
+
+### I1: выбор эпохи и абляция «Full − gating»
+
+Лучшая эпоха cls-моделей выбрана по val mAP с гейтингом; no_gating переоценивает тот же чекпойнт. Если бы эпоху выбирали по скорингу heatmap, val mAP без гейтинга был бы выше на «зазор», т.е. Δ(Full − gating) на val завышена на эту величину (сам зазор тоже смещён вверх выбором). Основное свидетельство для I1 — обученный контраст «Full − cls head & gating (vs B+aug)» и 2×2.
+
+- B+cls s0: без гейтинга на лучшей эпохе (3) 0.1912, максимум по эпохам 0.1912 (эпоха 3) → зазор +0.0000
+- B+cls s1: без гейтинга на лучшей эпохе (3) 0.1921, максимум по эпохам 0.1921 (эпоха 3) → зазор +0.0000
+- Full s0: без гейтинга на лучшей эпохе (6) 0.2117, максимум по эпохам 0.2117 (эпоха 6) → зазор +0.0000
+- Full s1: без гейтинга на лучшей эпохе (6) 0.2100, максимум по эпохам 0.2100 (эпоха 6) → зазор +0.0000
+- Full s2: без гейтинга на лучшей эпохе (6) 0.2160, максимум по эпохам 0.2160 (эпоха 6) → зазор +0.0000
+
+## 2×2: главные эффекты и взаимодействие (val)
+
+| effect | seeds | estimate | 95% CI | P(≤0) |
+|---|---|---|---|---|
+| aug main effect | 0,1 | +0.0251 | [+0.0160, +0.0338] | 0.000 |
+| cls main effect | 0,1 | +0.0099 | [+0.0021, +0.0176] | 0.005 |
+| interaction aug×cls | 0,1 | -0.0026 | [-0.0167, +0.0121] | 0.624 |
+
+Клетки 2×2 — таблицы прогонов как обучены (box_scale 1.0 во всех четырёх, порог из их val-свипа): post-hoc I3 сюда не входит. Единицы по клеткам: B: as trained; B+aug: as trained; B+cls: as trained; Full: as trained
+
+## MLflow
+
+| run | status | mlflow id | start | best val mAP | matches a results dir |
+|---|---|---|---|---|---|
+| full_s2 | FINISHED | b096efc5 | 2026-11-15 00:02 | 0.2183 | yes |
+| b_aug_s1 | FINISHED | 71c35767 | 2026-11-14 23:08 | 0.2094 | yes |
+| b_cls_s1 | FINISHED | 7f0bcbd7 | 2026-11-14 22:32 | 0.1957 | yes |
+| full_s1 | FINISHED | f5ec1f6f | 2026-11-14 21:29 | 0.2193 | yes |
+| b_aug_s0 | FINISHED | ddade703 | 2026-11-14 20:25 | 0.2129 | yes |
+| b_cls_s0 | FINISHED | b839282e | 2026-11-14 19:02 | 0.1960 | yes |
+| full_s0 | FINISHED | 99e78e6c | 2026-11-14 17:29 | 0.2200 | yes |
+| baseline_s2 | FINISHED | e90bd302 | 2026-11-14 16:04 | 0.1956 | yes |
+| baseline_s1 | FINISHED | 1bbb2ec5 | 2026-11-14 14:49 | 0.1829 | yes |
+| baseline_s0 | FINISHED | 8a123f73 | 2026-11-14 12:53 | 0.1865 | yes |
+
+## Рисунки
+
+- `reports/figures/hw2_val_map_by_config.png`
+- `reports/figures/hw2_learning_curves.png`
+- `reports/figures/hw2_ablation_deltas.png`
+- `reports/figures/hw2_threshold_curves.png`
+
+-> results/experiments.md
+-> reports/figures/hw2_val_map_by_config.png
+-> reports/figures/hw2_learning_curves.png
+-> reports/figures/hw2_ablation_deltas.png
+-> reports/figures/hw2_threshold_curves.png
+[hw2 11:57:52]   done in 0 min 6 s
+[hw2 11:57:52] $ .venv/bin/python scripts/plot_hw2_errors.py
+-> reports/figures/hw2_error_decomposition.png
+# Декомпозиция 1 − mAP по конфигам (val)
+
+_Генерируется `scripts/plot_hw2_errors.py` из `results/<run>/val_metrics.json` (README §5.6). Слагаемые в сумме дают 1 − mAP. «Среднее» — по всем сидам конфига; «сдвиг против B» — среднее по сидам конфига разностей с B того же сида (B: 3 сида, B+aug и B+cls: 0 и 1)._
+
+| конфиг | сиды | негативы с боксом (FP) | пропущенные позитивы | локализация на позитивах | 1 − mAP |
+|---|---|---|---|---|---|
+| B | 0,1,2 | 0.365 | 0.172 | 0.275 | 0.812 |
+| B+aug | 0,1 | 0.226 | 0.312 | 0.251 | 0.789 |
+| B+cls | 0,1 | 0.211 | 0.329 | 0.265 | 0.804 |
+| Full | 0,1,2 | 0.199 | 0.323 | 0.258 | 0.781 |
+
+| сдвиг против B (тот же seed) | сиды | негативы с боксом (FP) | пропущенные позитивы | локализация на позитивах | Δ mAP |
+|---|---|---|---|---|---|
+| B+aug − B | 0,1 | -0.167 | +0.166 | -0.025 | +0.0264 |
+| B+cls − B | 0,1 | -0.182 | +0.182 | -0.012 | +0.0112 |
+| Full − B | 0,1,2 | -0.166 | +0.152 | -0.017 | +0.0309 |
+-> results/hw2_summary/error_decomposition.md
+[hw2 11:57:53]   done in 0 min 1 s
+[hw2 11:57:53] $ .venv/bin/python scripts/analyze_hw2_mechanism.py
+# HW2: проверки механизма (val)
+
+_Генерируется `scripts/analyze_hw2_mechanism.py`. Все сравнения на одних и тех же 4 002 снимках val; CI — парный бутстрап по NIH-пациентам (2000 ресэмплов). «max-box» — максимальный score бокса снимка, он решает, есть ли у снимка бокс выше порога (sensitivity = TPR, FP-image rate = FPR этого score)._
+
+## 1. Гейтинг: тот же чекпойнт с гейтингом (A) и без (B)
+
+| run | AUC max-box A | B | ΔAUC [95% CI] | порог A / B | FP-rate A / B | sens A / B (свои пороги) | sens B при FP-rate A | sens A при FP-rate B | Δsens при FP-rate A / B |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0 | 0.883 | 0.872 | +0.0110 [+0.0070, +0.0152] | 0.20 / 0.30 | 0.081 / 0.144 | 0.581 / 0.688 | 0.526 | 0.706 | +0.056 / +0.018 |
+| b_cls_s1 | 0.889 | 0.884 | +0.0052 [+0.0018, +0.0087] | 0.15 / 0.25 | 0.074 / 0.171 | 0.586 / 0.741 | 0.558 | 0.762 | +0.028 / +0.021 |
+| full_s0 | 0.893 | 0.886 | +0.0071 [+0.0039, +0.0105] | 0.10 / 0.25 | 0.090 / 0.142 | 0.647 / 0.712 | 0.599 | 0.737 | +0.048 / +0.024 |
+| full_s1/tuned | 0.894 | 0.886 | +0.0085 [+0.0050, +0.0120] | 0.15 / 0.30 | 0.067 / 0.076 | 0.576 / 0.563 | 0.539 | 0.589 | +0.037 / +0.026 |
+| full_s2 | 0.895 | 0.887 | +0.0076 [+0.0046, +0.0108] | 0.15 / 0.25 | 0.061 / 0.149 | 0.570 / 0.723 | 0.530 | 0.756 | +0.040 / +0.032 |
+
+## 2. Аугментации: A = с аугментациями, B = тот же конфиг и seed без них
+
+| A | B | AUC max-box A | B | ΔAUC [95% CI] | порог A / B | FP-rate A / B | sens A / B (свои пороги) | sens B при FP-rate A | sens A при FP-rate B | Δsens при FP-rate A / B |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b_aug_s0 | baseline_s0 | 0.886 | 0.878 | +0.0084 [+0.0023, +0.0149] | 0.30 / 0.25 | 0.100 / 0.191 | 0.629 / 0.763 | 0.601 | 0.781 | +0.028 / +0.018 |
+| b_aug_s1 | baseline_s1 | 0.887 | 0.881 | +0.0060 [+0.0005, +0.0117] | 0.30 / 0.25 | 0.071 / 0.184 | 0.567 / 0.754 | 0.541 | 0.766 | +0.026 / +0.011 |
+| full_s0 | b_cls_s0 | 0.893 | 0.883 | +0.0097 [+0.0051, +0.0144] | 0.10 / 0.20 | 0.090 / 0.081 | 0.647 / 0.581 | 0.619 | 0.607 | +0.028 / +0.026 |
+| full_s1 | b_cls_s1 | 0.894 | 0.889 | +0.0053 [+0.0005, +0.0101] | 0.15 / 0.15 | 0.067 / 0.074 | 0.576 / 0.586 | 0.556 | 0.587 | +0.020 / +0.001 |
+
+## 3. Train detection loss (на батчах как в обучении: у аугментированных прогонов — аугментированных)
+
+| run | лучшая эпоха | det loss на лучшей эпохе | det loss на 6-й | val mAP лучшей / 6-й эпохи |
+|---|---|---|---|---|
+| baseline_s0 | 4 | 1.613 | 0.969 | 0.1865 / 0.1703 |
+| baseline_s1 | 3 | 1.855 | 0.972 | 0.1829 / 0.1710 |
+| baseline_s2 | 3 | 1.817 | 0.981 | 0.1956 / 0.1820 |
+| b_cls_s0 | 3 | 1.823 | 0.927 | 0.1960 / 0.1556 |
+| b_cls_s1 | 3 | 1.842 | 0.919 | 0.1957 / 0.1657 |
+| b_aug_s0 | 5 | 1.782 | 1.745 | 0.2129 / 0.2125 |
+| b_aug_s1 | 6 | 1.763 | 1.763 | 0.2093 / 0.2093 |
+| full_s0 | 6 | 1.735 | 1.735 | 0.2200 / 0.2200 |
+| full_s1 | 6 | 1.752 | 1.752 | 0.2194 / 0.2194 |
+| full_s2 | 6 | 1.735 | 1.735 | 0.2183 / 0.2183 |
+
+## 4. Гейтинг по проекциям: Δ mAP = с гейтингом − без (тот же чекпойнт)
+
+| run | view | n (позитивов) | mAP с гейтингом | без | Δ [95% CI] | AUC max-box внутри view: с гейтингом / без | средний P головы: позитивы / негативы |
+|---|---|---|---|---|---|---|---|
+| b_cls_s0 | PA | 2176 (202) | 0.0878 | 0.1217 | -0.0340 [-0.0608, -0.0082] | 0.869 / 0.863 | 0.36 / 0.08 |
+| b_cls_s0 | AP | 1826 (698) | 0.2223 | 0.2121 | +0.0102 [+0.0002, +0.0196] | 0.831 / 0.811 | 0.71 / 0.35 |
+| b_cls_s1 | PA | 2176 (202) | 0.0956 | 0.1143 | -0.0187 [-0.0411, +0.0022] | 0.863 / 0.861 | 0.33 / 0.07 |
+| b_cls_s1 | AP | 1826 (698) | 0.2221 | 0.2154 | +0.0067 [-0.0062, +0.0199] | 0.846 / 0.834 | 0.66 / 0.28 |
+| full_s0 | PA | 2176 (202) | 0.1413 | 0.1383 | +0.0030 [-0.0188, +0.0231] | 0.875 / 0.872 | 0.31 / 0.05 |
+| full_s0 | AP | 1826 (698) | 0.2422 | 0.2356 | +0.0066 [-0.0039, +0.0171] | 0.848 / 0.836 | 0.56 / 0.20 |
+| full_s1/tuned | PA | 2176 (202) | 0.1367 | 0.1292 | +0.0075 [-0.0102, +0.0231] | 0.880 / 0.875 | 0.38 / 0.07 |
+| full_s1/tuned | AP | 1826 (698) | 0.2436 | 0.2360 | +0.0076 [-0.0042, +0.0188] | 0.847 / 0.835 | 0.62 / 0.24 |
+| full_s2 | PA | 2176 (202) | 0.1234 | 0.1423 | -0.0188 [-0.0433, +0.0039] | 0.878 / 0.875 | 0.36 / 0.07 |
+| full_s2 | AP | 1826 (698) | 0.2452 | 0.2399 | +0.0054 [-0.0096, +0.0199] | 0.851 / 0.837 | 0.62 / 0.24 |
+-> results/hw2_summary/mechanism.md
+[hw2 11:58:33]   done in 0 min 40 s
+[hw2 11:58:33] === TEST (final; box_scale, score_mode and thresholds all come from val) ===
+[hw2 11:58:33] skip (results/baseline_s0/test_metrics.json exists)
+[hw2 11:58:33] skip (results/baseline_s1/test_metrics.json exists)
+[hw2 11:58:33] skip (results/baseline_s2/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_aug_s0/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_aug_s0/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_aug_s1/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_aug_s1/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s0/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s0/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s0/posthoc/no_gating/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s0/posthoc/no_boxscale/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s1/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s1/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s1/posthoc/no_gating/test_metrics.json exists)
+[hw2 11:58:33] skip (results/b_cls_s1/posthoc/no_boxscale/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s0/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s0/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s0/posthoc/no_gating/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s0/posthoc/no_boxscale/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s1/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s1/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s1/posthoc/no_gating/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s1/posthoc/no_boxscale/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s2/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s2/posthoc/tuned/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s2/posthoc/no_gating/test_metrics.json exists)
+[hw2 11:58:33] skip (results/full_s2/posthoc/no_boxscale/test_metrics.json exists)
+[hw2 11:58:33] $ .venv/bin/python -m rsna.evaluate summarize --runs results/baseline_s0 results/baseline_s1 results/baseline_s2 --split test --out results/baseline_summary
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| baseline_s0 | 0.1846 | 0.1512 | 0.2215 | 0.2500 | 0.8664 | 0.7656 | 0.7967 | 0.6330 | 0.2033 |
+| baseline_s1 | 0.1845 | 0.1530 | 0.2182 | 0.2500 | 0.8711 | 0.7544 | 0.8135 | 0.6320 | 0.1865 |
+| baseline_s2 | 0.2034 | 0.1640 | 0.2456 | 0.2500 | 0.8743 | 0.6822 | 0.8589 | 0.6410 | 0.1411 |
+| mean | 0.1908 | 0.1561 | 0.2284 | 0.2500 | 0.8706 | 0.7341 | 0.8230 | 0.6353 | 0.1770 |
+| std | 0.0109 | 0.0069 | 0.0150 | 0.0000 | 0.0040 | 0.0452 | 0.0322 | 0.0049 | 0.0322 |
+[hw2 11:58:34]   done in 0 min 1 s
+[hw2 11:58:34] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_aug_s0 results/b_aug_s1 --split test --out results/hw2_summary/b_aug
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_aug_s0 | 0.2162 | 0.1741 | 0.2621 | 0.3000 | 0.8781 | 0.6389 | 0.8895 | 0.6551 | 0.1105 |
+| b_aug_s1 | 0.2156 | 0.1685 | 0.2642 | 0.3000 | 0.8811 | 0.5767 | 0.9207 | 0.6546 | 0.0793 |
+| mean | 0.2159 | 0.1713 | 0.2631 | 0.3000 | 0.8796 | 0.6078 | 0.9051 | 0.6548 | 0.0949 |
+| std | 0.0005 | 0.0040 | 0.0015 | 0.0000 | 0.0021 | 0.0440 | 0.0221 | 0.0004 | 0.0221 |
+[hw2 11:58:34]   done in 0 min 0 s
+[hw2 11:58:34] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_aug_s0:tuned results/b_aug_s1:tuned --split test --out results/hw2_summary/b_aug@tuned
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_aug_s0:tuned | 0.2166 | 0.1742 | 0.2616 | 0.3000 | 0.8781 | 0.6389 | 0.8895 | 0.6482 | 0.1105 |
+| b_aug_s1:tuned | 0.2149 | 0.1671 | 0.2628 | 0.3000 | 0.8811 | 0.5767 | 0.9207 | 0.6515 | 0.0793 |
+| mean | 0.2157 | 0.1707 | 0.2622 | 0.3000 | 0.8796 | 0.6078 | 0.9051 | 0.6499 | 0.0949 |
+| std | 0.0011 | 0.0050 | 0.0009 | 0.0000 | 0.0021 | 0.0440 | 0.0221 | 0.0023 | 0.0221 |
+[hw2 11:58:34]   done in 0 min 0 s
+[hw2 11:58:34] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0 results/b_cls_s1 --split test --out results/hw2_summary/b_cls
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0 | 0.1926 | 0.1504 | 0.2377 | 0.2000 | 0.8764 | 0.5811 | 0.9185 | 0.6337 | 0.0815 |
+| b_cls_s1 | 0.2006 | 0.1597 | 0.2434 | 0.1500 | 0.8761 | 0.5822 | 0.9137 | 0.6465 | 0.0863 |
+| mean | 0.1966 | 0.1551 | 0.2406 | 0.1750 | 0.8763 | 0.5817 | 0.9161 | 0.6401 | 0.0839 |
+| std | 0.0056 | 0.0066 | 0.0041 | 0.0354 | 0.0002 | 0.0008 | 0.0034 | 0.0091 | 0.0034 |
+[hw2 11:58:34]   done in 0 min 0 s
+[hw2 11:58:34] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0:tuned results/b_cls_s1:tuned --split test --out results/hw2_summary/b_cls@tuned
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0:tuned | 0.1922 | 0.1498 | 0.2362 | 0.2000 | 0.8764 | 0.5811 | 0.9185 | 0.6364 | 0.0815 |
+| b_cls_s1:tuned | 0.2006 | 0.1597 | 0.2434 | 0.1500 | 0.8761 | 0.5822 | 0.9137 | 0.6465 | 0.0863 |
+| mean | 0.1964 | 0.1547 | 0.2398 | 0.1750 | 0.8763 | 0.5817 | 0.9161 | 0.6415 | 0.0839 |
+| std | 0.0060 | 0.0070 | 0.0051 | 0.0354 | 0.0002 | 0.0008 | 0.0034 | 0.0071 | 0.0034 |
+[hw2 11:58:35]   done in 0 min 1 s
+[hw2 11:58:35] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0:no_gating results/b_cls_s1:no_gating --split test --out results/hw2_summary/b_cls@no_gating
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0:no_gating | 0.1843 | 0.1473 | 0.2241 | 0.3000 | 0.8764 | 0.6700 | 0.8544 | 0.6326 | 0.1456 |
+| b_cls_s1:no_gating | 0.1964 | 0.1621 | 0.2324 | 0.2500 | 0.8761 | 0.7522 | 0.8212 | 0.6404 | 0.1788 |
+| mean | 0.1903 | 0.1547 | 0.2283 | 0.2750 | 0.8763 | 0.7111 | 0.8378 | 0.6365 | 0.1622 |
+| std | 0.0086 | 0.0105 | 0.0059 | 0.0354 | 0.0002 | 0.0581 | 0.0235 | 0.0055 | 0.0235 |
+[hw2 11:58:35]   done in 0 min 0 s
+[hw2 11:58:35] $ .venv/bin/python -m rsna.evaluate summarize --runs results/b_cls_s0:no_boxscale results/b_cls_s1:no_boxscale --split test --out results/hw2_summary/b_cls@no_boxscale
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| b_cls_s0:no_boxscale | 0.1926 | 0.1504 | 0.2377 | 0.2000 | 0.8764 | 0.5811 | 0.9185 | 0.6337 | 0.0815 |
+| b_cls_s1:no_boxscale | 0.2006 | 0.1597 | 0.2434 | 0.1500 | 0.8761 | 0.5822 | 0.9137 | 0.6465 | 0.0863 |
+| mean | 0.1966 | 0.1551 | 0.2406 | 0.1750 | 0.8763 | 0.5817 | 0.9161 | 0.6401 | 0.0839 |
+| std | 0.0056 | 0.0066 | 0.0041 | 0.0354 | 0.0002 | 0.0008 | 0.0034 | 0.0091 | 0.0034 |
+[hw2 11:58:35]   done in 0 min 0 s
+[hw2 11:58:35] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0 results/full_s1 results/full_s2 --split test --out results/hw2_summary/full
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0 | 0.2170 | 0.1733 | 0.2629 | 0.1000 | 0.8868 | 0.6411 | 0.9056 | 0.6427 | 0.0944 |
+| full_s1 | 0.2224 | 0.1751 | 0.2717 | 0.1500 | 0.8846 | 0.5911 | 0.9285 | 0.6477 | 0.0715 |
+| full_s2 | 0.2228 | 0.1762 | 0.2714 | 0.1500 | 0.8871 | 0.5722 | 0.9346 | 0.6547 | 0.0654 |
+| mean | 0.2207 | 0.1749 | 0.2687 | 0.1333 | 0.8862 | 0.6015 | 0.9229 | 0.6484 | 0.0771 |
+| std | 0.0032 | 0.0015 | 0.0050 | 0.0289 | 0.0013 | 0.0356 | 0.0153 | 0.0060 | 0.0153 |
+[hw2 11:58:35]   done in 0 min 0 s
+[hw2 11:58:35] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0:tuned results/full_s1:tuned results/full_s2:tuned --split test --out results/hw2_summary/full@tuned
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0:tuned | 0.2170 | 0.1733 | 0.2629 | 0.1000 | 0.8868 | 0.6411 | 0.9056 | 0.6427 | 0.0944 |
+| full_s1:tuned | 0.2204 | 0.1730 | 0.2692 | 0.1500 | 0.8846 | 0.5911 | 0.9285 | 0.6439 | 0.0715 |
+| full_s2:tuned | 0.2228 | 0.1762 | 0.2714 | 0.1500 | 0.8871 | 0.5722 | 0.9346 | 0.6547 | 0.0654 |
+| mean | 0.2201 | 0.1742 | 0.2679 | 0.1333 | 0.8862 | 0.6015 | 0.9229 | 0.6471 | 0.0771 |
+| std | 0.0029 | 0.0018 | 0.0044 | 0.0289 | 0.0013 | 0.0356 | 0.0153 | 0.0066 | 0.0153 |
+[hw2 11:58:35]   done in 0 min 0 s
+[hw2 11:58:35] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0:no_gating results/full_s1:no_gating results/full_s2:no_gating --split test --out results/hw2_summary/full@no_gating
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0:no_gating | 0.2125 | 0.1727 | 0.2551 | 0.2500 | 0.8868 | 0.7067 | 0.8537 | 0.6416 | 0.1463 |
+| full_s1:no_gating | 0.2176 | 0.1722 | 0.2648 | 0.3000 | 0.8846 | 0.5844 | 0.9166 | 0.6479 | 0.0834 |
+| full_s2:no_gating | 0.2130 | 0.1761 | 0.2541 | 0.2500 | 0.8871 | 0.7256 | 0.8389 | 0.6473 | 0.1611 |
+| mean | 0.2144 | 0.1737 | 0.2580 | 0.2667 | 0.8862 | 0.6722 | 0.8697 | 0.6456 | 0.1303 |
+| std | 0.0028 | 0.0021 | 0.0059 | 0.0289 | 0.0013 | 0.0766 | 0.0412 | 0.0035 | 0.0412 |
+[hw2 11:58:36]   done in 0 min 1 s
+[hw2 11:58:36] $ .venv/bin/python -m rsna.evaluate summarize --runs results/full_s0:no_boxscale results/full_s1:no_boxscale results/full_s2:no_boxscale --split test --out results/hw2_summary/full@no_boxscale
+| run | map | ci_lo | ci_hi | threshold | image_roc_auc | sensitivity | specificity | matched_iou | fp_image_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| full_s0:no_boxscale | 0.2170 | 0.1733 | 0.2629 | 0.1000 | 0.8868 | 0.6411 | 0.9056 | 0.6427 | 0.0944 |
+| full_s1:no_boxscale | 0.2224 | 0.1751 | 0.2717 | 0.1500 | 0.8846 | 0.5911 | 0.9285 | 0.6477 | 0.0715 |
+| full_s2:no_boxscale | 0.2228 | 0.1762 | 0.2714 | 0.1500 | 0.8871 | 0.5722 | 0.9346 | 0.6547 | 0.0654 |
+| mean | 0.2207 | 0.1749 | 0.2687 | 0.1333 | 0.8862 | 0.6015 | 0.9229 | 0.6484 | 0.0771 |
+| std | 0.0032 | 0.0015 | 0.0050 | 0.0289 | 0.0013 | 0.0356 | 0.0153 | 0.0060 | 0.0153 |
+[hw2 11:58:36]   done in 0 min 0 s
+[hw2 11:58:36] $ .venv/bin/python -m rsna.evaluate compare --a results/full_s0:tuned --b results/baseline_s0 --split test
+| A | B | split | n | mAP A | mAP B | A−B | 95% CI | P(A−B≤0) |
+|---|---|---|---|---|---|---|---|---|
+| full_s0:tuned (thr 0.10) | baseline_s0 (thr 0.25) | test | 4004 | 0.2170 | 0.1846 | 0.0324 | [0.0166, 0.0479] | 0.000 |
+
+Paired bootstrap (2000 replicates), resampling unit: nih_patient (n = 1725).
+
+-> results/comparisons/full_s0@tuned__vs__baseline_s0__test.json
+[hw2 11:58:36]   done in 0 min 0 s
+[hw2 11:58:36] $ .venv/bin/python -m rsna.evaluate compare --a results/full_s1:tuned --b results/baseline_s1 --split test
+| A | B | split | n | mAP A | mAP B | A−B | 95% CI | P(A−B≤0) |
+|---|---|---|---|---|---|---|---|---|
+| full_s1:tuned (thr 0.15) | baseline_s1 (thr 0.25) | test | 4004 | 0.2204 | 0.1845 | 0.0360 | [0.0145, 0.0577] | 0.000 |
+
+Paired bootstrap (2000 replicates), resampling unit: nih_patient (n = 1725).
+
+-> results/comparisons/full_s1@tuned__vs__baseline_s1__test.json
+[hw2 11:58:37]   done in 0 min 1 s
+[hw2 11:58:37] $ .venv/bin/python -m rsna.evaluate compare --a results/full_s2:tuned --b results/baseline_s2 --split test
+| A | B | split | n | mAP A | mAP B | A−B | 95% CI | P(A−B≤0) |
+|---|---|---|---|---|---|---|---|---|
+| full_s2:tuned (thr 0.15) | baseline_s2 (thr 0.25) | test | 4004 | 0.2228 | 0.2034 | 0.0194 | [0.0053, 0.0331] | 0.004 |
+
+Paired bootstrap (2000 replicates), resampling unit: nih_patient (n = 1725).
+
+-> results/comparisons/full_s2@tuned__vs__baseline_s2__test.json
+[hw2 11:58:37]   done in 0 min 0 s
+[hw2 11:58:37] $ .venv/bin/python -m rsna.report --primary-variant tuned --with-test
+# Журнал экспериментов
+_Сгенерировано `python -m rsna.report` 2026-11-15 11:58; источники: results; primary variant: tuned._
+
+Все val-числа посчитаны при пороге score, выбранном на VAL (argmax свипа), поэтому смещены вверх. У единиц с box_scale, подобранным на VAL (вариант tuned), есть ещё один выбор на тех же снимках, так что их val-смещение больше, чем у B (B взят как обучен, box_scale 1.0). Строки, где tuned сравнивается с неподобранной единицей, помечены †: их val Δ включает выигрыш от подбора (у «Full − box_scale» он ≥ 0 по построению). Несмещённые проверки I3: cross-fit оценка ниже и test-строки. Test в решениях не участвует.
+
+## Чего не хватает
+
+- ничего
+
+## Журнал запусков (ledger)
+
+| run | date | git sha | config | seed | hypothesis (short) | best ep | val mAP | val thr | val AUC | train min | status |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| baseline_s0 | 2026-11-14 12:53 | 7d837c7 | baseline | 0 | Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite… | 4 | 0.1865 | 0.25 | 0.878 | 108.6 | ok |
+| baseline_s1 | 2026-11-14 14:49 | 1f61980 | baseline | 1 | Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite… | 3 | 0.1829 | 0.25 | 0.881 | 69.0 | ok |
+| baseline_s2 | 2026-11-14 16:04 | bdb29d2 | baseline | 2 | Предобученный ResNet-18 с простой anchor-free головой (CenterNet-lite… | 3 | 0.1956 | 0.25 | 0.884 | 79.6 | ok |
+| full_s0 | 2026-11-14 17:29 | bdb29d2 | full | 0 | Сочетание image-level головы с гейтингом score (I1) и лёгких аугмента… | 6 | 0.2200 | 0.10 | 0.893 | 85.5 | ok |
+| b_cls_s0 | 2026-11-14 19:02 | 87944cd | b_cls | 0 | Image-level голова (GAP(C5) -> Linear, BCE «на снимке есть пневмония»… | 3 | 0.1960 | 0.20 | 0.884 | 74.7 | ok |
+| b_aug_s0 | 2026-11-14 20:25 | 87944cd | b_aug | 0 | Лёгкие аугментации (горизонтальный флип с p=0.5, масштаб ±10 %, сдвиг… | 5 | 0.2129 | 0.30 | 0.886 | 58.7 | ok |
+| full_s1 | 2026-11-14 21:29 | 87944cd | full | 1 | Сочетание image-level головы с гейтингом score (I1) и лёгких аугмента… | 6 | 0.2193 | 0.15 | 0.894 | 59.2 | ok |
+| b_cls_s1 | 2026-11-14 22:32 | 87944cd | b_cls | 1 | Image-level голова (GAP(C5) -> Linear, BCE «на снимке есть пневмония»… | 3 | 0.1957 | 0.15 | 0.887 | 33.4 | ok |
+| b_aug_s1 | 2026-11-14 23:08 | 87944cd | b_aug | 1 | Лёгкие аугментации (горизонтальный флип с p=0.5, масштаб ±10 %, сдвиг… | 6 | 0.2094 | 0.30 | 0.887 | 50.5 | ok |
+| full_s2 | 2026-11-15 00:02 | 87944cd | full | 2 | Сочетание image-level головы с гейтингом score (I1) и лёгких аугмента… | 6 | 0.2183 | 0.15 | 0.895 | 50.3 | ok |
+
+## Сводка по конфигам (среднее ± std по сидам, ddof=1)
+
+| config | n seeds | seeds (/variant) | val mAP | val thr | AUC max-box | AUC cls | sens | spec | FP-img rate | mAP pos | test mAP |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| B | 3 | 0, 1, 2 | 0.1883 ± 0.0066 | 0.25 ± 0.00 | 0.881 ± 0.003 | – | 0.732 ± 0.047 | 0.832 ± 0.034 | 0.168 ± 0.034 | 0.2972 ± 0.0133 | 0.1908 ± 0.0109 (n=3) |
+| B+aug | 2 | 0/tuned, 1/tuned | 0.2126 ± 0.0038 | 0.30 ± 0.00 | 0.887 ± 0.000 | – | 0.598 ± 0.044 | 0.915 ± 0.021 | 0.085 ± 0.021 | 0.2751 ± 0.0199 | 0.2157 ± 0.0011 (n=2) |
+| B+cls | 2 | 0/tuned, 1/tuned | 0.1959 ± 0.0003 | 0.17 ± 0.04 | 0.886 ± 0.004 | 0.885 ± 0.002 | 0.583 ± 0.003 | 0.922 ± 0.004 | 0.078 ± 0.004 | 0.2482 ± 0.0032 | 0.1964 ± 0.0060 (n=2) |
+| Full | 3 | 0/tuned, 1/tuned, 2/tuned | 0.2193 ± 0.0009 | 0.13 ± 0.03 | 0.894 ± 0.001 | 0.894 ± 0.001 | 0.597 ± 0.043 | 0.927 ± 0.015 | 0.073 ± 0.015 | 0.2742 ± 0.0124 | 0.2201 ± 0.0029 (n=3) |
+| B+aug / no_boxscale | 2 | 0/no_boxscale, 1/no_boxscale | 0.2111 ± 0.0025 | 0.30 ± 0.00 | 0.887 ± 0.000 | – | 0.598 ± 0.044 | 0.915 ± 0.021 | 0.085 ± 0.021 | 0.2731 ± 0.0181 | 0.2159 ± 0.0005 (n=2) |
+| B+cls / no_boxscale | 2 | 0/no_boxscale, 1/no_boxscale | 0.1959 ± 0.0002 | 0.17 ± 0.04 | 0.886 ± 0.004 | 0.885 ± 0.002 | 0.583 ± 0.003 | 0.922 ± 0.004 | 0.078 ± 0.004 | 0.2482 ± 0.0032 | 0.1966 ± 0.0056 (n=2) |
+| B+cls / no_gating | 2 | 0/no_gating, 1/no_gating | 0.1916 ± 0.0006 | 0.28 ± 0.04 | 0.878 ± 0.008 | 0.885 ± 0.002 | 0.714 ± 0.038 | 0.842 ± 0.019 | 0.158 ± 0.019 | 0.2959 ± 0.0134 | 0.1903 ± 0.0086 (n=2) |
+| Full / no_boxscale | 3 | 0/no_boxscale, 1/no_boxscale, 2/no_boxscale | 0.2192 ± 0.0009 | 0.13 ± 0.03 | 0.894 ± 0.001 | 0.894 ± 0.001 | 0.597 ± 0.043 | 0.927 ± 0.015 | 0.073 ± 0.015 | 0.2740 ± 0.0124 | 0.2207 ± 0.0032 (n=3) |
+| Full / no_gating | 3 | 0/no_gating, 1/no_gating, 2/no_gating | 0.2131 ± 0.0025 | 0.27 ± 0.03 | 0.886 ± 0.001 | 0.894 ± 0.001 | 0.666 ± 0.089 | 0.878 ± 0.040 | 0.122 ± 0.040 | 0.3030 ± 0.0319 | 0.2144 ± 0.0028 (n=3) |
+
+Тривиальные ориентиры (val): prior_boxes 0.0217, prior_boxes_ap 0.0347
+
+## Решение по правилу §5.5: каждый конфиг против B (val, как обучены)
+
+Правило — README §5.5 (тег hw1, коммит 87944cd, 2026-11-14 17:55: через 26 минут после старта full_s0, до первого HW2-контраста): эффект заявляется, только если среднее по сидам Δ > MDE = 0.013 и пулированный парный CI не содержит 0 (ухудшение — симметрично). Обе стороны — таблицы как обучены (box_scale 1.0, порог из своего val-свипа), пары по совпадающему seed. CI отражает только шум выборки пациентов; шум обучения учтён через MDE.
+
+| contrast | seeds | Δ mAP (seed mean) | 95% CI (pooled, paired patient bootstrap) | per seed Δ | Δ > MDE 0.013 | verdict |
+|---|---|---|---|---|---|---|
+| B+aug − B | 0,1 | +0.0264 | [+0.0134, +0.0387] | s0: +0.0264; s1: +0.0265 | да | эффект |
+| B+cls − B | 0,1 | +0.0112 | [-0.0009, +0.0231] | s0: +0.0095; s1: +0.0129 | нет | не обнаружен |
+| Full − B | 0,1,2 | +0.0309 | [+0.0196, +0.0420] | s0: +0.0335; s1: +0.0365; s2: +0.0227 | да | эффект |
+
+Те же контрасты на test — описательно: заранее зарегистрирован только test-контраст Full (tuned) − B (`results/comparisons/full_s*@tuned__vs__baseline_s*__test.*`), в решениях test не участвует.
+
+| contrast | seeds | Δ mAP (seed mean) | 95% CI (pooled, paired patient bootstrap) | per seed Δ | Δ > MDE 0.013 | verdict |
+|---|---|---|---|---|---|---|
+| B+aug − B | 0,1 | +0.0314 | [+0.0151, +0.0468] | s0: +0.0316; s1: +0.0311 | да | эффект |
+| B+cls − B | 0,1 | +0.0121 | [-0.0018, +0.0254] | s0: +0.0080; s1: +0.0161 | нет | не обнаружен |
+| Full − B | 0,1,2 | +0.0299 | [+0.0147, +0.0446] | s0: +0.0324; s1: +0.0380; s2: +0.0194 | да | эффект |
+
+## Заранее зарегистрированный контраст: Full (основная единица) − B
+
+Тот контраст, который `scripts/run_hw2.sh` с самого начала считал на test (`rsna.evaluate compare --a results/full_s<seed>:<primary> --b results/baseline_s<seed>`), пулированный по сидам. Full взят в основном варианте (у tuned box_scale подобран на val), B — как обучен; на val Δ поэтому включает подбор box_scale (†). Строка «Full − B» в таблице решений выше — контраст «как обучены» с обеих сторон.
+
+| ablation (Δ = Full − ablated) | split | seeds | Δ mAP (seed mean) | 95% CI (paired patient bootstrap) | P(Δ≤0) | per seed Δ [95% CI] |
+|---|---|---|---|---|---|---|
+| Full (primary) − B (pre-registered) † | val | 0,1,2 | +0.0310 | [+0.0197, +0.0423] | 0.000 | s0: +0.0335 [+0.0206, +0.0467]; s1: +0.0368 [+0.0204, +0.0525]; s2: +0.0227 [+0.0072, +0.0388] |
+| Full (primary) − B (pre-registered) | test | 0,1,2 | +0.0292 | [+0.0141, +0.0438] | 0.000 | s0: +0.0324 [+0.0166, +0.0479]; s1: +0.0360 [+0.0145, +0.0577]; s2: +0.0194 [+0.0053, +0.0331] |
+
+## Абляции: парные разности против Full
+
+Δ = mAP(Full) − mAP(абляция) на одних и тех же снимках; для конфигов пары по совпадающему seed и обе стороны как обучены (box_scale 1.0), для post-hoc вариантов это тот же чекпойнт против основной единицы Full. Seed-mean Δ: CI учитывает только шум выборки снимков (общий ресэмпл для всех сидов), разброс между сидами виден по per-seed значениям.
+
+| ablation (Δ = Full − ablated) | split | seeds | Δ mAP (seed mean) | 95% CI (paired patient bootstrap) | P(Δ≤0) | per seed Δ [95% CI] |
+|---|---|---|---|---|---|---|
+| Full − aug  (vs B+cls) | val | 0,1 | +0.0238 | [+0.0132, +0.0343] | 0.000 | s0: +0.0240 [+0.0123, +0.0355]; s1: +0.0236 [+0.0104, +0.0373] |
+| Full − cls head & gating  (vs B+aug) | val | 0,1 | +0.0086 | [-0.0004, +0.0176] | 0.030 | s0: +0.0071 [-0.0041, +0.0188]; s1: +0.0100 [+0.0001, +0.0208] |
+| Full − all  (vs B) | val | 0,1,2 | +0.0309 | [+0.0196, +0.0420] | 0.000 | s0: +0.0335 [+0.0206, +0.0467]; s1: +0.0365 [+0.0202, +0.0516]; s2: +0.0227 [+0.0072, +0.0388] |
+| Full − box_scale  (post hoc, same ckpt) † | val | 0,1,2 | +0.0001 | [-0.0005, +0.0008] | 0.386 | s0: +0.0000 [+0.0000, +0.0000]; s1: +0.0003 [-0.0016, +0.0023]; s2: +0.0000 [+0.0000, +0.0000] |
+| Full − gating  (post hoc, same ckpt) | val | 0,1,2 | +0.0062 | [-0.0018, +0.0144] | 0.063 | s0: +0.0083 [-0.0013, +0.0177]; s1: +0.0081 [-0.0012, +0.0179]; s2: +0.0023 [-0.0098, +0.0151] |
+| Full − aug  (vs B+cls) | test | 0,1 | +0.0231 | [+0.0122, +0.0343] | 0.000 | s0: +0.0244 [+0.0126, +0.0360]; s1: +0.0218 [+0.0074, +0.0364] |
+| Full − cls head & gating  (vs B+aug) | test | 0,1 | +0.0038 | [-0.0039, +0.0113] | 0.174 | s0: +0.0008 [-0.0087, +0.0097]; s1: +0.0069 [-0.0030, +0.0173] |
+| Full − all  (vs B) | test | 0,1,2 | +0.0299 | [+0.0147, +0.0446] | 0.000 | s0: +0.0324 [+0.0166, +0.0479]; s1: +0.0380 [+0.0170, +0.0592]; s2: +0.0194 [+0.0053, +0.0331] |
+| Full − box_scale  (post hoc, same ckpt) | test | 0,1,2 | -0.0007 | [-0.0013, -0.0001] | 0.989 | s0: +0.0000 [+0.0000, +0.0000]; s1: -0.0020 [-0.0038, -0.0003]; s2: +0.0000 [+0.0000, +0.0000] |
+| Full − gating  (post hoc, same ckpt) | test | 0,1,2 | +0.0057 | [-0.0026, +0.0140] | 0.096 | s0: +0.0045 [-0.0048, +0.0139]; s1: +0.0029 [-0.0055, +0.0114]; s2: +0.0098 [-0.0047, +0.0227] |
+
+† val Δ включает подбор box_scale на тех же снимках только у Full (смещение в пользу Full).
+
+### I3 (box_scale): cross-fit оценка на val
+
+Масштаб и порог выбираются на одной случайной половине val, выигрыш против box_scale 1.0 меряется на другой (2 фолда, среднее); в отличие от «Full − box_scale» эта оценка не завышена выбором.
+
+- B+aug s0: выбран ×0.95 (val 0.2153 против 0.2129 при ×1.0, выигрыш ≥ 0 по построению); cross-fit +0.0022 (масштабы по фолдам 0.95, 0.95)
+- B+aug s1: выбран ×0.975 (val 0.2099 против 0.2093 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0018 (масштабы по фолдам 1.025, 0.95)
+- B+cls s0: выбран ×1.05 (val 0.1961 против 0.1960 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0016 (масштабы по фолдам 1.075, 1.0)
+- B+cls s1: выбран ×1.0 (val 0.1957 против 0.1957 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0009 (масштабы по фолдам 1.025, 1.0)
+- Full s0: выбран ×1.0 (val 0.2200 против 0.2200 при ×1.0, выигрыш ≥ 0 по построению); cross-fit +0.0000 (масштабы по фолдам 1.0, 1.0)
+- Full s1: выбран ×0.975 (val 0.2196 против 0.2194 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0001 (масштабы по фолдам 1.0, 0.975)
+- Full s2: выбран ×1.0 (val 0.2183 против 0.2183 при ×1.0, выигрыш ≥ 0 по построению); cross-fit -0.0021 (масштабы по фолдам 1.025, 0.975)
+
+### I1: выбор эпохи и абляция «Full − gating»
+
+Лучшая эпоха cls-моделей выбрана по val mAP с гейтингом; no_gating переоценивает тот же чекпойнт. Если бы эпоху выбирали по скорингу heatmap, val mAP без гейтинга был бы выше на «зазор», т.е. Δ(Full − gating) на val завышена на эту величину (сам зазор тоже смещён вверх выбором). Основное свидетельство для I1 — обученный контраст «Full − cls head & gating (vs B+aug)» и 2×2.
+
+- B+cls s0: без гейтинга на лучшей эпохе (3) 0.1912, максимум по эпохам 0.1912 (эпоха 3) → зазор +0.0000
+- B+cls s1: без гейтинга на лучшей эпохе (3) 0.1921, максимум по эпохам 0.1921 (эпоха 3) → зазор +0.0000
+- Full s0: без гейтинга на лучшей эпохе (6) 0.2117, максимум по эпохам 0.2117 (эпоха 6) → зазор +0.0000
+- Full s1: без гейтинга на лучшей эпохе (6) 0.2100, максимум по эпохам 0.2100 (эпоха 6) → зазор +0.0000
+- Full s2: без гейтинга на лучшей эпохе (6) 0.2160, максимум по эпохам 0.2160 (эпоха 6) → зазор +0.0000
+
+## 2×2: главные эффекты и взаимодействие (val)
+
+| effect | seeds | estimate | 95% CI | P(≤0) |
+|---|---|---|---|---|
+| aug main effect | 0,1 | +0.0251 | [+0.0160, +0.0338] | 0.000 |
+| cls main effect | 0,1 | +0.0099 | [+0.0021, +0.0176] | 0.005 |
+| interaction aug×cls | 0,1 | -0.0026 | [-0.0167, +0.0121] | 0.624 |
+
+Клетки 2×2 — таблицы прогонов как обучены (box_scale 1.0 во всех четырёх, порог из их val-свипа): post-hoc I3 сюда не входит. Единицы по клеткам: B: as trained; B+aug: as trained; B+cls: as trained; Full: as trained
+
+## MLflow
+
+| run | status | mlflow id | start | best val mAP | matches a results dir |
+|---|---|---|---|---|---|
+| full_s2 | FINISHED | b096efc5 | 2026-11-15 00:02 | 0.2183 | yes |
+| b_aug_s1 | FINISHED | 71c35767 | 2026-11-14 23:08 | 0.2094 | yes |
+| b_cls_s1 | FINISHED | 7f0bcbd7 | 2026-11-14 22:32 | 0.1957 | yes |
+| full_s1 | FINISHED | f5ec1f6f | 2026-11-14 21:29 | 0.2193 | yes |
+| b_aug_s0 | FINISHED | ddade703 | 2026-11-14 20:25 | 0.2129 | yes |
+| b_cls_s0 | FINISHED | b839282e | 2026-11-14 19:02 | 0.1960 | yes |
+| full_s0 | FINISHED | 99e78e6c | 2026-11-14 17:29 | 0.2200 | yes |
+| baseline_s2 | FINISHED | e90bd302 | 2026-11-14 16:04 | 0.1956 | yes |
+| baseline_s1 | FINISHED | 1bbb2ec5 | 2026-11-14 14:49 | 0.1829 | yes |
+| baseline_s0 | FINISHED | 8a123f73 | 2026-11-14 12:53 | 0.1865 | yes |
+
+## Рисунки
+
+- `reports/figures/hw2_val_map_by_config.png`
+- `reports/figures/hw2_learning_curves.png`
+- `reports/figures/hw2_ablation_deltas.png`
+- `reports/figures/hw2_threshold_curves.png`
+
+-> results/experiments.md
+-> reports/figures/hw2_val_map_by_config.png
+-> reports/figures/hw2_learning_curves.png
+-> reports/figures/hw2_ablation_deltas.png
+-> reports/figures/hw2_threshold_curves.png
+[hw2 11:58:46]   done in 0 min 9 s
+[hw2 11:58:46] finished; log logs/run_hw2_20261115_115744.log

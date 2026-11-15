@@ -13,9 +13,9 @@ from rsna import paths
 from rsna.analysis import (box_pairs, calibration, decomposition, decomposition_md, greedy_pairs, per_image_table,
                            scale_boxes, slice_table)
 from rsna.metric import load_gt, paired_bootstrap_diff, preds_from_df, rsna_map
-from rsna.report import (Evaluated, Run, Unit, ablation_rows, build, build_ledger, config_name, contrast_bootstrap,
-                         discover, evaluate_unit, factorial_rows, group_by_config, is_smoke, missing_report,
-                         posthoc_units, primary_unit, seed_pairs, summary_frame, unit_metrics)
+from rsna.report import (MDE, Evaluated, Run, Unit, ablation_rows, build, build_ledger, config_name, contrast_bootstrap,
+                         decision_rows, decision_verdict, discover, evaluate_unit, factorial_rows, group_by_config,
+                         is_smoke, missing_report, posthoc_units, primary_unit, seed_pairs, summary_frame, unit_metrics)
 
 HAS_DATA = paths.METADATA.exists() and paths.SPLIT_FILE.exists() and paths.BOXES.exists()
 needs_data = pytest.mark.skipif(not HAS_DATA, reason="processed data / split not available")
@@ -169,6 +169,27 @@ def test_seed_matched_ablation_rows() -> None:
     assert rows[0]["per_seed"][0]["ref"] == "full_s0" and rows[0]["per_seed"][0]["abl"] == "b_cls_s0"
 
 
+def test_decision_rule_needs_both_mde_and_ci() -> None:
+    assert decision_verdict(MDE + 0.01, 0.001, 0.05) == "эффект"
+    assert decision_verdict(MDE - 0.001, 0.001, 0.03).startswith("CI > 0")  # "significant" but below the seed noise
+    assert decision_verdict(MDE, 0.001, 0.03).startswith("CI > 0")  # strict '>' as in README §5.5
+    assert decision_verdict(MDE + 0.01, -0.001, 0.05).startswith("|Δ| > MDE")
+    assert decision_verdict(0.0, -0.01, 0.01) == "не обнаружен"
+    assert decision_verdict(-MDE - 0.01, -0.05, -0.001) == "ухудшение"  # harm is reported, not hidden as a null
+    assert decision_verdict(-0.005, -0.01, -0.001).startswith("CI < 0")
+
+
+def test_decision_rows_compare_every_config_with_b_on_matched_seeds() -> None:
+    rng = np.random.default_rng(1)
+    base = {s: _ev(f"baseline_s{s}", _series(rng.random(50).tolist())) for s in (0, 1, 2)}
+    b_aug = {s: _ev(f"b_aug_s{s}", _series((rng.random(50) + 0.5).tolist())) for s in (0, 1)}
+    rows = decision_rows({"baseline": base, "b_aug": b_aug}, n_boot=200)
+    assert len(rows) == 1 and rows[0]["config"] == "b_aug" and rows[0]["seeds"] == [0, 1]
+    per = [b_aug[s].metrics["map"] - base[s].metrics["map"] for s in (0, 1)]
+    assert rows[0]["diff"] == pytest.approx(np.mean(per)) and rows[0]["verdict"] == "эффект"
+    assert decision_rows({"b_aug": b_aug}, n_boot=10) == []
+
+
 def test_factorial_additive_has_zero_interaction() -> None:
     rng = np.random.default_rng(2)
     base = rng.random(80) * 0.5
@@ -246,7 +267,8 @@ def test_decomposition_md_states_total_localization() -> None:
 @needs_data
 def test_build_factorial_is_immune_to_box_scale_tuning(tmp_path: Path) -> None:
     """Null study: 4 configs with IDENTICAL val tables (boxes x1.25 too large), box_scale tuned for all but B as in
-    run_hw2.sh. The 2x2 must be exactly 0 (as-trained cells); val Δs of tuned vs untuned units carry the † flag."""
+    run_hw2.sh. The 2x2, the decision table and the config ablations (as-trained cells) must be exactly 0; only Full's
+    tuned-vs-untuned post-hoc contrast carries the tuning gain and the † flag."""
     from rsna.evaluate import load_meta
     from rsna.posthoc import make_variant, tune
 
@@ -276,10 +298,15 @@ def test_build_factorial_is_immune_to_box_scale_tuning(tmp_path: Path) -> None:
                 mlflow_uri=f"sqlite:///{tmp_path / 'none.db'}")
     assert len(out["factorial"]) == 3 and all(f["diff"] == 0 for f in out["factorial"])
     d = {r["ablation"]: r for r in out["deltas"]}
-    assert d["baseline"]["diff"] > 0.05 and d["baseline"]["box_scale_selection"]  # tuning gain only, flagged
-    assert d["no_boxscale"]["box_scale_selection"] and d["b_cls"]["diff"] == 0 and not d["b_cls"]["box_scale_selection"]
+    # config contrasts use the as-trained tables of both sides: identical tables -> exactly 0, nothing flagged
+    for c in ("baseline", "b_cls", "b_aug"):
+        assert d[c]["diff"] == 0 and not d[c]["box_scale_selection"]
+    # the tuning gain shows up only in Full's own post-hoc contrast (tuned vs as trained), and it is flagged
+    assert d["no_boxscale"]["diff"] > 0.05 and d["no_boxscale"]["box_scale_selection"]
+    assert all(r["diff"] == 0 for r in out["decision"]) and all(r["reference"] == "baseline" for r in out["decision"])
+    assert len(out["prereg"]) == 1 and out["prereg"][0]["diff"] > 0.05 and out["prereg"][0]["box_scale_selection"]
     md = (tmp_path / "exp.md").read_text()
-    assert "одинаково для всех конфигов" not in md and "cross-fit" in md and "Full − all  (vs B) †" in md
+    assert "одинаково для всех конфигов" not in md and "cross-fit" in md and "Full − box_scale  (post hoc, same ckpt) †" in md
 
 
 def test_analysis_categories_decomposition_and_slices() -> None:

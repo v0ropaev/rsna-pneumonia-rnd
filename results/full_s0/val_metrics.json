@@ -1,0 +1,248 @@
+{
+  "run": "full_s0",
+  "split": "val",
+  "threshold_source": "from_val (argmax of results/<run>/threshold_sweep.csv)",
+  "limit": null,
+  "train_run": {
+    "start": "2026-11-14T17:29:39",
+    "mlflow_run_id": "99e78e6c01be449fb95a97e6e70b6558",
+    "git_sha": "bdb29d2"
+  },
+  "note": "val threshold chosen on val: selection-biased",
+  "n_images": 4002,
+  "threshold": 0.1,
+  "map": 0.220009,
+  "ci_lo": 0.191607,
+  "ci_hi": 0.246509,
+  "bootstrap_unit": "nih_patient",
+  "n_scored": 1178,
+  "image_roc_auc": 0.892557,
+  "image_pr_auc": 0.721244,
+  "sensitivity": 0.646667,
+  "specificity": 0.91038,
+  "matched_iou": 0.640038,
+  "errors": {
+    "n_pos": 900,
+    "n_neg": 3102,
+    "n_fp_neg_images": 278,
+    "n_scored": 1178,
+    "fp_image_rate": 0.08962,
+    "pos_with_boxes_rate": 0.646667,
+    "map_pos": 0.287968,
+    "loss_fp_neg": 0.235993,
+    "loss_missed_pos": 0.269949,
+    "loss_loc_pos": 0.274049
+  },
+  "oracle_gating": {
+    "map_at_run_thr": 0.287968,
+    "best_thr": 0.05,
+    "map_at_best_thr": 0.310629
+  },
+  "slices": {
+    "view": [
+      {
+        "slice": "view",
+        "value": "AP",
+        "n": 1826,
+        "n_pos": 698,
+        "map": 0.242195,
+        "ci_lo": 0.21232,
+        "ci_hi": 0.272188,
+        "n_scored": 919,
+        "map_pos": 0.318878,
+        "fp_image_rate": 0.195922,
+        "sensitivity": 0.719198
+      },
+      {
+        "slice": "view",
+        "value": "PA",
+        "n": 2176,
+        "n_pos": 202,
+        "map": 0.141289,
+        "ci_lo": 0.10751,
+        "ci_hi": 0.174689,
+        "n_scored": 259,
+        "map_pos": 0.181157,
+        "fp_image_rate": 0.028875,
+        "sensitivity": 0.39604
+      }
+    ],
+    "sex": [
+      {
+        "slice": "sex",
+        "value": "F",
+        "n": 1730,
+        "n_pos": 376,
+        "map": 0.217127,
+        "ci_lo": 0.159889,
+        "ci_hi": 0.259092,
+        "n_scored": 498,
+        "map_pos": 0.287578,
+        "fp_image_rate": 0.090103,
+        "sensitivity": 0.625
+      },
+      {
+        "slice": "sex",
+        "value": "M",
+        "n": 2272,
+        "n_pos": 524,
+        "map": 0.22212,
+        "ci_lo": 0.191815,
+        "ci_hi": 0.254343,
+        "n_scored": 680,
+        "map_pos": 0.288247,
+        "fp_image_rate": 0.089245,
+        "sensitivity": 0.662214
+      }
+    ],
+    "age_bucket": [
+      {
+        "slice": "age_bucket",
+        "value": "<20",
+        "n": 337,
+        "n_pos": 125,
+        "map": 0.292237,
+        "ci_lo": 0.213249,
+        "ci_hi": 0.350543,
+        "n_scored": 157,
+        "map_pos": 0.36705,
+        "fp_image_rate": 0.150943,
+        "sensitivity": 0.784
+      },
+      {
+        "slice": "age_bucket",
+        "value": "20-40",
+        "n": 1087,
+        "n_pos": 265,
+        "map": 0.21548,
+        "ci_lo": 0.165258,
+        "ci_hi": 0.266013,
+        "n_scored": 344,
+        "map_pos": 0.279717,
+        "fp_image_rate": 0.096107,
+        "sensitivity": 0.641509
+      },
+      {
+        "slice": "age_bucket",
+        "value": "40-60",
+        "n": 1598,
+        "n_pos": 334,
+        "map": 0.242063,
+        "ci_lo": 0.197072,
+        "ci_hi": 0.285609,
+        "n_scored": 431,
+        "map_pos": 0.312363,
+        "fp_image_rate": 0.076741,
+        "sensitivity": 0.667665
+      },
+      {
+        "slice": "age_bucket",
+        "value": "60+",
+        "n": 980,
+        "n_pos": 176,
+        "map": 0.141607,
+        "ci_lo": 0.098871,
+        "ci_hi": 0.175874,
+        "n_scored": 246,
+        "map_pos": 0.197929,
+        "fp_image_rate": 0.087065,
+        "sensitivity": 0.517045
+      }
+    ],
+    "cls": [
+      {
+        "slice": "cls",
+        "value": "Lung Opacity",
+        "n": 900,
+        "n_pos": 900,
+        "map": 0.287968,
+        "ci_lo": 0.25548,
+        "ci_hi": 0.320506,
+        "n_scored": 900,
+        "map_pos": 0.287968,
+        "fp_image_rate": null,
+        "sensitivity": 0.646667
+      },
+      {
+        "slice": "cls",
+        "value": "No Lung Opacity / Not Normal",
+        "n": 1771,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 275,
+        "map_pos": null,
+        "fp_image_rate": 0.15528,
+        "sensitivity": null
+      },
+      {
+        "slice": "cls",
+        "value": "Normal",
+        "n": 1331,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 3,
+        "map_pos": null,
+        "fp_image_rate": 0.002254,
+        "sensitivity": null
+      }
+    ],
+    "n_boxes": [
+      {
+        "slice": "n_boxes",
+        "value": "0",
+        "n": 3102,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 278,
+        "map_pos": null,
+        "fp_image_rate": 0.08962,
+        "sensitivity": null
+      },
+      {
+        "slice": "n_boxes",
+        "value": "1",
+        "n": 392,
+        "n_pos": 392,
+        "map": 0.175994,
+        "ci_lo": 0.149202,
+        "ci_hi": 0.202454,
+        "n_scored": 392,
+        "map_pos": 0.175994,
+        "fp_image_rate": null,
+        "sensitivity": 0.492347
+      },
+      {
+        "slice": "n_boxes",
+        "value": "2",
+        "n": 490,
+        "n_pos": 490,
+        "map": 0.381331,
+        "ci_lo": 0.335427,
+        "ci_hi": 0.421977,
+        "n_scored": 490,
+        "map_pos": 0.381331,
+        "fp_image_rate": null,
+        "sensitivity": 0.761224
+      },
+      {
+        "slice": "n_boxes",
+        "value": "3+",
+        "n": 18,
+        "n_pos": 18,
+        "map": 0.184954,
+        "ci_lo": 0.106428,
+        "ci_hi": 0.272955,
+        "n_scored": 18,
+        "map_pos": 0.184954,
+        "fp_image_rate": null,
+        "sensitivity": 0.888889
+      }
+    ]
+  }
+}

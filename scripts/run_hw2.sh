@@ -10,11 +10,13 @@
 #   (when that run exists): as trained vs B for every config (box_scale 1.0 on both sides: the trained factors only),
 #   plus full:tuned vs B (the headline Full − B, which includes I3; its val Δ also includes the box_scale selection).
 #   B = HW1 baseline as trained (box_scale 1.0) by design; rsna.report's 2x2 uses the as-trained tables of all cells.
-# Then val summaries + rsna.report. TEST only with EVAL_TEST=1 (once, at the very end): every run and variant incl.
+# Then val summaries + rsna.report + the §7 error/mechanism analyses (scripts/plot_hw2_errors.py,
+# scripts/analyze_hw2_mechanism.py; val only). TEST only with EVAL_TEST=1 (once, at the very end): every run and variant incl.
 # baseline seeds, test summaries, paired test Full vs B per seed, report --with-test. Nothing is selected on test.
 # Env: SEEDS="0 1 2" (keep only queue items with these seeds), QUEUE="full:0 b_cls:0 ..." (replace the queue),
 #      BASELINE_SEEDS="0 1 2", EVAL_TEST=0|1, DRY_RUN=0|1 (print the plan, run nothing), RSNA_DEVICE (cpu|mps|cuda).
-# Logs: logs/run_hw2_<timestamp>.log (everything) + logs/<run>.train.log (gitignored via *.log). Run from anywhere.
+# Logs: logs/run_hw2_<timestamp>.log (everything) + logs/<run>.train.log (gitignored); copies cited by reports/HW2.md
+# are kept, with relative paths, in results/logs/ (versioned). Run from anywhere.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PYTHONPATH=src  # always this checkout's code (the venv may be shared between checkouts)
@@ -87,7 +89,9 @@ for it in ${items[@]+"${items[@]}"}; do
   say "=== $name ($cfg) ==="
   if [ -f "results/$name/meta.json" ]; then
     skip "results/$name/meta.json"
-    if [ ! -f "runs/$name/best.pt" ]; then say "WARNING: runs/$name/best.pt missing: test evaluation of $name will fail"; fi
+    if [ "$EVAL_TEST" = 1 ] && [ ! -f "runs/$name/best.pt" ] && [ ! -f "results/$name/test_metrics.json" ]; then
+      say "WARNING: runs/$name/best.pt missing: test evaluation of $name will fail"
+    fi
   else
     ow=()
     if [ -e "results/$name" ] || [ -e "runs/$name" ]; then
@@ -143,6 +147,8 @@ summaries() {  # $1 = split
 say "=== val summaries ==="
 summaries val
 run $PY -m rsna.report --primary-variant "$PRIMARY"
+run $PY scripts/plot_hw2_errors.py        # §7 figure + results/hw2_summary/error_decomposition.md (val only)
+run $PY scripts/analyze_hw2_mechanism.py  # §7 matched-operating-point checks -> results/hw2_summary/mechanism.md (val only)
 
 # ----------------------------------------------------------------------------- test (final, once)
 if [ "$EVAL_TEST" = 1 ]; then

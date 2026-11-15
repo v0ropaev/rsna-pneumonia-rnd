@@ -1,0 +1,7 @@
+label,split,seeds,diff,lo,hi,p_diff_le_0,n_images,n_groups,n_boot,bootstrap_unit,n_units,box_scale_selection,config,reference,verdict
+B+aug − B,val,"[0, 1]",0.02644,0.01345,0.03868,0.00050,4002,2,2000,nih_patient,1718,False,b_aug,baseline,эффект
+B+cls − B,val,"[0, 1]",0.01120,-0.00088,0.02311,0.03550,4002,2,2000,nih_patient,1718,False,b_cls,baseline,не обнаружен
+Full − B,val,"[0, 1, 2]",0.03091,0.01959,0.04200,0.00000,4002,3,2000,nih_patient,1718,False,full,baseline,эффект
+B+aug − B,test,"[0, 1]",0.03137,0.01508,0.04679,0.00000,4004,2,2000,nih_patient,1725,False,b_aug,baseline,эффект
+B+cls − B,test,"[0, 1]",0.01206,-0.00178,0.02537,0.04850,4004,2,2000,nih_patient,1725,False,b_cls,baseline,не обнаружен
+Full − B,test,"[0, 1, 2]",0.02991,0.01467,0.04460,0.00000,4004,3,2000,nih_patient,1725,False,full,baseline,эффект

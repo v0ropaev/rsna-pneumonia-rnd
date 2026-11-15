@@ -1,0 +1,23 @@
+{
+  "run_name": "b_aug_s1",
+  "git_sha": "87944cd",
+  "seed": 1,
+  "device": "mps",
+  "torch": "2.15.0",
+  "python": "3.11.15",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "start": "2026-11-14T23:08:55",
+  "end": "2026-11-15T00:02:18",
+  "train_seconds": 3032.2,
+  "wall_seconds": 3203.7,
+  "n_train": 18678,
+  "n_val": 4002,
+  "total_steps": 7002,
+  "mlflow_run_id": "71c357675abb45c8a7850dbe45f5e646",
+  "best_epoch": 6,
+  "val_map": 0.20935,
+  "val_thr": 0.3,
+  "val_auc": 0.88685,
+  "train_min": 50.54,
+  "determinism": "MPS kernels are not bit-deterministic; same-seed reruns match only approximately"
+}
