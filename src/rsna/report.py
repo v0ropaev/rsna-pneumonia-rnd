@@ -13,6 +13,8 @@ Inputs (all optional, partial results are fine; what is missing is printed):
   `--primary-variant NAME` makes that variant the run's main result wherever it exists (e.g. a VAL-tuned box_scale);
   the raw training output then appears as the post-hoc ablation "no_boxscale" (it has box_scale 1.0 and the
   configured score_mode; "as_trained" if the config itself sets box_scale != 1.0) unless such a variant dir exists.
+* HW3 runs (names starting with `hw3_`: robustness / leakage retrainings on other split files, summarized by
+  scripts/run_hw3.sh) are ignored here, in the run dirs and in the ledger, so the HW2 report stays reproducible.
 * `results/experiments.csv` of every --results dir, results/baseline_trivial/*/val_metrics.json, MLflow (sqlite db
   of this checkout, read only if the file exists).
 Every val number uses the run's VAL-selected score threshold (argmax of its sweep), so val mAP is selection-biased.
@@ -148,8 +150,12 @@ def load_run(d: Path) -> Run:
                bool(meta) and has_tables(d), variants)
 
 
+HW3_PREFIX = "hw3_"  # HW3 runs are not part of the HW2 report (see module doc)
+
+
 def discover(results_dirs: Iterable[Path]) -> tuple[list[Run], list[str]]:
-    """All run dirs under the results dirs (a dir may itself be a run); the first occurrence of a name wins."""
+    """All run dirs under the results dirs (a dir may itself be a run); the first occurrence of a name wins.
+    HW3 runs (HW3_PREFIX) are skipped."""
     runs: dict[str, Run] = {}
     notes: list[str] = []
     for root in results_dirs:
@@ -158,6 +164,8 @@ def discover(results_dirs: Iterable[Path]) -> tuple[list[Run], list[str]]:
             continue
         cands = [root] if (root / "config.yaml").exists() else sorted(p for p in root.iterdir() if (p / "config.yaml").exists())
         for d in cands:
+            if d.name.startswith(HW3_PREFIX):
+                continue
             if d.name in runs:
                 notes.append(f"duplicate run name {d.name}: using {runs[d.name].dir}, ignoring {d}")
                 continue
@@ -431,7 +439,8 @@ def read_ledgers(results_dirs: Iterable[Path]) -> pd.DataFrame:
         p = root / "experiments.csv"
         if p.exists():
             with open(p, newline="") as f:
-                frames.append(pd.DataFrame(list(csv.DictReader(f))))
+                rows = [r for r in csv.DictReader(f) if not str(r.get("run_name", "")).startswith(HW3_PREFIX)]
+                frames.append(pd.DataFrame(rows))
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
 
 
@@ -709,7 +718,8 @@ def mlflow_runs(uri: str) -> pd.DataFrame | None:
         df["start_time"] = pd.to_datetime(df["start_time"], utc=True).dt.tz_convert(datetime.now().astimezone().tzinfo)
     cols = {"tags.mlflow.runName": "run_name", "status": "status", "run_id": "run_id", "start_time": "start",
             "metrics.best_val_map": "best_val_map", "tags.seed": "seed", "tags.git_sha": "git_sha"}
-    return df[[c for c in cols if c in df.columns]].rename(columns=cols)
+    df = df[[c for c in cols if c in df.columns]].rename(columns=cols)
+    return df[~df["run_name"].astype(str).str.startswith(HW3_PREFIX)] if "run_name" in df else df
 
 
 def mlflow_md(df: pd.DataFrame | None, runs: list[Run]) -> str:

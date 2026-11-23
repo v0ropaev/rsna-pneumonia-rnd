@@ -1,0 +1,184 @@
+{
+  "base": "data/splits/split_v1.csv",
+  "v1": {
+    "train": {
+      "n_images": 18678,
+      "n_patients": 8009,
+      "pos_%": 22.55,
+      "AP_%": 45.62,
+      "not_normal_%": 44.31
+    },
+    "val": {
+      "n_images": 4002,
+      "n_patients": 1718,
+      "pos_%": 22.49,
+      "AP_%": 45.63,
+      "not_normal_%": 44.25
+    }
+  },
+  "train_frac50": {
+    "train": {
+      "n_images": 9340,
+      "n_patients": 4008,
+      "pos_%": 22.56,
+      "AP_%": 45.62,
+      "not_normal_%": 44.31
+    },
+    "val": {
+      "n_images": 4002,
+      "n_patients": 1718,
+      "pos_%": 22.49,
+      "AP_%": 45.63,
+      "not_normal_%": 44.25
+    },
+    "unused": {
+      "n_images": 9338,
+      "n_patients": 4001,
+      "pos_%": 22.54,
+      "AP_%": 45.61,
+      "not_normal_%": 44.31
+    }
+  },
+  "train_frac20": {
+    "train": {
+      "n_images": 3736,
+      "n_patients": 1600,
+      "pos_%": 22.59,
+      "AP_%": 45.64,
+      "not_normal_%": 44.3
+    },
+    "val": {
+      "n_images": 4002,
+      "n_patients": 1718,
+      "pos_%": 22.49,
+      "AP_%": 45.63,
+      "not_normal_%": 44.25
+    },
+    "unused": {
+      "n_images": 14942,
+      "n_patients": 6409,
+      "pos_%": 22.54,
+      "AP_%": 45.61,
+      "not_normal_%": 44.32
+    }
+  },
+  "train_frac10": {
+    "train": {
+      "n_images": 1868,
+      "n_patients": 796,
+      "pos_%": 22.64,
+      "AP_%": 45.66,
+      "not_normal_%": 44.27
+    },
+    "val": {
+      "n_images": 4002,
+      "n_patients": 1718,
+      "pos_%": 22.49,
+      "AP_%": 45.63,
+      "not_normal_%": 44.25
+    },
+    "unused": {
+      "n_images": 16810,
+      "n_patients": 7213,
+      "pos_%": 22.54,
+      "AP_%": 45.61,
+      "not_normal_%": 44.32
+    }
+  },
+  "resplit_s1": {
+    "train": {
+      "n_images": 18677,
+      "n_patients": 8013,
+      "pos_%": 22.55,
+      "AP_%": 45.62,
+      "not_normal_%": 44.3
+    },
+    "val": {
+      "n_images": 4003,
+      "n_patients": 1714,
+      "pos_%": 22.48,
+      "AP_%": 45.62,
+      "not_normal_%": 44.32
+    },
+    "val_overlap_with_v1_val_%": 23.98
+  },
+  "resplit_s2": {
+    "train": {
+      "n_images": 18676,
+      "n_patients": 8012,
+      "pos_%": 22.52,
+      "AP_%": 45.6,
+      "not_normal_%": 44.31
+    },
+    "val": {
+      "n_images": 4004,
+      "n_patients": 1715,
+      "pos_%": 22.63,
+      "AP_%": 45.68,
+      "not_normal_%": 44.28
+    },
+    "val_overlap_with_v1_val_%": 23.63
+  },
+  "resplit_s3": {
+    "train": {
+      "n_images": 18676,
+      "n_patients": 8010,
+      "pos_%": 22.53,
+      "AP_%": 45.61,
+      "not_normal_%": 44.3
+    },
+    "val": {
+      "n_images": 4004,
+      "n_patients": 1717,
+      "pos_%": 22.6,
+      "AP_%": 45.65,
+      "not_normal_%": 44.31
+    },
+    "val_overlap_with_v1_val_%": 24.05
+  },
+  "leak_s0": {
+    "train": {
+      "n_images": 18678,
+      "n_patients": 8157,
+      "pos_%": 22.98,
+      "AP_%": 46.13,
+      "not_normal_%": 44.46
+    },
+    "val": {
+      "n_images": 3308,
+      "n_patients": 1718,
+      "pos_%": 20.53,
+      "AP_%": 43.17,
+      "not_normal_%": 43.26
+    },
+    "unused": {
+      "n_images": 694,
+      "n_patients": 630,
+      "pos_%": 20.32,
+      "AP_%": 43.52,
+      "not_normal_%": 45.1
+    },
+    "roles": {
+      "clean_multi": {
+        "n_images": 1421,
+        "n_patients": 327,
+        "pos_%": 26.11
+      },
+      "clean_single": {
+        "n_images": 1064,
+        "n_patients": 1064,
+        "pos_%": 7.33
+      },
+      "donor": {
+        "n_images": 694,
+        "n_patients": 327,
+        "pos_%": 31.84
+      },
+      "leaked_eval": {
+        "n_images": 823,
+        "n_patients": 327,
+        "pos_%": 27.95
+      }
+    }
+  }
+}
