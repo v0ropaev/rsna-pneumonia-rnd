@@ -1,0 +1,1722 @@
+[hw3 02:41:40] skip (data/splits/hw3/summary.json exists)
+[hw3 02:41:40] log logs/run_hw3_20261124_024140.log; queue: frac20:0 frac50:0 resplit1:0 leak:0 frac10:0 frac20:1 frac50:1 leak:1 resplit2:0 frac10:1 resplit3:0; device: auto; analyses on cpu; DRY_RUN=0 TRAIN=1
+[hw3 02:41:40] === hw3_frac20_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/train_frac20.csv) ===
+[hw3 02:41:40] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_frac20_s0 --set data.split_file=data/splits/hw3/train_frac20.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_frac20_s0: device=mps train=3736 val=4002 steps/epoch=233 total=1398 warmup=279
+[train]   step 200/1398 loss=3.0771 4.95 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=233 loss=4.7270 loss_hm=3.3727 loss_wh=5.7606 loss_off=0.3349 loss_cls=0.4434 val_map=0.0944 val_thr=0.1000 val_auc=0.8525 val_map_heatmap=0.0996 lr=0.0003 epoch_sec=46.9000 val_sec=15.9000 it_per_sec=4.9600
+[train]   step 400/1398 loss=2.5929 4.67 it/s
+[train] epoch 2/6 epoch=2 steps=466 loss=2.7655 loss_hm=1.8585 loss_wh=2.5832 loss_off=0.2578 loss_cls=0.3908 val_map=0.1405 val_thr=0.1500 val_auc=0.8605 val_map_heatmap=0.1304 lr=0.0003 epoch_sec=53.8000 val_sec=22.9000 it_per_sec=4.3300
+[train]   step 600/1398 loss=2.4832 2.74 it/s
+[train] epoch 3/6 epoch=3 steps=699 loss=2.5372 loss_hm=1.6745 loss_wh=2.3645 loss_off=0.2474 loss_cls=0.3788 val_map=0.1612 val_thr=0.1000 val_auc=0.8723 val_map_heatmap=0.1604 lr=0.0002 epoch_sec=83.7000 val_sec=18.8000 it_per_sec=2.7800
+[train]   step 800/1398 loss=2.4040 3.44 it/s
+[train] epoch 4/6 epoch=4 steps=932 loss=2.4059 loss_hm=1.5944 loss_wh=2.2398 loss_off=0.2369 loss_cls=0.3506 val_map=0.1489 val_thr=0.1000 val_auc=0.8767 val_map_heatmap=0.1544 lr=0.0001 epoch_sec=68.0000 val_sec=19.1000 it_per_sec=3.4200
+[train]   step 1000/1398 loss=2.2561 3.14 it/s
+[train] epoch 5/6 epoch=5 steps=1165 loss=2.2571 loss_hm=1.4793 loss_wh=2.0989 loss_off=0.2355 loss_cls=0.3323 val_map=0.1614 val_thr=0.1000 val_auc=0.8740 val_map_heatmap=0.1645 lr=0.0000 epoch_sec=69.7000 val_sec=19.3000 it_per_sec=3.3500
+[train]   step 1200/1398 loss=2.1363 3.47 it/s
+[train] epoch 6/6 epoch=6 steps=1398 loss=2.1562 loss_hm=1.4028 loss_wh=2.0537 loss_off=0.2332 loss_cls=0.3149 val_map=0.1630 val_thr=0.1000 val_auc=0.8754 val_map_heatmap=0.1663 lr=0.0000 epoch_sec=73.8000 val_sec=26.7000 it_per_sec=3.1600
+[train] done: {"best_epoch": 6, "val_map": 0.16297, "val_thr": 0.1, "val_auc": 0.87537, "train_min": 6.6} -> results/hw3_frac20_s0
+[hw3 02:50:28]   trained in 8 min
+[hw3 02:50:28] $ .venv/bin/python -m rsna.evaluate --run results/hw3_frac20_s0 --split val
+### hw3_frac20_s0 — val
+
+mAP **0.1630** [0.1397, 0.1869] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1182
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8754 |
+| image_pr_auc | 0.6851 |
+| sensitivity | 0.6011 |
+| specificity | 0.9091 |
+| matched_iou | 0.5906 |
+| mAP on positives only | 0.2140 |
+| FP-image rate on negatives | 0.0909 (282/3102) |
+| loss: FP on negatives | 0.2386 |
+| loss: missed positives (no box) | 0.3037 |
+| loss: localization on positives | 0.2947 |
+| oracle gating @run thr | 0.2140 |
+| oracle gating @best thr (0.05) | 0.2493 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1855 | [0.158, 0.211] | 0.2440 | 0.195 | 0.675 |
+| view | PA | 2176 | 202 | 0.0846 | [0.059, 0.109] | 0.1106 | 0.031 | 0.347 |
+| sex | F | 1730 | 376 | 0.1668 | [0.120, 0.206] | 0.2227 | 0.093 | 0.625 |
+| sex | M | 2272 | 524 | 0.1601 | [0.134, 0.191] | 0.2078 | 0.089 | 0.584 |
+| age_bucket | <20 | 337 | 125 | 0.2169 | [0.135, 0.272] | 0.2725 | 0.151 | 0.696 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1656 | [0.129, 0.207] | 0.2156 | 0.097 | 0.596 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1799 | [0.140, 0.215] | 0.2343 | 0.080 | 0.620 |
+| age_bucket | 60+ | 980 | 176 | 0.0947 | [0.067, 0.116] | 0.1318 | 0.086 | 0.506 |
+| cls | Lung Opacity | 900 | 900 | 0.2140 | [0.186, 0.243] | 0.2140 | – | 0.601 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.158 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.091 | – |
+| n_boxes | 1 | 392 | 392 | 0.1191 | [0.095, 0.143] | 0.1191 | – | 0.421 |
+| n_boxes | 2 | 490 | 490 | 0.2919 | [0.257, 0.329] | 0.2919 | – | 0.737 |
+| n_boxes | 3+ | 18 | 18 | 0.1623 | [0.090, 0.242] | 0.1623 | – | 0.833 |
+
+-> results/hw3_frac20_s0/val_metrics.json
+[hw3 02:50:31]   done in 0 min 3 s
+[hw3 02:50:31] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_frac20_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1000 0.1075      1182           0.1075
+    0.8250 0.1000 0.1172      1182           0.1172
+    0.8500 0.1000 0.1260      1182           0.1260
+    0.8750 0.1000 0.1344      1182           0.1344
+    0.9000 0.1000 0.1406      1182           0.1406
+    0.9250 0.1000 0.1477      1182           0.1477
+    0.9500 0.1000 0.1540      1182           0.1540
+    0.9750 0.1000 0.1585      1182           0.1585
+    1.0000 0.1000 0.1630      1182           0.1630
+    1.0250 0.1000 0.1658      1182           0.1658
+    1.0500 0.1000 0.1671      1182           0.1671
+    1.0750 0.1000 0.1686      1182           0.1686
+    1.1000 0.1000 0.1679      1182           0.1679
+    1.1250 0.1000 0.1666      1182           0.1666
+    1.1500 0.1000 0.1647      1182           0.1647
+    1.1750 0.1000 0.1610      1182           0.1610
+    1.2000 0.1000 0.1583      1182           0.1583
+    1.2250 0.1000 0.1552      1182           0.1552
+    1.2500 0.1000 0.1499      1182           0.1499
+    1.2750 0.1000 0.1456      1182           0.1456
+    1.3000 0.1000 0.1402      1182           0.1402
+-> box_scale 1.075 (thr 0.10, val mAP 0.1686 vs 0.1630 at 1.0); cross-fitted gain +0.0058 -> results/hw3_frac20_s0/posthoc/box_scale.json
+[hw3 02:50:42]   done in 0 min 11 s
+[hw3 02:50:42] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_frac20_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_frac20_s0:tuned — val
+
+mAP **0.1686** [0.1441, 0.1926] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1182
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8754 |
+| image_pr_auc | 0.6851 |
+| sensitivity | 0.6011 |
+| specificity | 0.9091 |
+| matched_iou | 0.6016 |
+| mAP on positives only | 0.2214 |
+| FP-image rate on negatives | 0.0909 (282/3102) |
+| loss: FP on negatives | 0.2386 |
+| loss: missed positives (no box) | 0.3037 |
+| loss: localization on positives | 0.2891 |
+| oracle gating @run thr | 0.2214 |
+| oracle gating @best thr (0.05) | 0.2592 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1917 | [0.163, 0.217] | 0.2521 | 0.195 | 0.675 |
+| view | PA | 2176 | 202 | 0.0883 | [0.062, 0.114] | 0.1154 | 0.031 | 0.347 |
+| sex | F | 1730 | 376 | 0.1727 | [0.125, 0.211] | 0.2305 | 0.093 | 0.625 |
+| sex | M | 2272 | 524 | 0.1656 | [0.139, 0.195] | 0.2149 | 0.089 | 0.584 |
+| age_bucket | <20 | 337 | 125 | 0.2259 | [0.142, 0.281] | 0.2838 | 0.151 | 0.696 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1671 | [0.129, 0.207] | 0.2176 | 0.097 | 0.596 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1873 | [0.147, 0.225] | 0.2440 | 0.080 | 0.620 |
+| age_bucket | 60+ | 980 | 176 | 0.1006 | [0.071, 0.124] | 0.1401 | 0.086 | 0.506 |
+| cls | Lung Opacity | 900 | 900 | 0.2214 | [0.194, 0.251] | 0.2214 | – | 0.601 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.158 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.091 | – |
+| n_boxes | 1 | 392 | 392 | 0.1177 | [0.092, 0.141] | 0.1177 | – | 0.421 |
+| n_boxes | 2 | 490 | 490 | 0.3075 | [0.271, 0.346] | 0.3075 | – | 0.737 |
+| n_boxes | 3+ | 18 | 18 | 0.1381 | [0.069, 0.218] | 0.1381 | – | 0.833 |
+
+-> results/hw3_frac20_s0/posthoc/tuned/val_metrics.json
+[hw3 02:50:45]   done in 0 min 3 s
+[hw3 02:50:45] === hw3_frac50_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/train_frac50.csv) ===
+[hw3 02:50:45] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_frac50_s0 --set data.split_file=data/splits/hw3/train_frac50.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_frac50_s0: device=mps train=9340 val=4002 steps/epoch=583 total=3498 warmup=300
+[train]   step 200/3498 loss=3.2129 2.56 it/s
+[train]   step 400/3498 loss=2.7643 2.02 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=583 loss=3.4556 loss_hm=2.3658 loss_wh=3.8836 loss_off=0.2859 loss_cls=0.4157 val_map=0.1072 val_thr=0.1000 val_auc=0.8621 val_map_heatmap=0.1136 lr=0.0003 epoch_sec=299.9000 val_sec=46.4000 it_per_sec=1.9400
+[train]   step 600/3498 loss=2.6556 1.31 it/s
+[train]   step 800/3498 loss=2.6543 1.60 it/s
+[train]   step 1000/3498 loss=2.5065 1.48 it/s
+[train] epoch 2/6 epoch=2 steps=1166 loss=2.5458 loss_hm=1.6894 loss_wh=2.3547 loss_off=0.2441 loss_cls=0.3768 val_map=0.1573 val_thr=0.1500 val_auc=0.8684 val_map_heatmap=0.1642 lr=0.0002 epoch_sec=395.1000 val_sec=52.1000 it_per_sec=1.4800
+[train]   step 1200/3498 loss=2.5072 1.36 it/s
+[train]   step 1400/3498 loss=2.4324 1.26 it/s
+[train]   step 1600/3498 loss=2.3331 1.20 it/s
+[train] epoch 3/6 epoch=3 steps=1749 loss=2.3869 loss_hm=1.5773 loss_wh=2.1735 loss_off=0.2340 loss_cls=0.3583 val_map=0.1640 val_thr=0.1000 val_auc=0.8732 val_map_heatmap=0.1645 lr=0.0002 epoch_sec=477.9000 val_sec=58.4000 it_per_sec=1.2200
+[train]   step 1800/3498 loss=2.3639 1.18 it/s
+[train]   step 2000/3498 loss=2.2901 1.31 it/s
+[train]   step 2200/3498 loss=2.2638 1.51 it/s
+[train] epoch 4/6 epoch=4 steps=2332 loss=2.2825 loss_hm=1.4986 loss_wh=2.0215 loss_off=0.2283 loss_cls=0.3535 val_map=0.1698 val_thr=0.1000 val_auc=0.8800 val_map_heatmap=0.1678 lr=0.0001 epoch_sec=371.0000 val_sec=38.0000 it_per_sec=1.5700
+[train]   step 2400/3498 loss=2.2744 1.87 it/s
+[train]   step 2600/3498 loss=2.1937 1.83 it/s
+[train]   step 2800/3498 loss=2.0360 1.84 it/s
+[train] epoch 5/6 epoch=5 steps=2915 loss=2.1722 loss_hm=1.4194 loss_wh=1.9270 loss_off=0.2288 loss_cls=0.3313 val_map=0.1866 val_thr=0.1000 val_auc=0.8829 val_map_heatmap=0.1848 lr=0.0000 epoch_sec=312.0000 val_sec=37.4000 it_per_sec=1.8700
+[train]   step 3000/3498 loss=2.1019 1.81 it/s
+[train]   step 3200/3498 loss=2.0084 1.85 it/s
+[train]   step 3400/3498 loss=2.2277 1.86 it/s
+[train] epoch 6/6 epoch=6 steps=3498 loss=2.1054 loss_hm=1.3716 loss_wh=1.8660 loss_off=0.2272 loss_cls=0.3201 val_map=0.1885 val_thr=0.1500 val_auc=0.8843 val_map_heatmap=0.1825 lr=0.0000 epoch_sec=309.5000 val_sec=38.0000 it_per_sec=1.8800
+[train] done: {"best_epoch": 6, "val_map": 0.18848, "val_thr": 0.15, "val_auc": 0.88434, "train_min": 36.09} -> results/hw3_frac50_s0
+[hw3 03:31:34]   trained in 40 min
+[hw3 03:31:34] $ .venv/bin/python -m rsna.evaluate --run results/hw3_frac50_s0 --split val
+### hw3_frac50_s0 — val
+
+mAP **0.1885** [0.1592, 0.2175] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4002, scored 1083
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8843 |
+| image_pr_auc | 0.7040 |
+| sensitivity | 0.5511 |
+| specificity | 0.9410 |
+| matched_iou | 0.6221 |
+| mAP on positives only | 0.2268 |
+| FP-image rate on negatives | 0.0590 (183/3102) |
+| loss: FP on negatives | 0.1690 |
+| loss: missed positives (no box) | 0.3730 |
+| loss: localization on positives | 0.2695 |
+| oracle gating @run thr | 0.2268 |
+| oracle gating @best thr (0.05) | 0.2888 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.2192 | [0.183, 0.252] | 0.2613 | 0.119 | 0.626 |
+| view | PA | 2176 | 202 | 0.0866 | [0.058, 0.111] | 0.1076 | 0.025 | 0.292 |
+| sex | F | 1730 | 376 | 0.1920 | [0.139, 0.234] | 0.2349 | 0.062 | 0.556 |
+| sex | M | 2272 | 524 | 0.1859 | [0.149, 0.224] | 0.2210 | 0.057 | 0.548 |
+| age_bucket | <20 | 337 | 125 | 0.2698 | [0.166, 0.331] | 0.3195 | 0.108 | 0.744 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1910 | [0.141, 0.239] | 0.2256 | 0.058 | 0.558 |
+| age_bucket | 40-60 | 1598 | 334 | 0.2052 | [0.157, 0.252] | 0.2494 | 0.057 | 0.545 |
+| age_bucket | 60+ | 980 | 176 | 0.0978 | [0.065, 0.121] | 0.1200 | 0.050 | 0.415 |
+| cls | Lung Opacity | 900 | 900 | 0.2268 | [0.194, 0.257] | 0.2268 | – | 0.551 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.103 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.001 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.059 | – |
+| n_boxes | 1 | 392 | 392 | 0.1119 | [0.089, 0.139] | 0.1119 | – | 0.372 |
+| n_boxes | 2 | 490 | 490 | 0.3220 | [0.277, 0.361] | 0.3220 | – | 0.686 |
+| n_boxes | 3+ | 18 | 18 | 0.1397 | [0.072, 0.224] | 0.1397 | – | 0.778 |
+
+-> results/hw3_frac50_s0/val_metrics.json
+[hw3 03:31:36]   done in 0 min 2 s
+[hw3 03:31:36] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_frac50_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1362      1083           0.1362
+    0.8250 0.1500 0.1470      1083           0.1470
+    0.8500 0.1500 0.1571      1083           0.1571
+    0.8750 0.1500 0.1655      1083           0.1655
+    0.9000 0.1500 0.1737      1083           0.1737
+    0.9250 0.1500 0.1802      1083           0.1802
+    0.9500 0.1500 0.1840      1083           0.1840
+    0.9750 0.1500 0.1874      1083           0.1874
+    1.0000 0.1500 0.1885      1083           0.1885
+    1.0250 0.1500 0.1888      1083           0.1888
+    1.0500 0.1000 0.1886      1244           0.1881
+    1.0750 0.1000 0.1869      1244           0.1855
+    1.1000 0.1000 0.1853      1244           0.1841
+    1.1250 0.1000 0.1819      1244           0.1793
+    1.1500 0.1000 0.1796      1244           0.1762
+    1.1750 0.1000 0.1755      1244           0.1727
+    1.2000 0.1000 0.1700      1244           0.1659
+    1.2250 0.1000 0.1642      1244           0.1604
+    1.2500 0.1000 0.1589      1244           0.1546
+    1.2750 0.1000 0.1526      1244           0.1482
+    1.3000 0.1000 0.1455      1244           0.1412
+-> box_scale 1.025 (thr 0.15, val mAP 0.1888 vs 0.1885 at 1.0); cross-fitted gain -0.0008 -> results/hw3_frac50_s0/posthoc/box_scale.json
+[hw3 03:31:51]   done in 0 min 15 s
+[hw3 03:31:51] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_frac50_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_frac50_s0:tuned — val
+
+mAP **0.1888** [0.1602, 0.2169] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4002, scored 1083
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8843 |
+| image_pr_auc | 0.7040 |
+| sensitivity | 0.5511 |
+| specificity | 0.9410 |
+| matched_iou | 0.6246 |
+| mAP on positives only | 0.2272 |
+| FP-image rate on negatives | 0.0590 (183/3102) |
+| loss: FP on negatives | 0.1690 |
+| loss: missed positives (no box) | 0.3730 |
+| loss: localization on positives | 0.2691 |
+| oracle gating @run thr | 0.2272 |
+| oracle gating @best thr (0.05) | 0.2901 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.2190 | [0.184, 0.250] | 0.2611 | 0.119 | 0.626 |
+| view | PA | 2176 | 202 | 0.0889 | [0.060, 0.112] | 0.1104 | 0.025 | 0.292 |
+| sex | F | 1730 | 376 | 0.1916 | [0.141, 0.233] | 0.2343 | 0.062 | 0.556 |
+| sex | M | 2272 | 524 | 0.1868 | [0.150, 0.224] | 0.2221 | 0.057 | 0.548 |
+| age_bucket | <20 | 337 | 125 | 0.2703 | [0.167, 0.332] | 0.3200 | 0.108 | 0.744 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1879 | [0.139, 0.234] | 0.2219 | 0.058 | 0.558 |
+| age_bucket | 40-60 | 1598 | 334 | 0.2057 | [0.159, 0.252] | 0.2500 | 0.057 | 0.545 |
+| age_bucket | 60+ | 980 | 176 | 0.1028 | [0.069, 0.128] | 0.1261 | 0.050 | 0.415 |
+| cls | Lung Opacity | 900 | 900 | 0.2272 | [0.195, 0.258] | 0.2272 | – | 0.551 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.103 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.001 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.059 | – |
+| n_boxes | 1 | 392 | 392 | 0.1131 | [0.091, 0.139] | 0.1131 | – | 0.372 |
+| n_boxes | 2 | 490 | 490 | 0.3221 | [0.279, 0.360] | 0.3221 | – | 0.686 |
+| n_boxes | 3+ | 18 | 18 | 0.1302 | [0.063, 0.208] | 0.1302 | – | 0.778 |
+
+-> results/hw3_frac50_s0/posthoc/tuned/val_metrics.json
+[hw3 03:31:54]   done in 0 min 3 s
+[hw3 03:31:54] === hw3_resplit1_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/resplit_s1.csv) ===
+[hw3 03:31:54] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_resplit1_s0 --set data.split_file=data/splits/hw3/resplit_s1.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_resplit1_s0: device=mps train=18677 val=4003 steps/epoch=1167 total=7002 warmup=300
+[train]   step 200/7002 loss=3.1305 1.90 it/s
+[train]   step 400/7002 loss=2.7932 1.94 it/s
+[train]   step 600/7002 loss=2.7304 1.93 it/s
+[train]   step 800/7002 loss=2.6599 1.94 it/s
+[train]   step 1000/7002 loss=2.5720 1.95 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=1167 loss=3.0435 loss_hm=2.0719 loss_wh=3.0924 loss_off=0.2642 loss_cls=0.3981 val_map=0.1447 val_thr=0.1000 val_auc=0.8646 val_map_heatmap=0.1590 lr=0.0003 epoch_sec=576.7000 val_sec=46.5000 it_per_sec=2.0200
+[train]   step 1200/7002 loss=2.5975 1.89 it/s
+[train]   step 1400/7002 loss=2.4928 2.26 it/s
+[train]   step 1600/7002 loss=2.5657 2.16 it/s
+[train]   step 1800/7002 loss=2.4886 2.07 it/s
+[train]   step 2000/7002 loss=2.3296 2.29 it/s
+[train]   step 2200/7002 loss=2.3523 2.47 it/s
+[train] epoch 2/6 epoch=2 steps=2334 loss=2.4471 loss_hm=1.6278 loss_wh=2.0954 loss_off=0.2415 loss_cls=0.3682 val_map=0.1738 val_thr=0.1000 val_auc=0.8740 val_map_heatmap=0.1798 lr=0.0002 epoch_sec=454.2000 val_sec=17.8000 it_per_sec=2.5700
+[train]   step 2400/7002 loss=2.3172 3.72 it/s
+[train]   step 2600/7002 loss=2.2107 3.72 it/s
+[train]   step 2800/7002 loss=2.1339 3.66 it/s
+[train]   step 3000/7002 loss=2.2726 3.65 it/s
+[train]   step 3200/7002 loss=2.3844 3.67 it/s
+[train]   step 3400/7002 loss=2.2829 3.70 it/s
+[train] epoch 3/6 epoch=3 steps=3501 loss=2.3411 loss_hm=1.5645 loss_wh=1.8506 loss_off=0.2334 loss_cls=0.3581 val_map=0.1926 val_thr=0.1000 val_auc=0.8817 val_map_heatmap=0.1912 lr=0.0002 epoch_sec=314.4000 val_sec=17.5000 it_per_sec=3.7100
+[train]   step 3600/7002 loss=2.3304 3.79 it/s
+[train]   step 3800/7002 loss=2.1715 3.79 it/s
+[train]   step 4000/7002 loss=2.2860 3.80 it/s
+[train]   step 4200/7002 loss=2.1918 3.81 it/s
+[train]   step 4400/7002 loss=2.0773 3.80 it/s
+[train]   step 4600/7002 loss=2.3419 3.80 it/s
+[train] epoch 4/6 epoch=4 steps=4668 loss=2.2202 loss_hm=1.4737 loss_wh=1.7314 loss_off=0.2288 loss_cls=0.3445 val_map=0.1956 val_thr=0.1000 val_auc=0.8846 val_map_heatmap=0.1944 lr=0.0001 epoch_sec=306.7000 val_sec=17.5000 it_per_sec=3.8000
+[train]   step 4800/7002 loss=2.0829 3.49 it/s
+[train]   step 5000/7002 loss=2.0734 3.61 it/s
+[train]   step 5200/7002 loss=2.1254 3.58 it/s
+[train]   step 5400/7002 loss=2.0884 3.58 it/s
+[train]   step 5600/7002 loss=2.1956 3.55 it/s
+[train]   step 5800/7002 loss=2.1192 3.55 it/s
+[train] epoch 5/6 epoch=5 steps=5835 loss=2.1295 loss_hm=1.4119 loss_wh=1.6549 loss_off=0.2250 loss_cls=0.3272 val_map=0.2051 val_thr=0.1500 val_auc=0.8856 val_map_heatmap=0.2076 lr=0.0000 epoch_sec=328.7000 val_sec=19.8000 it_per_sec=3.5500
+[train]   step 6000/7002 loss=2.1499 3.43 it/s
+[train]   step 6200/7002 loss=2.0511 3.47 it/s
+[train]   step 6400/7002 loss=2.0785 3.48 it/s
+[train]   step 6600/7002 loss=1.9879 3.48 it/s
+[train]   step 6800/7002 loss=2.0344 3.51 it/s
+[train]   step 7000/7002 loss=2.1387 3.53 it/s
+[train] epoch 6/6 epoch=6 steps=7002 loss=2.0638 loss_hm=1.3651 loss_wh=1.5831 loss_off=0.2227 loss_cls=0.3177 val_map=0.2027 val_thr=0.1500 val_auc=0.8850 val_map_heatmap=0.2041 lr=0.0000 epoch_sec=330.9000 val_sec=18.5000 it_per_sec=3.5300
+[train] done: {"best_epoch": 5, "val_map": 0.2051, "val_thr": 0.15, "val_auc": 0.88559, "train_min": 38.53} -> results/hw3_resplit1_s0
+[hw3 04:12:56]   trained in 41 min
+[hw3 04:12:56] $ .venv/bin/python -m rsna.evaluate --run results/hw3_resplit1_s0 --split val
+### hw3_resplit1_s0 — val
+
+mAP **0.2051** [0.1759, 0.2341] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4003, scored 1155
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8856 |
+| image_pr_auc | 0.7106 |
+| sensitivity | 0.5767 |
+| specificity | 0.9178 |
+| matched_iou | 0.6552 |
+| mAP on positives only | 0.2632 |
+| FP-image rate on negatives | 0.0822 (255/3103) |
+| loss: FP on negatives | 0.2208 |
+| loss: missed positives (no box) | 0.3299 |
+| loss: localization on positives | 0.2442 |
+| oracle gating @run thr | 0.2632 |
+| oracle gating @best thr (0.05) | 0.3207 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 699 | 0.2268 | [0.194, 0.261] | 0.2933 | 0.182 | 0.648 |
+| view | PA | 2177 | 201 | 0.1271 | [0.096, 0.167] | 0.1587 | 0.025 | 0.328 |
+| sex | F | 1729 | 375 | 0.2173 | [0.172, 0.259] | 0.2787 | 0.078 | 0.589 |
+| sex | M | 2274 | 525 | 0.1964 | [0.165, 0.231] | 0.2521 | 0.085 | 0.568 |
+| age_bucket | <20 | 258 | 80 | 0.2909 | [0.161, 0.392] | 0.3418 | 0.079 | 0.738 |
+| age_bucket | 20-40 | 1088 | 255 | 0.1733 | [0.128, 0.221] | 0.2230 | 0.088 | 0.514 |
+| age_bucket | 40-60 | 1692 | 385 | 0.2290 | [0.176, 0.281] | 0.2986 | 0.090 | 0.629 |
+| age_bucket | 60+ | 964 | 180 | 0.1633 | [0.123, 0.198] | 0.2095 | 0.065 | 0.483 |
+| age_bucket | invalid | 1 | 0 | – | [–, –] | – | 0.000 | – |
+| cls | Lung Opacity | 900 | 900 | 0.2632 | [0.230, 0.297] | 0.2632 | – | 0.577 |
+| cls | No Lung Opacity / Not Normal | 1774 | 0 | 0.0000 | [0.000, 0.000] | – | 0.143 | – |
+| cls | Normal | 1329 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 3103 | 0 | 0.0000 | [0.000, 0.000] | – | 0.082 | – |
+| n_boxes | 1 | 390 | 390 | 0.1646 | [0.135, 0.190] | 0.1646 | – | 0.436 |
+| n_boxes | 2 | 489 | 489 | 0.3470 | [0.297, 0.393] | 0.3470 | – | 0.681 |
+| n_boxes | 3+ | 21 | 21 | 0.1433 | [0.079, 0.232] | 0.1433 | – | 0.762 |
+
+-> results/hw3_resplit1_s0/val_metrics.json
+[hw3 04:12:58]   done in 0 min 2 s
+[hw3 04:12:58] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_resplit1_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1559      1155           0.1559
+    0.8250 0.1500 0.1686      1155           0.1686
+    0.8500 0.1500 0.1794      1155           0.1794
+    0.8750 0.1500 0.1884      1155           0.1884
+    0.9000 0.1500 0.1939      1155           0.1939
+    0.9250 0.1500 0.1994      1155           0.1994
+    0.9500 0.1500 0.2019      1155           0.2019
+    0.9750 0.1500 0.2047      1155           0.2047
+    1.0000 0.1500 0.2051      1155           0.2051
+    1.0250 0.1500 0.2047      1155           0.2047
+    1.0500 0.1500 0.2015      1155           0.2015
+    1.0750 0.1500 0.1986      1155           0.1986
+    1.1000 0.1500 0.1946      1155           0.1946
+    1.1250 0.1500 0.1895      1155           0.1895
+    1.1500 0.1500 0.1829      1155           0.1829
+    1.1750 0.1500 0.1765      1155           0.1765
+    1.2000 0.1000 0.1694      1329           0.1694
+    1.2250 0.1000 0.1619      1329           0.1614
+    1.2500 0.1000 0.1543      1329           0.1535
+    1.2750 0.1000 0.1456      1329           0.1453
+    1.3000 0.1000 0.1374      1329           0.1363
+-> box_scale 1.0 (thr 0.15, val mAP 0.2051 vs 0.2051 at 1.0); cross-fitted gain -0.0006 -> results/hw3_resplit1_s0/posthoc/box_scale.json
+[hw3 04:13:03]   done in 0 min 5 s
+[hw3 04:13:03] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_resplit1_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_resplit1_s0:tuned — val
+
+mAP **0.2051** [0.1759, 0.2341] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4003, scored 1155
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8856 |
+| image_pr_auc | 0.7106 |
+| sensitivity | 0.5767 |
+| specificity | 0.9178 |
+| matched_iou | 0.6552 |
+| mAP on positives only | 0.2632 |
+| FP-image rate on negatives | 0.0822 (255/3103) |
+| loss: FP on negatives | 0.2208 |
+| loss: missed positives (no box) | 0.3299 |
+| loss: localization on positives | 0.2442 |
+| oracle gating @run thr | 0.2632 |
+| oracle gating @best thr (0.05) | 0.3207 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 699 | 0.2268 | [0.194, 0.261] | 0.2933 | 0.182 | 0.648 |
+| view | PA | 2177 | 201 | 0.1271 | [0.096, 0.167] | 0.1587 | 0.025 | 0.328 |
+| sex | F | 1729 | 375 | 0.2173 | [0.172, 0.259] | 0.2787 | 0.078 | 0.589 |
+| sex | M | 2274 | 525 | 0.1964 | [0.165, 0.231] | 0.2521 | 0.085 | 0.568 |
+| age_bucket | <20 | 258 | 80 | 0.2909 | [0.161, 0.392] | 0.3418 | 0.079 | 0.738 |
+| age_bucket | 20-40 | 1088 | 255 | 0.1733 | [0.128, 0.221] | 0.2230 | 0.088 | 0.514 |
+| age_bucket | 40-60 | 1692 | 385 | 0.2290 | [0.176, 0.281] | 0.2986 | 0.090 | 0.629 |
+| age_bucket | 60+ | 964 | 180 | 0.1633 | [0.123, 0.198] | 0.2095 | 0.065 | 0.483 |
+| age_bucket | invalid | 1 | 0 | – | [–, –] | – | 0.000 | – |
+| cls | Lung Opacity | 900 | 900 | 0.2632 | [0.230, 0.297] | 0.2632 | – | 0.577 |
+| cls | No Lung Opacity / Not Normal | 1774 | 0 | 0.0000 | [0.000, 0.000] | – | 0.143 | – |
+| cls | Normal | 1329 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 3103 | 0 | 0.0000 | [0.000, 0.000] | – | 0.082 | – |
+| n_boxes | 1 | 390 | 390 | 0.1646 | [0.135, 0.190] | 0.1646 | – | 0.436 |
+| n_boxes | 2 | 489 | 489 | 0.3470 | [0.297, 0.393] | 0.3470 | – | 0.681 |
+| n_boxes | 3+ | 21 | 21 | 0.1433 | [0.079, 0.232] | 0.1433 | – | 0.762 |
+
+-> results/hw3_resplit1_s0/posthoc/tuned/val_metrics.json
+[hw3 04:13:05]   done in 0 min 2 s
+[hw3 04:13:05] === hw3_leak_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/leak_s0.csv) ===
+[hw3 04:13:05] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_leak_s0 --set data.split_file=data/splits/hw3/leak_s0.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_leak_s0: device=mps train=18678 val=3308 steps/epoch=1167 total=7002 warmup=300
+[train]   step 200/7002 loss=3.0962 3.59 it/s
+[train]   step 400/7002 loss=2.8099 3.59 it/s
+[train]   step 600/7002 loss=2.8166 3.58 it/s
+[train]   step 800/7002 loss=2.5608 3.58 it/s
+[train]   step 1000/7002 loss=2.4390 3.59 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=1167 loss=3.0417 loss_hm=2.0530 loss_wh=3.1685 loss_off=0.2702 loss_cls=0.4017 val_map=0.1371 val_thr=0.0500 val_auc=0.8782 val_map_heatmap=0.1538 lr=0.0003 epoch_sec=325.0000 val_sec=15.3000 it_per_sec=3.5900
+[train]   step 1200/7002 loss=2.8374 3.63 it/s
+[train]   step 1400/7002 loss=2.4207 3.57 it/s
+[train]   step 1600/7002 loss=2.4199 3.59 it/s
+[train]   step 1800/7002 loss=2.5312 3.56 it/s
+[train]   step 2000/7002 loss=2.4825 3.53 it/s
+[train]   step 2200/7002 loss=2.4166 3.55 it/s
+[train] epoch 2/6 epoch=2 steps=2334 loss=2.4580 loss_hm=1.6301 loss_wh=2.1258 loss_off=0.2409 loss_cls=0.3744 val_map=0.1688 val_thr=0.1500 val_auc=0.8728 val_map_heatmap=0.1726 lr=0.0002 epoch_sec=328.0000 val_sec=15.2000 it_per_sec=3.5600
+[train]   step 2400/7002 loss=2.4071 3.58 it/s
+[train]   step 2600/7002 loss=2.4689 3.59 it/s
+[train]   step 2800/7002 loss=2.3892 3.59 it/s
+[train]   step 3000/7002 loss=2.3307 3.61 it/s
+[train]   step 3200/7002 loss=2.3184 3.62 it/s
+[train]   step 3400/7002 loss=2.2573 3.62 it/s
+[train] epoch 3/6 epoch=3 steps=3501 loss=2.3386 loss_hm=1.5568 loss_wh=1.8673 loss_off=0.2339 loss_cls=0.3612 val_map=0.1954 val_thr=0.1500 val_auc=0.8889 val_map_heatmap=0.1962 lr=0.0002 epoch_sec=323.4000 val_sec=15.2000 it_per_sec=3.6100
+[train]   step 3600/7002 loss=2.2249 3.53 it/s
+[train]   step 3800/7002 loss=2.2804 3.50 it/s
+[train]   step 4000/7002 loss=2.1000 3.50 it/s
+[train]   step 4200/7002 loss=2.2722 3.54 it/s
+[train]   step 4400/7002 loss=2.1616 3.55 it/s
+[train]   step 4600/7002 loss=2.2359 3.57 it/s
+[train] epoch 4/6 epoch=4 steps=4668 loss=2.2243 loss_hm=1.4766 loss_wh=1.7255 loss_off=0.2282 loss_cls=0.3470 val_map=0.1948 val_thr=0.1500 val_auc=0.8904 val_map_heatmap=0.1950 lr=0.0001 epoch_sec=327.1000 val_sec=15.1000 it_per_sec=3.5700
+[train]   step 4800/7002 loss=2.0607 3.60 it/s
+[train]   step 5000/7002 loss=2.1080 3.60 it/s
+[train]   step 5200/7002 loss=2.1077 3.62 it/s
+[train]   step 5400/7002 loss=2.0495 3.63 it/s
+[train]   step 5600/7002 loss=2.0864 3.64 it/s
+[train]   step 5800/7002 loss=2.1061 3.64 it/s
+[train] epoch 5/6 epoch=5 steps=5835 loss=2.1209 loss_hm=1.4032 loss_wh=1.6231 loss_off=0.2233 loss_cls=0.3321 val_map=0.2033 val_thr=0.1500 val_auc=0.8950 val_map_heatmap=0.2002 lr=0.0000 epoch_sec=320.3000 val_sec=14.9000 it_per_sec=3.6400
+[train]   step 6000/7002 loss=2.0716 3.61 it/s
+[train]   step 6200/7002 loss=2.1576 3.54 it/s
+[train]   step 6400/7002 loss=2.0491 3.53 it/s
+[train]   step 6600/7002 loss=2.1889 3.51 it/s
+[train]   step 6800/7002 loss=2.2462 3.50 it/s
+[train]   step 7000/7002 loss=2.0569 3.48 it/s
+[train] epoch 6/6 epoch=6 steps=7002 loss=2.0528 loss_hm=1.3546 loss_wh=1.5650 loss_off=0.2219 loss_cls=0.3198 val_map=0.2119 val_thr=0.1500 val_auc=0.8958 val_map_heatmap=0.2092 lr=0.0000 epoch_sec=335.8000 val_sec=16.6000 it_per_sec=3.4800
+[train] done: {"best_epoch": 6, "val_map": 0.21188, "val_thr": 0.15, "val_auc": 0.89585, "train_min": 32.66} -> results/hw3_leak_s0
+[hw3 04:47:24]   trained in 34 min
+[hw3 04:47:24] $ .venv/bin/python -m rsna.evaluate --run results/hw3_leak_s0 --split val
+### hw3_leak_s0 — val
+
+mAP **0.2119** [0.1813, 0.2416] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 3308, scored 860
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8958 |
+| image_pr_auc | 0.7129 |
+| sensitivity | 0.5965 |
+| specificity | 0.9312 |
+| matched_iou | 0.6477 |
+| mAP on positives only | 0.2684 |
+| FP-image rate on negatives | 0.0688 (181/2629) |
+| loss: FP on negatives | 0.2105 |
+| loss: missed positives (no box) | 0.3186 |
+| loss: localization on positives | 0.2590 |
+| oracle gating @run thr | 0.2684 |
+| oracle gating @best thr (0.05) | 0.3147 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1428 | 516 | 0.2325 | [0.199, 0.267] | 0.2997 | 0.163 | 0.674 |
+| view | PA | 1880 | 163 | 0.1415 | [0.104, 0.179] | 0.1692 | 0.019 | 0.350 |
+| sex | F | 1447 | 287 | 0.2183 | [0.165, 0.274] | 0.2700 | 0.059 | 0.578 |
+| sex | M | 1861 | 392 | 0.2074 | [0.169, 0.245] | 0.2672 | 0.077 | 0.610 |
+| age_bucket | <20 | 273 | 87 | 0.2763 | [0.192, 0.335] | 0.3367 | 0.102 | 0.770 |
+| age_bucket | 20-40 | 919 | 209 | 0.2038 | [0.148, 0.251] | 0.2652 | 0.089 | 0.603 |
+| age_bucket | 40-60 | 1310 | 245 | 0.2493 | [0.195, 0.300] | 0.3094 | 0.055 | 0.612 |
+| age_bucket | 60+ | 806 | 138 | 0.1220 | [0.078, 0.152] | 0.1573 | 0.060 | 0.449 |
+| cls | Lung Opacity | 679 | 679 | 0.2684 | [0.234, 0.300] | 0.2684 | – | 0.596 |
+| cls | No Lung Opacity / Not Normal | 1431 | 0 | 0.0000 | [0.000, 0.000] | – | 0.124 | – |
+| cls | Normal | 1198 | 0 | 0.0000 | [0.000, 0.000] | – | 0.003 | – |
+| n_boxes | 0 | 2629 | 0 | 0.0000 | [0.000, 0.000] | – | 0.069 | – |
+| n_boxes | 1 | 308 | 308 | 0.1572 | [0.123, 0.190] | 0.1572 | – | 0.445 |
+| n_boxes | 2 | 357 | 357 | 0.3689 | [0.316, 0.417] | 0.3689 | – | 0.717 |
+| n_boxes | 3+ | 14 | 14 | 0.1496 | [0.090, 0.214] | 0.1496 | – | 0.857 |
+
+-> results/hw3_leak_s0/val_metrics.json
+[hw3 04:47:25]   done in 0 min 1 s
+[hw3 04:47:25] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_leak_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1692       860           0.1692
+    0.8250 0.1500 0.1816       860           0.1816
+    0.8500 0.1500 0.1914       860           0.1914
+    0.8750 0.1500 0.1984       860           0.1984
+    0.9000 0.1500 0.2045       860           0.2045
+    0.9250 0.1500 0.2096       860           0.2096
+    0.9500 0.1500 0.2119       860           0.2119
+    0.9750 0.1500 0.2115       860           0.2115
+    1.0000 0.1500 0.2119       860           0.2119
+    1.0250 0.1500 0.2089       860           0.2089
+    1.0500 0.1500 0.2050       860           0.2050
+    1.0750 0.1500 0.2002       860           0.2002
+    1.1000 0.1500 0.1945       860           0.1945
+    1.1250 0.1500 0.1888       860           0.1888
+    1.1500 0.1500 0.1808       860           0.1808
+    1.1750 0.1500 0.1742       860           0.1742
+    1.2000 0.1500 0.1668       860           0.1668
+    1.2250 0.1500 0.1583       860           0.1583
+    1.2500 0.1500 0.1489       860           0.1489
+    1.2750 0.1500 0.1412       860           0.1412
+    1.3000 0.1500 0.1314       860           0.1314
+-> box_scale 0.95 (thr 0.15, val mAP 0.2119 vs 0.2119 at 1.0); cross-fitted gain -0.0023 -> results/hw3_leak_s0/posthoc/box_scale.json
+[hw3 04:47:29]   done in 0 min 4 s
+[hw3 04:47:29] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_leak_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_leak_s0:tuned — val
+
+mAP **0.2119** [0.1823, 0.2418] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 3308, scored 860
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8958 |
+| image_pr_auc | 0.7129 |
+| sensitivity | 0.5965 |
+| specificity | 0.9312 |
+| matched_iou | 0.6425 |
+| mAP on positives only | 0.2684 |
+| FP-image rate on negatives | 0.0688 (181/2629) |
+| loss: FP on negatives | 0.2105 |
+| loss: missed positives (no box) | 0.3186 |
+| loss: localization on positives | 0.2590 |
+| oracle gating @run thr | 0.2684 |
+| oracle gating @best thr (0.05) | 0.3122 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1428 | 516 | 0.2332 | [0.200, 0.269] | 0.3006 | 0.163 | 0.674 |
+| view | PA | 1880 | 163 | 0.1393 | [0.102, 0.177] | 0.1666 | 0.019 | 0.350 |
+| sex | F | 1447 | 287 | 0.2161 | [0.162, 0.272] | 0.2673 | 0.059 | 0.578 |
+| sex | M | 1861 | 392 | 0.2090 | [0.170, 0.246] | 0.2692 | 0.077 | 0.610 |
+| age_bucket | <20 | 273 | 87 | 0.2717 | [0.185, 0.330] | 0.3311 | 0.102 | 0.770 |
+| age_bucket | 20-40 | 919 | 209 | 0.2061 | [0.149, 0.252] | 0.2682 | 0.089 | 0.603 |
+| age_bucket | 40-60 | 1310 | 245 | 0.2501 | [0.196, 0.300] | 0.3103 | 0.055 | 0.612 |
+| age_bucket | 60+ | 806 | 138 | 0.1201 | [0.079, 0.149] | 0.1549 | 0.060 | 0.449 |
+| cls | Lung Opacity | 679 | 679 | 0.2684 | [0.234, 0.301] | 0.2684 | – | 0.596 |
+| cls | No Lung Opacity / Not Normal | 1431 | 0 | 0.0000 | [0.000, 0.000] | – | 0.124 | – |
+| cls | Normal | 1198 | 0 | 0.0000 | [0.000, 0.000] | – | 0.003 | – |
+| n_boxes | 0 | 2629 | 0 | 0.0000 | [0.000, 0.000] | – | 0.069 | – |
+| n_boxes | 1 | 308 | 308 | 0.1624 | [0.129, 0.195] | 0.1624 | – | 0.445 |
+| n_boxes | 2 | 357 | 357 | 0.3634 | [0.311, 0.409] | 0.3634 | – | 0.717 |
+| n_boxes | 3+ | 14 | 14 | 0.1796 | [0.112, 0.247] | 0.1796 | – | 0.857 |
+
+-> results/hw3_leak_s0/posthoc/tuned/val_metrics.json
+[hw3 04:47:31]   done in 0 min 2 s
+[hw3 04:47:31] === hw3_frac10_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/train_frac10.csv) ===
+[hw3 04:47:31] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_frac10_s0 --set data.split_file=data/splits/hw3/train_frac10.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_frac10_s0: device=mps train=1868 val=4002 steps/epoch=116 total=696 warmup=139
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=116 loss=5.6100 loss_hm=4.0861 loss_wh=7.0621 loss_off=0.3558 loss_cls=0.4618 val_map=0.0332 val_thr=0.0500 val_auc=0.8240 val_map_heatmap=0.0311 lr=0.0003 epoch_sec=34.4000 val_sec=20.6000 it_per_sec=3.3700
+[train]   step 200/696 loss=3.1195 3.26 it/s
+[train] epoch 2/6 epoch=2 steps=232 loss=3.0224 loss_hm=2.0626 loss_wh=2.7371 loss_off=0.2767 loss_cls=0.4094 val_map=0.0631 val_thr=0.0500 val_auc=0.8588 val_map_heatmap=0.0652 lr=0.0003 epoch_sec=35.2000 val_sec=19.4000 it_per_sec=3.3000
+[train] epoch 3/6 epoch=3 steps=348 loss=2.7400 loss_hm=1.8390 loss_wh=2.6108 loss_off=0.2575 loss_cls=0.3824 val_map=0.1166 val_thr=0.1000 val_auc=0.8465 val_map_heatmap=0.1090 lr=0.0002 epoch_sec=35.1000 val_sec=20.2000 it_per_sec=3.3000
+[train]   step 400/696 loss=2.4447 3.39 it/s
+[train] epoch 4/6 epoch=4 steps=464 loss=2.4143 loss_hm=1.5934 loss_wh=2.3387 loss_off=0.2393 loss_cls=0.3477 val_map=0.1392 val_thr=0.1000 val_auc=0.8668 val_map_heatmap=0.1444 lr=0.0001 epoch_sec=34.7000 val_sec=20.0000 it_per_sec=3.3400
+[train] epoch 5/6 epoch=5 steps=580 loss=2.3452 loss_hm=1.5473 loss_wh=2.1945 loss_off=0.2427 loss_cls=0.3357 val_map=0.1460 val_thr=0.1000 val_auc=0.8687 val_map_heatmap=0.1442 lr=0.0000 epoch_sec=35.8000 val_sec=21.0000 it_per_sec=3.2400
+[train]   step 600/696 loss=2.1369 3.30 it/s
+[train] epoch 6/6 epoch=6 steps=696 loss=2.2039 loss_hm=1.4341 loss_wh=2.1939 loss_off=0.2407 loss_cls=0.3097 val_map=0.1507 val_thr=0.1000 val_auc=0.8692 val_map_heatmap=0.1501 lr=0.0000 epoch_sec=35.9000 val_sec=20.4000 it_per_sec=3.2300
+[train] done: {"best_epoch": 6, "val_map": 0.15071, "val_thr": 0.1, "val_auc": 0.86922, "train_min": 3.52} -> results/hw3_frac10_s0
+[hw3 04:53:10]   trained in 5 min
+[hw3 04:53:10] $ .venv/bin/python -m rsna.evaluate --run results/hw3_frac10_s0 --split val
+### hw3_frac10_s0 — val
+
+mAP **0.1507** [0.1288, 0.1719] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1240
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8692 |
+| image_pr_auc | 0.6750 |
+| sensitivity | 0.6278 |
+| specificity | 0.8904 |
+| matched_iou | 0.5853 |
+| mAP on positives only | 0.2076 |
+| FP-image rate on negatives | 0.1096 (340/3102) |
+| loss: FP on negatives | 0.2742 |
+| loss: missed positives (no box) | 0.2702 |
+| loss: localization on positives | 0.3049 |
+| oracle gating @run thr | 0.2076 |
+| oracle gating @best thr (0.05) | 0.2303 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1692 | [0.145, 0.194] | 0.2361 | 0.245 | 0.718 |
+| view | PA | 2176 | 202 | 0.0830 | [0.056, 0.110] | 0.1093 | 0.032 | 0.317 |
+| sex | F | 1730 | 376 | 0.1586 | [0.124, 0.194] | 0.2244 | 0.115 | 0.646 |
+| sex | M | 2272 | 524 | 0.1448 | [0.121, 0.173] | 0.1956 | 0.105 | 0.615 |
+| age_bucket | <20 | 337 | 125 | 0.2157 | [0.140, 0.272] | 0.2847 | 0.189 | 0.784 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1528 | [0.119, 0.188] | 0.2105 | 0.122 | 0.608 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1605 | [0.126, 0.192] | 0.2187 | 0.096 | 0.638 |
+| age_bucket | 60+ | 980 | 176 | 0.0882 | [0.059, 0.112] | 0.1277 | 0.098 | 0.528 |
+| cls | Lung Opacity | 900 | 900 | 0.2076 | [0.181, 0.234] | 0.2076 | – | 0.628 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.189 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.005 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.110 | – |
+| n_boxes | 1 | 392 | 392 | 0.1123 | [0.089, 0.137] | 0.1123 | – | 0.459 |
+| n_boxes | 2 | 490 | 490 | 0.2870 | [0.254, 0.321] | 0.2870 | – | 0.759 |
+| n_boxes | 3+ | 18 | 18 | 0.1227 | [0.058, 0.195] | 0.1227 | – | 0.722 |
+
+-> results/hw3_frac10_s0/val_metrics.json
+[hw3 04:53:11]   done in 0 min 1 s
+[hw3 04:53:11] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_frac10_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1091      1064           0.1066
+    0.8250 0.1500 0.1162      1064           0.1147
+    0.8500 0.1500 0.1238      1064           0.1224
+    0.8750 0.1500 0.1301      1064           0.1294
+    0.9000 0.1000 0.1347      1240           0.1347
+    0.9250 0.1000 0.1401      1240           0.1401
+    0.9500 0.1000 0.1443      1240           0.1443
+    0.9750 0.1000 0.1480      1240           0.1480
+    1.0000 0.1000 0.1507      1240           0.1507
+    1.0250 0.1000 0.1521      1240           0.1521
+    1.0500 0.1000 0.1526      1240           0.1526
+    1.0750 0.1000 0.1522      1240           0.1522
+    1.1000 0.1000 0.1527      1240           0.1527
+    1.1250 0.1000 0.1503      1240           0.1503
+    1.1500 0.1000 0.1479      1240           0.1479
+    1.1750 0.1000 0.1459      1240           0.1459
+    1.2000 0.1000 0.1422      1240           0.1422
+    1.2250 0.1000 0.1385      1240           0.1385
+    1.2500 0.1000 0.1331      1240           0.1331
+    1.2750 0.1000 0.1290      1240           0.1290
+    1.3000 0.1000 0.1243      1240           0.1243
+-> box_scale 1.1 (thr 0.10, val mAP 0.1527 vs 0.1507 at 1.0); cross-fitted gain +0.0009 -> results/hw3_frac10_s0/posthoc/box_scale.json
+[hw3 04:53:17]   done in 0 min 5 s
+[hw3 04:53:17] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_frac10_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_frac10_s0:tuned — val
+
+mAP **0.1527** [0.1310, 0.1726] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1240
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8692 |
+| image_pr_auc | 0.6750 |
+| sensitivity | 0.6278 |
+| specificity | 0.8904 |
+| matched_iou | 0.5909 |
+| mAP on positives only | 0.2103 |
+| FP-image rate on negatives | 0.1096 (340/3102) |
+| loss: FP on negatives | 0.2742 |
+| loss: missed positives (no box) | 0.2702 |
+| loss: localization on positives | 0.3030 |
+| oracle gating @run thr | 0.2103 |
+| oracle gating @best thr (0.05) | 0.2341 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1729 | [0.149, 0.198] | 0.2412 | 0.245 | 0.718 |
+| view | PA | 2176 | 202 | 0.0787 | [0.053, 0.107] | 0.1036 | 0.032 | 0.317 |
+| sex | F | 1730 | 376 | 0.1569 | [0.121, 0.188] | 0.2221 | 0.115 | 0.646 |
+| sex | M | 2272 | 524 | 0.1495 | [0.126, 0.178] | 0.2019 | 0.105 | 0.615 |
+| age_bucket | <20 | 337 | 125 | 0.2190 | [0.146, 0.277] | 0.2890 | 0.189 | 0.784 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1507 | [0.116, 0.187] | 0.2075 | 0.122 | 0.608 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1615 | [0.128, 0.193] | 0.2200 | 0.096 | 0.638 |
+| age_bucket | 60+ | 980 | 176 | 0.0969 | [0.066, 0.122] | 0.1404 | 0.098 | 0.528 |
+| cls | Lung Opacity | 900 | 900 | 0.2103 | [0.184, 0.236] | 0.2103 | – | 0.628 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.189 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.005 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.110 | – |
+| n_boxes | 1 | 392 | 392 | 0.1025 | [0.080, 0.125] | 0.1025 | – | 0.459 |
+| n_boxes | 2 | 490 | 490 | 0.3008 | [0.266, 0.333] | 0.3008 | – | 0.759 |
+| n_boxes | 3+ | 18 | 18 | 0.0959 | [0.044, 0.159] | 0.0959 | – | 0.722 |
+
+-> results/hw3_frac10_s0/posthoc/tuned/val_metrics.json
+[hw3 04:53:18]   done in 0 min 1 s
+[hw3 04:53:18] === hw3_frac20_s1 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/train_frac20.csv) ===
+[hw3 04:53:18] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 1 --run-name hw3_frac20_s1 --set data.split_file=data/splits/hw3/train_frac20.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_frac20_s1: device=mps train=3736 val=4002 steps/epoch=233 total=1398 warmup=279
+[train]   step 200/1398 loss=3.0379 3.56 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=233 loss=4.6861 loss_hm=3.3563 loss_wh=5.4883 loss_off=0.3117 loss_cls=0.4692 val_map=0.1293 val_thr=0.1000 val_auc=0.8550 val_map_heatmap=0.1273 lr=0.0003 epoch_sec=65.3000 val_sec=18.3000 it_per_sec=3.5700
+[train]   step 400/1398 loss=2.7697 3.67 it/s
+[train] epoch 2/6 epoch=2 steps=466 loss=2.7748 loss_hm=1.8604 loss_wh=2.6335 loss_off=0.2587 loss_cls=0.3922 val_map=0.1383 val_thr=0.1000 val_auc=0.8637 val_map_heatmap=0.1364 lr=0.0003 epoch_sec=63.1000 val_sec=17.8000 it_per_sec=3.6900
+[train]   step 600/1398 loss=2.5340 3.71 it/s
+[train] epoch 3/6 epoch=3 steps=699 loss=2.5678 loss_hm=1.7114 loss_wh=2.3547 loss_off=0.2464 loss_cls=0.3746 val_map=0.1464 val_thr=0.1000 val_auc=0.8688 val_map_heatmap=0.1652 lr=0.0002 epoch_sec=62.9000 val_sec=17.9000 it_per_sec=3.7000
+[train]   step 800/1398 loss=2.4146 3.70 it/s
+[train] epoch 4/6 epoch=4 steps=932 loss=2.4404 loss_hm=1.6228 loss_wh=2.3148 loss_off=0.2432 loss_cls=0.3430 val_map=0.1653 val_thr=0.1000 val_auc=0.8713 val_map_heatmap=0.1667 lr=0.0001 epoch_sec=63.5000 val_sec=18.0000 it_per_sec=3.6700
+[train]   step 1000/1398 loss=2.3130 3.69 it/s
+[train] epoch 5/6 epoch=5 steps=1165 loss=2.2554 loss_hm=1.4731 loss_wh=2.1814 loss_off=0.2335 loss_cls=0.3306 val_map=0.1706 val_thr=0.1000 val_auc=0.8761 val_map_heatmap=0.1790 lr=0.0000 epoch_sec=63.4000 val_sec=18.1000 it_per_sec=3.6800
+[train]   step 1200/1398 loss=2.0589 3.72 it/s
+[train] epoch 6/6 epoch=6 steps=1398 loss=2.1293 loss_hm=1.3835 loss_wh=2.0268 loss_off=0.2336 loss_cls=0.3096 val_map=0.1683 val_thr=0.1500 val_auc=0.8756 val_map_heatmap=0.1723 lr=0.0000 epoch_sec=63.3000 val_sec=17.9000 it_per_sec=3.6800
+[train] done: {"best_epoch": 5, "val_map": 0.17063, "val_thr": 0.1, "val_auc": 0.87611, "train_min": 6.36} -> results/hw3_frac20_s1
+[hw3 05:01:34]   trained in 8 min
+[hw3 05:01:34] $ .venv/bin/python -m rsna.evaluate --run results/hw3_frac20_s1 --split val
+### hw3_frac20_s1 — val
+
+mAP **0.1706** [0.1464, 0.1950] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1263
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8761 |
+| image_pr_auc | 0.6905 |
+| sensitivity | 0.6744 |
+| specificity | 0.8830 |
+| matched_iou | 0.5974 |
+| mAP on positives only | 0.2395 |
+| FP-image rate on negatives | 0.1170 (363/3102) |
+| loss: FP on negatives | 0.2874 |
+| loss: missed positives (no box) | 0.2320 |
+| loss: localization on positives | 0.3100 |
+| oracle gating @run thr | 0.2395 |
+| oracle gating @best thr (0.05) | 0.2646 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1946 | [0.167, 0.223] | 0.2771 | 0.262 | 0.772 |
+| view | PA | 2176 | 202 | 0.0821 | [0.055, 0.105] | 0.1093 | 0.034 | 0.337 |
+| sex | F | 1730 | 376 | 0.1808 | [0.137, 0.220] | 0.2577 | 0.118 | 0.684 |
+| sex | M | 2272 | 524 | 0.1631 | [0.134, 0.194] | 0.2263 | 0.116 | 0.668 |
+| age_bucket | <20 | 337 | 125 | 0.2471 | [0.160, 0.312] | 0.3282 | 0.193 | 0.840 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1706 | [0.129, 0.213] | 0.2388 | 0.129 | 0.668 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1839 | [0.145, 0.223] | 0.2539 | 0.100 | 0.656 |
+| age_bucket | 60+ | 980 | 176 | 0.0997 | [0.076, 0.120] | 0.1501 | 0.111 | 0.602 |
+| cls | Lung Opacity | 900 | 900 | 0.2395 | [0.210, 0.268] | 0.2395 | – | 0.674 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.203 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.003 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.117 | – |
+| n_boxes | 1 | 392 | 392 | 0.1188 | [0.099, 0.141] | 0.1188 | – | 0.485 |
+| n_boxes | 2 | 490 | 490 | 0.3391 | [0.301, 0.376] | 0.3391 | – | 0.818 |
+| n_boxes | 3+ | 18 | 18 | 0.1553 | [0.090, 0.225] | 0.1553 | – | 0.889 |
+
+-> results/hw3_frac20_s1/val_metrics.json
+[hw3 05:01:36]   done in 0 min 2 s
+[hw3 05:01:36] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_frac20_s1
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1237      1126           0.1224
+    0.8250 0.1500 0.1333      1126           0.1325
+    0.8500 0.1500 0.1410      1126           0.1407
+    0.8750 0.1500 0.1485      1126           0.1478
+    0.9000 0.1500 0.1555      1126           0.1551
+    0.9250 0.1500 0.1601      1126           0.1601
+    0.9500 0.1000 0.1654      1263           0.1654
+    0.9750 0.1000 0.1691      1263           0.1691
+    1.0000 0.1000 0.1706      1263           0.1706
+    1.0250 0.1000 0.1721      1263           0.1721
+    1.0500 0.1000 0.1718      1263           0.1718
+    1.0750 0.1000 0.1706      1263           0.1706
+    1.1000 0.1000 0.1681      1263           0.1681
+    1.1250 0.1000 0.1657      1263           0.1657
+    1.1500 0.1000 0.1613      1263           0.1613
+    1.1750 0.1000 0.1584      1263           0.1584
+    1.2000 0.1000 0.1535      1263           0.1535
+    1.2250 0.1000 0.1485      1263           0.1485
+    1.2500 0.1000 0.1430      1263           0.1430
+    1.2750 0.1000 0.1379      1263           0.1379
+    1.3000 0.1000 0.1315      1263           0.1315
+-> box_scale 1.025 (thr 0.10, val mAP 0.1721 vs 0.1706 at 1.0); cross-fitted gain +0.0008 -> results/hw3_frac20_s1/posthoc/box_scale.json
+[hw3 05:01:41]   done in 0 min 5 s
+[hw3 05:01:41] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_frac20_s1 --name tuned --box-scale tuned --score-mode keep
+### hw3_frac20_s1:tuned — val
+
+mAP **0.1721** [0.1482, 0.1959] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1263
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8761 |
+| image_pr_auc | 0.6905 |
+| sensitivity | 0.6744 |
+| specificity | 0.8830 |
+| matched_iou | 0.6003 |
+| mAP on positives only | 0.2416 |
+| FP-image rate on negatives | 0.1170 (363/3102) |
+| loss: FP on negatives | 0.2874 |
+| loss: missed positives (no box) | 0.2320 |
+| loss: localization on positives | 0.3085 |
+| oracle gating @run thr | 0.2416 |
+| oracle gating @best thr (0.05) | 0.2683 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1962 | [0.169, 0.224] | 0.2794 | 0.262 | 0.772 |
+| view | PA | 2176 | 202 | 0.0832 | [0.056, 0.106] | 0.1107 | 0.034 | 0.337 |
+| sex | F | 1730 | 376 | 0.1813 | [0.139, 0.220] | 0.2585 | 0.118 | 0.684 |
+| sex | M | 2272 | 524 | 0.1654 | [0.136, 0.196] | 0.2294 | 0.116 | 0.668 |
+| age_bucket | <20 | 337 | 125 | 0.2484 | [0.161, 0.314] | 0.3299 | 0.193 | 0.840 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1722 | [0.131, 0.214] | 0.2411 | 0.129 | 0.668 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1864 | [0.148, 0.224] | 0.2572 | 0.100 | 0.656 |
+| age_bucket | 60+ | 980 | 176 | 0.0995 | [0.075, 0.121] | 0.1499 | 0.111 | 0.602 |
+| cls | Lung Opacity | 900 | 900 | 0.2416 | [0.213, 0.271] | 0.2416 | – | 0.674 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.203 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.003 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.117 | – |
+| n_boxes | 1 | 392 | 392 | 0.1192 | [0.099, 0.142] | 0.1192 | – | 0.485 |
+| n_boxes | 2 | 490 | 490 | 0.3428 | [0.304, 0.379] | 0.3428 | – | 0.818 |
+| n_boxes | 3+ | 18 | 18 | 0.1531 | [0.086, 0.225] | 0.1531 | – | 0.889 |
+
+-> results/hw3_frac20_s1/posthoc/tuned/val_metrics.json
+[hw3 05:01:42]   done in 0 min 1 s
+[hw3 05:01:42] === hw3_frac50_s1 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/train_frac50.csv) ===
+[hw3 05:01:42] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 1 --run-name hw3_frac50_s1 --set data.split_file=data/splits/hw3/train_frac50.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_frac50_s1: device=mps train=9340 val=4002 steps/epoch=583 total=3498 warmup=300
+[train]   step 200/3498 loss=3.0833 3.71 it/s
+[train]   step 400/3498 loss=2.7076 3.69 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=583 loss=3.5135 loss_hm=2.4146 loss_wh=3.8301 loss_off=0.2888 loss_cls=0.4271 val_map=0.1299 val_thr=0.0500 val_auc=0.8611 val_map_heatmap=0.1341 lr=0.0003 epoch_sec=157.3000 val_sec=18.0000 it_per_sec=3.7100
+[train]   step 600/3498 loss=2.4721 3.82 it/s
+[train]   step 800/3498 loss=2.5915 3.70 it/s
+[train]   step 1000/3498 loss=2.5769 3.70 it/s
+[train] epoch 2/6 epoch=2 steps=1166 loss=2.5577 loss_hm=1.7020 loss_wh=2.3252 loss_off=0.2434 loss_cls=0.3798 val_map=0.1407 val_thr=0.1000 val_auc=0.8640 val_map_heatmap=0.1337 lr=0.0002 epoch_sec=157.1000 val_sec=17.8000 it_per_sec=3.7100
+[train]   step 1200/3498 loss=2.3272 3.76 it/s
+[train]   step 1400/3498 loss=2.4520 3.70 it/s
+[train]   step 1600/3498 loss=2.4876 3.74 it/s
+[train] epoch 3/6 epoch=3 steps=1749 loss=2.4141 loss_hm=1.5909 loss_wh=2.1645 loss_off=0.2392 loss_cls=0.3675 val_map=0.1848 val_thr=0.1500 val_auc=0.8819 val_map_heatmap=0.1815 lr=0.0002 epoch_sec=154.4000 val_sec=17.3000 it_per_sec=3.7800
+[train]   step 1800/3498 loss=2.3115 3.88 it/s
+[train]   step 2000/3498 loss=2.3148 3.86 it/s
+[train]   step 2200/3498 loss=2.2540 3.86 it/s
+[train] epoch 4/6 epoch=4 steps=2332 loss=2.2766 loss_hm=1.4996 loss_wh=1.9487 loss_off=0.2340 loss_cls=0.3482 val_map=0.1830 val_thr=0.1000 val_auc=0.8829 val_map_heatmap=0.1823 lr=0.0001 epoch_sec=151.5000 val_sec=17.5000 it_per_sec=3.8500
+[train]   step 2400/3498 loss=2.0644 3.83 it/s
+[train]   step 2600/3498 loss=2.1552 3.81 it/s
+[train]   step 2800/3498 loss=2.0200 3.82 it/s
+[train] epoch 5/6 epoch=5 steps=2915 loss=2.1368 loss_hm=1.4024 loss_wh=1.7571 loss_off=0.2295 loss_cls=0.3292 val_map=0.2009 val_thr=0.1000 val_auc=0.8869 val_map_heatmap=0.2010 lr=0.0000 epoch_sec=152.1000 val_sec=17.3000 it_per_sec=3.8300
+[train]   step 3000/3498 loss=2.0163 3.86 it/s
+[train]   step 3200/3498 loss=2.0506 3.86 it/s
+[train]   step 3400/3498 loss=2.0765 3.87 it/s
+[train] epoch 6/6 epoch=6 steps=3498 loss=2.0624 loss_hm=1.3518 loss_wh=1.7023 loss_off=0.2233 loss_cls=0.3171 val_map=0.2032 val_thr=0.1000 val_auc=0.8874 val_map_heatmap=0.1953 lr=0.0000 epoch_sec=150.7000 val_sec=17.3000 it_per_sec=3.8700
+[train] done: {"best_epoch": 6, "val_map": 0.2032, "val_thr": 0.1, "val_auc": 0.88736, "train_min": 15.38} -> results/hw3_frac50_s1
+[hw3 05:18:57]   trained in 17 min
+[hw3 05:18:57] $ .venv/bin/python -m rsna.evaluate --run results/hw3_frac50_s1 --split val
+### hw3_frac50_s1 — val
+
+mAP **0.2032** [0.1769, 0.2297] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1239
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8874 |
+| image_pr_auc | 0.7112 |
+| sensitivity | 0.6644 |
+| specificity | 0.8907 |
+| matched_iou | 0.6272 |
+| mAP on positives only | 0.2797 |
+| FP-image rate on negatives | 0.1093 (339/3102) |
+| loss: FP on negatives | 0.2736 |
+| loss: missed positives (no box) | 0.2437 |
+| loss: localization on positives | 0.2794 |
+| oracle gating @run thr | 0.2797 |
+| oracle gating @best thr (0.05) | 0.3108 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.2324 | [0.203, 0.263] | 0.3189 | 0.230 | 0.745 |
+| view | PA | 2176 | 202 | 0.1038 | [0.076, 0.131] | 0.1444 | 0.040 | 0.386 |
+| sex | F | 1730 | 376 | 0.2041 | [0.154, 0.249] | 0.2856 | 0.111 | 0.652 |
+| sex | M | 2272 | 524 | 0.2025 | [0.170, 0.233] | 0.2756 | 0.108 | 0.674 |
+| age_bucket | <20 | 337 | 125 | 0.2792 | [0.195, 0.342] | 0.3551 | 0.160 | 0.808 |
+| age_bucket | 20-40 | 1087 | 265 | 0.2040 | [0.161, 0.246] | 0.2763 | 0.114 | 0.672 |
+| age_bucket | 40-60 | 1598 | 334 | 0.2201 | [0.173, 0.269] | 0.3071 | 0.104 | 0.665 |
+| age_bucket | 60+ | 980 | 176 | 0.1238 | [0.091, 0.148] | 0.1793 | 0.098 | 0.551 |
+| cls | Lung Opacity | 900 | 900 | 0.2797 | [0.249, 0.313] | 0.2797 | – | 0.664 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.190 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.109 | – |
+| n_boxes | 1 | 392 | 392 | 0.1588 | [0.136, 0.185] | 0.1588 | – | 0.500 |
+| n_boxes | 2 | 490 | 490 | 0.3802 | [0.336, 0.424] | 0.3802 | – | 0.788 |
+| n_boxes | 3+ | 18 | 18 | 0.1793 | [0.098, 0.272] | 0.1793 | – | 0.889 |
+
+-> results/hw3_frac50_s1/val_metrics.json
+[hw3 05:18:58]   done in 0 min 1 s
+[hw3 05:18:58] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_frac50_s1
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1000 0.1480      1239           0.1480
+    0.8250 0.1000 0.1603      1239           0.1603
+    0.8500 0.1000 0.1701      1239           0.1701
+    0.8750 0.1000 0.1792      1239           0.1792
+    0.9000 0.1000 0.1879      1239           0.1879
+    0.9250 0.1000 0.1943      1239           0.1943
+    0.9500 0.1000 0.1999      1239           0.1999
+    0.9750 0.1000 0.2012      1239           0.2012
+    1.0000 0.1000 0.2032      1239           0.2032
+    1.0250 0.1000 0.2040      1239           0.2040
+    1.0500 0.1000 0.2028      1239           0.2028
+    1.0750 0.1000 0.2009      1239           0.2009
+    1.1000 0.1000 0.1981      1239           0.1981
+    1.1250 0.1000 0.1932      1239           0.1932
+    1.1500 0.1000 0.1884      1239           0.1884
+    1.1750 0.1000 0.1836      1239           0.1836
+    1.2000 0.1000 0.1762      1239           0.1762
+    1.2250 0.1000 0.1700      1239           0.1700
+    1.2500 0.1000 0.1626      1239           0.1626
+    1.2750 0.1000 0.1551      1239           0.1551
+    1.3000 0.1000 0.1473      1239           0.1473
+-> box_scale 1.025 (thr 0.10, val mAP 0.2040 vs 0.2032 at 1.0); cross-fitted gain -0.0013 -> results/hw3_frac50_s1/posthoc/box_scale.json
+[hw3 05:19:03]   done in 0 min 5 s
+[hw3 05:19:03] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_frac50_s1 --name tuned --box-scale tuned --score-mode keep
+### hw3_frac50_s1:tuned — val
+
+mAP **0.2040** [0.1779, 0.2304] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1239
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8874 |
+| image_pr_auc | 0.7112 |
+| sensitivity | 0.6644 |
+| specificity | 0.8907 |
+| matched_iou | 0.6293 |
+| mAP on positives only | 0.2808 |
+| FP-image rate on negatives | 0.1093 (339/3102) |
+| loss: FP on negatives | 0.2736 |
+| loss: missed positives (no box) | 0.2437 |
+| loss: localization on positives | 0.2787 |
+| oracle gating @run thr | 0.2808 |
+| oracle gating @best thr (0.05) | 0.3123 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.2329 | [0.203, 0.263] | 0.3197 | 0.230 | 0.745 |
+| view | PA | 2176 | 202 | 0.1053 | [0.078, 0.132] | 0.1465 | 0.040 | 0.386 |
+| sex | F | 1730 | 376 | 0.2046 | [0.155, 0.247] | 0.2862 | 0.111 | 0.652 |
+| sex | M | 2272 | 524 | 0.2035 | [0.171, 0.234] | 0.2769 | 0.108 | 0.674 |
+| age_bucket | <20 | 337 | 125 | 0.2793 | [0.194, 0.344] | 0.3553 | 0.160 | 0.808 |
+| age_bucket | 20-40 | 1087 | 265 | 0.2039 | [0.160, 0.246] | 0.2763 | 0.114 | 0.672 |
+| age_bucket | 40-60 | 1598 | 334 | 0.2202 | [0.175, 0.266] | 0.3072 | 0.104 | 0.665 |
+| age_bucket | 60+ | 980 | 176 | 0.1274 | [0.094, 0.152] | 0.1846 | 0.098 | 0.551 |
+| cls | Lung Opacity | 900 | 900 | 0.2808 | [0.250, 0.315] | 0.2808 | – | 0.664 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.190 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.109 | – |
+| n_boxes | 1 | 392 | 392 | 0.1593 | [0.136, 0.185] | 0.1593 | – | 0.500 |
+| n_boxes | 2 | 490 | 490 | 0.3821 | [0.337, 0.424] | 0.3821 | – | 0.788 |
+| n_boxes | 3+ | 18 | 18 | 0.1700 | [0.091, 0.263] | 0.1700 | – | 0.889 |
+
+-> results/hw3_frac50_s1/posthoc/tuned/val_metrics.json
+[hw3 05:19:04]   done in 0 min 1 s
+[hw3 05:19:04] === hw3_leak_s1 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/leak_s0.csv) ===
+[hw3 05:19:04] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 1 --run-name hw3_leak_s1 --set data.split_file=data/splits/hw3/leak_s0.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_leak_s1: device=mps train=18678 val=3308 steps/epoch=1167 total=7002 warmup=300
+[train]   step 200/7002 loss=3.0776 3.90 it/s
+[train]   step 400/7002 loss=2.7802 3.87 it/s
+[train]   step 600/7002 loss=2.6465 3.88 it/s
+[train]   step 800/7002 loss=2.7260 3.83 it/s
+[train]   step 1000/7002 loss=2.6854 3.84 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=1167 loss=3.0820 loss_hm=2.0941 loss_wh=3.1161 loss_off=0.2653 loss_cls=0.4110 val_map=0.1436 val_thr=0.0500 val_auc=0.8761 val_map_heatmap=0.1346 lr=0.0003 epoch_sec=302.9000 val_sec=14.5000 it_per_sec=3.8500
+[train]   step 1200/7002 loss=2.5471 3.90 it/s
+[train]   step 1400/7002 loss=2.3899 3.87 it/s
+[train]   step 1600/7002 loss=2.5031 3.87 it/s
+[train]   step 1800/7002 loss=2.5233 3.88 it/s
+[train]   step 2000/7002 loss=2.4290 3.88 it/s
+[train]   step 2200/7002 loss=2.3345 3.88 it/s
+[train] epoch 2/6 epoch=2 steps=2334 loss=2.4468 loss_hm=1.6262 loss_wh=2.0828 loss_off=0.2383 loss_cls=0.3740 val_map=0.1601 val_thr=0.0500 val_auc=0.8841 val_map_heatmap=0.1629 lr=0.0002 epoch_sec=300.6000 val_sec=14.4000 it_per_sec=3.8800
+[train]   step 2400/7002 loss=2.4812 3.86 it/s
+[train]   step 2600/7002 loss=2.3613 3.84 it/s
+[train]   step 2800/7002 loss=2.2984 3.85 it/s
+[train]   step 3000/7002 loss=2.3740 3.86 it/s
+[train]   step 3200/7002 loss=2.1663 3.86 it/s
+[train]   step 3400/7002 loss=2.2388 3.86 it/s
+[train] epoch 3/6 epoch=3 steps=3501 loss=2.3153 loss_hm=1.5369 loss_wh=1.8529 loss_off=0.2336 loss_cls=0.3596 val_map=0.1929 val_thr=0.1500 val_auc=0.8889 val_map_heatmap=0.1859 lr=0.0002 epoch_sec=301.9000 val_sec=14.4000 it_per_sec=3.8700
+[train]   step 3600/7002 loss=2.2857 3.81 it/s
+[train]   step 3800/7002 loss=2.3205 3.83 it/s
+[train]   step 4000/7002 loss=2.2051 3.85 it/s
+[train]   step 4200/7002 loss=2.0798 3.86 it/s
+[train]   step 4400/7002 loss=2.1126 3.86 it/s
+[train]   step 4600/7002 loss=2.1743 3.87 it/s
+[train] epoch 4/6 epoch=4 steps=4668 loss=2.2166 loss_hm=1.4708 loss_wh=1.7219 loss_off=0.2297 loss_cls=0.3438 val_map=0.1979 val_thr=0.1500 val_auc=0.8866 val_map_heatmap=0.1886 lr=0.0001 epoch_sec=301.7000 val_sec=14.4000 it_per_sec=3.8700
+[train]   step 4800/7002 loss=2.1438 3.84 it/s
+[train]   step 5000/7002 loss=2.0997 3.85 it/s
+[train]   step 5200/7002 loss=2.0397 3.87 it/s
+[train]   step 5400/7002 loss=2.0520 3.87 it/s
+[train]   step 5600/7002 loss=2.0462 3.87 it/s
+[train]   step 5800/7002 loss=2.0768 3.85 it/s
+[train] epoch 5/6 epoch=5 steps=5835 loss=2.1237 loss_hm=1.4010 loss_wh=1.6594 loss_off=0.2261 loss_cls=0.3307 val_map=0.2062 val_thr=0.1500 val_auc=0.8937 val_map_heatmap=0.1973 lr=0.0000 epoch_sec=303.8000 val_sec=14.8000 it_per_sec=3.8400
+[train]   step 6000/7002 loss=2.1553 3.82 it/s
+[train]   step 6200/7002 loss=2.0654 3.83 it/s
+[train]   step 6400/7002 loss=2.1880 3.85 it/s
+[train]   step 6600/7002 loss=2.1773 3.86 it/s
+[train]   step 6800/7002 loss=2.0260 3.86 it/s
+[train]   step 7000/7002 loss=1.9665 3.86 it/s
+[train] epoch 6/6 epoch=6 steps=7002 loss=2.0559 loss_hm=1.3554 loss_wh=1.5904 loss_off=0.2218 loss_cls=0.3197 val_map=0.2108 val_thr=0.1500 val_auc=0.8933 val_map_heatmap=0.2095 lr=0.0000 epoch_sec=302.3000 val_sec=14.3000 it_per_sec=3.8600
+[train] done: {"best_epoch": 6, "val_map": 0.21079, "val_thr": 0.15, "val_auc": 0.89326, "train_min": 30.22} -> results/hw3_leak_s1
+[hw3 05:50:51]   trained in 31 min
+[hw3 05:50:51] $ .venv/bin/python -m rsna.evaluate --run results/hw3_leak_s1 --split val
+### hw3_leak_s1 — val
+
+mAP **0.2108** [0.1797, 0.2407] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 3308, scored 824
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8933 |
+| image_pr_auc | 0.7095 |
+| sensitivity | 0.5596 |
+| specificity | 0.9448 |
+| matched_iou | 0.6465 |
+| mAP on positives only | 0.2558 |
+| FP-image rate on negatives | 0.0552 (145/2629) |
+| loss: FP on negatives | 0.1760 |
+| loss: missed positives (no box) | 0.3629 |
+| loss: localization on positives | 0.2504 |
+| oracle gating @run thr | 0.2558 |
+| oracle gating @best thr (0.05) | 0.3074 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1428 | 516 | 0.2389 | [0.205, 0.275] | 0.2922 | 0.126 | 0.641 |
+| view | PA | 1880 | 163 | 0.1188 | [0.086, 0.152] | 0.1407 | 0.017 | 0.301 |
+| sex | F | 1447 | 287 | 0.2155 | [0.160, 0.268] | 0.2568 | 0.047 | 0.551 |
+| sex | M | 1861 | 392 | 0.2074 | [0.169, 0.244] | 0.2551 | 0.061 | 0.566 |
+| age_bucket | <20 | 273 | 87 | 0.2873 | [0.204, 0.338] | 0.3467 | 0.097 | 0.782 |
+| age_bucket | 20-40 | 919 | 209 | 0.2137 | [0.160, 0.261] | 0.2598 | 0.063 | 0.574 |
+| age_bucket | 40-60 | 1310 | 245 | 0.2426 | [0.184, 0.293] | 0.2911 | 0.046 | 0.567 |
+| age_bucket | 60+ | 806 | 138 | 0.1048 | [0.061, 0.136] | 0.1298 | 0.049 | 0.384 |
+| cls | Lung Opacity | 679 | 679 | 0.2558 | [0.219, 0.288] | 0.2558 | – | 0.560 |
+| cls | No Lung Opacity / Not Normal | 1431 | 0 | 0.0000 | [0.000, 0.000] | – | 0.100 | – |
+| cls | Normal | 1198 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 2629 | 0 | 0.0000 | [0.000, 0.000] | – | 0.055 | – |
+| n_boxes | 1 | 308 | 308 | 0.1446 | [0.111, 0.176] | 0.1446 | – | 0.393 |
+| n_boxes | 2 | 357 | 357 | 0.3570 | [0.305, 0.405] | 0.3570 | – | 0.697 |
+| n_boxes | 3+ | 14 | 14 | 0.1222 | [0.059, 0.195] | 0.1222 | – | 0.714 |
+
+-> results/hw3_leak_s1/val_metrics.json
+[hw3 05:50:52]   done in 0 min 1 s
+[hw3 05:50:52] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_leak_s1
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1640       824           0.1640
+    0.8250 0.1500 0.1765       824           0.1765
+    0.8500 0.1500 0.1860       824           0.1860
+    0.8750 0.1500 0.1948       824           0.1948
+    0.9000 0.1500 0.2015       824           0.2015
+    0.9250 0.1500 0.2062       824           0.2062
+    0.9500 0.1500 0.2092       824           0.2092
+    0.9750 0.1500 0.2121       824           0.2121
+    1.0000 0.1500 0.2108       824           0.2108
+    1.0250 0.1500 0.2086       824           0.2086
+    1.0500 0.1500 0.2058       824           0.2058
+    1.0750 0.1500 0.2002       824           0.2002
+    1.1000 0.1500 0.1961       824           0.1961
+    1.1250 0.1500 0.1891       824           0.1891
+    1.1500 0.1500 0.1829       824           0.1829
+    1.1750 0.1500 0.1747       824           0.1747
+    1.2000 0.1500 0.1676       824           0.1676
+    1.2250 0.1500 0.1576       824           0.1576
+    1.2500 0.1500 0.1493       824           0.1493
+    1.2750 0.1500 0.1406       824           0.1406
+    1.3000 0.1500 0.1312       824           0.1312
+-> box_scale 0.975 (thr 0.15, val mAP 0.2121 vs 0.2108 at 1.0); cross-fitted gain +0.0011 -> results/hw3_leak_s1/posthoc/box_scale.json
+[hw3 05:50:56]   done in 0 min 4 s
+[hw3 05:50:56] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_leak_s1 --name tuned --box-scale tuned --score-mode keep
+### hw3_leak_s1:tuned — val
+
+mAP **0.2121** [0.1813, 0.2418] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 3308, scored 824
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8933 |
+| image_pr_auc | 0.7095 |
+| sensitivity | 0.5596 |
+| specificity | 0.9448 |
+| matched_iou | 0.6472 |
+| mAP on positives only | 0.2573 |
+| FP-image rate on negatives | 0.0552 (145/2629) |
+| loss: FP on negatives | 0.1760 |
+| loss: missed positives (no box) | 0.3629 |
+| loss: localization on positives | 0.2491 |
+| oracle gating @run thr | 0.2573 |
+| oracle gating @best thr (0.05) | 0.3084 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1428 | 516 | 0.2403 | [0.207, 0.277] | 0.2938 | 0.126 | 0.641 |
+| view | PA | 1880 | 163 | 0.1198 | [0.087, 0.155] | 0.1418 | 0.017 | 0.301 |
+| sex | F | 1447 | 287 | 0.2171 | [0.163, 0.270] | 0.2587 | 0.047 | 0.551 |
+| sex | M | 1861 | 392 | 0.2085 | [0.169, 0.246] | 0.2563 | 0.061 | 0.566 |
+| age_bucket | <20 | 273 | 87 | 0.2842 | [0.200, 0.336] | 0.3430 | 0.097 | 0.782 |
+| age_bucket | 20-40 | 919 | 209 | 0.2144 | [0.161, 0.261] | 0.2606 | 0.063 | 0.574 |
+| age_bucket | 40-60 | 1310 | 245 | 0.2449 | [0.187, 0.297] | 0.2939 | 0.046 | 0.567 |
+| age_bucket | 60+ | 806 | 138 | 0.1078 | [0.064, 0.141] | 0.1335 | 0.049 | 0.384 |
+| cls | Lung Opacity | 679 | 679 | 0.2573 | [0.222, 0.291] | 0.2573 | – | 0.560 |
+| cls | No Lung Opacity / Not Normal | 1431 | 0 | 0.0000 | [0.000, 0.000] | – | 0.100 | – |
+| cls | Normal | 1198 | 0 | 0.0000 | [0.000, 0.000] | – | 0.002 | – |
+| n_boxes | 0 | 2629 | 0 | 0.0000 | [0.000, 0.000] | – | 0.055 | – |
+| n_boxes | 1 | 308 | 308 | 0.1466 | [0.112, 0.179] | 0.1466 | – | 0.393 |
+| n_boxes | 2 | 357 | 357 | 0.3580 | [0.306, 0.405] | 0.3580 | – | 0.697 |
+| n_boxes | 3+ | 14 | 14 | 0.1244 | [0.060, 0.197] | 0.1244 | – | 0.714 |
+
+-> results/hw3_leak_s1/posthoc/tuned/val_metrics.json
+[hw3 05:50:57]   done in 0 min 1 s
+[hw3 05:50:57] === hw3_resplit2_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/resplit_s2.csv) ===
+[hw3 05:50:57] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_resplit2_s0 --set data.split_file=data/splits/hw3/resplit_s2.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_resplit2_s0: device=mps train=18676 val=4004 steps/epoch=1167 total=7002 warmup=300
+[train]   step 200/7002 loss=3.2222 3.90 it/s
+[train]   step 400/7002 loss=2.8455 3.88 it/s
+[train]   step 600/7002 loss=2.6600 3.88 it/s
+[train]   step 800/7002 loss=2.6508 3.89 it/s
+[train]   step 1000/7002 loss=2.4896 3.89 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=1167 loss=3.0445 loss_hm=2.0645 loss_wh=3.1479 loss_off=0.2630 loss_cls=0.4022 val_map=0.1548 val_thr=0.1000 val_auc=0.8758 val_map_heatmap=0.1558 lr=0.0003 epoch_sec=299.9000 val_sec=17.3000 it_per_sec=3.8900
+[train]   step 1200/7002 loss=2.4902 3.90 it/s
+[train]   step 1400/7002 loss=2.5969 3.87 it/s
+[train]   step 1600/7002 loss=2.3477 3.88 it/s
+[train]   step 1800/7002 loss=2.5967 3.90 it/s
+[train]   step 2000/7002 loss=2.4011 3.90 it/s
+[train]   step 2200/7002 loss=2.4905 3.89 it/s
+[train] epoch 2/6 epoch=2 steps=2334 loss=2.4939 loss_hm=1.6692 loss_wh=2.1521 loss_off=0.2362 loss_cls=0.3733 val_map=0.1830 val_thr=0.1500 val_auc=0.8806 val_map_heatmap=0.1855 lr=0.0002 epoch_sec=299.9000 val_sec=17.3000 it_per_sec=3.8900
+[train]   step 2400/7002 loss=2.5259 3.90 it/s
+[train]   step 2600/7002 loss=2.4578 3.86 it/s
+[train]   step 2800/7002 loss=2.3422 3.87 it/s
+[train]   step 3000/7002 loss=2.3652 3.88 it/s
+[train]   step 3200/7002 loss=2.2337 3.88 it/s
+[train]   step 3400/7002 loss=2.3305 3.86 it/s
+[train] epoch 3/6 epoch=3 steps=3501 loss=2.3356 loss_hm=1.5592 loss_wh=1.8782 loss_off=0.2299 loss_cls=0.3587 val_map=0.2021 val_thr=0.1500 val_auc=0.8876 val_map_heatmap=0.1997 lr=0.0002 epoch_sec=302.4000 val_sec=17.7000 it_per_sec=3.8600
+[train]   step 3600/7002 loss=2.2345 3.78 it/s
+[train]   step 3800/7002 loss=2.3380 3.82 it/s
+[train]   step 4000/7002 loss=2.1501 3.85 it/s
+[train]   step 4200/7002 loss=2.1294 3.87 it/s
+[train]   step 4400/7002 loss=2.1521 3.87 it/s
+[train]   step 4600/7002 loss=2.1821 3.88 it/s
+[train] epoch 4/6 epoch=4 steps=4668 loss=2.2128 loss_hm=1.4734 loss_wh=1.7303 loss_off=0.2256 loss_cls=0.3408 val_map=0.2066 val_thr=0.1500 val_auc=0.8896 val_map_heatmap=0.2064 lr=0.0001 epoch_sec=300.9000 val_sec=17.3000 it_per_sec=3.8800
+[train]   step 4800/7002 loss=2.2278 3.88 it/s
+[train]   step 5000/7002 loss=2.1226 3.87 it/s
+[train]   step 5200/7002 loss=2.2020 3.88 it/s
+[train]   step 5400/7002 loss=2.1555 3.88 it/s
+[train]   step 5600/7002 loss=2.1850 3.87 it/s
+[train]   step 5800/7002 loss=2.0653 3.87 it/s
+[train] epoch 5/6 epoch=5 steps=5835 loss=2.1312 loss_hm=1.4135 loss_wh=1.6523 loss_off=0.2245 loss_cls=0.3279 val_map=0.2137 val_thr=0.1500 val_auc=0.8934 val_map_heatmap=0.2142 lr=0.0000 epoch_sec=301.5000 val_sec=17.3000 it_per_sec=3.8700
+[train]   step 6000/7002 loss=2.0914 3.87 it/s
+[train]   step 6200/7002 loss=2.2393 3.87 it/s
+[train]   step 6400/7002 loss=2.0792 3.87 it/s
+[train]   step 6600/7002 loss=2.0387 3.88 it/s
+[train]   step 6800/7002 loss=2.1466 3.88 it/s
+[train]   step 7000/7002 loss=2.1200 3.87 it/s
+[train] epoch 6/6 epoch=6 steps=7002 loss=2.0758 loss_hm=1.3743 loss_wh=1.6008 loss_off=0.2237 loss_cls=0.3176 val_map=0.2137 val_thr=0.1500 val_auc=0.8928 val_map_heatmap=0.2174 lr=0.0000 epoch_sec=301.8000 val_sec=18.9000 it_per_sec=3.8700
+[train] done: {"best_epoch": 5, "val_map": 0.21372, "val_thr": 0.15, "val_auc": 0.89339, "train_min": 30.11} -> results/hw3_resplit2_s0
+[hw3 06:22:56]   trained in 31 min
+[hw3 06:22:56] $ .venv/bin/python -m rsna.evaluate --run results/hw3_resplit2_s0 --split val
+### hw3_resplit2_s0 — val
+
+mAP **0.2137** [0.1858, 0.2424] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4004, scored 1157
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8934 |
+| image_pr_auc | 0.7230 |
+| sensitivity | 0.6026 |
+| specificity | 0.9190 |
+| matched_iou | 0.6437 |
+| mAP on positives only | 0.2729 |
+| FP-image rate on negatives | 0.0810 (251/3098) |
+| loss: FP on negatives | 0.2169 |
+| loss: missed positives (no box) | 0.3111 |
+| loss: localization on positives | 0.2582 |
+| oracle gating @run thr | 0.2729 |
+| oracle gating @best thr (0.05) | 0.3237 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1829 | 703 | 0.2396 | [0.212, 0.274] | 0.3081 | 0.179 | 0.680 |
+| view | PA | 2175 | 203 | 0.1213 | [0.086, 0.154] | 0.1512 | 0.025 | 0.335 |
+| sex | F | 1724 | 376 | 0.2091 | [0.160, 0.253] | 0.2752 | 0.088 | 0.593 |
+| sex | M | 2280 | 530 | 0.2172 | [0.179, 0.249] | 0.2713 | 0.075 | 0.609 |
+| age_bucket | <20 | 241 | 78 | 0.3152 | [0.198, 0.412] | 0.3678 | 0.080 | 0.718 |
+| age_bucket | 20-40 | 1120 | 261 | 0.2179 | [0.172, 0.263] | 0.2763 | 0.081 | 0.625 |
+| age_bucket | 40-60 | 1711 | 400 | 0.2185 | [0.172, 0.262] | 0.2825 | 0.089 | 0.620 |
+| age_bucket | 60+ | 932 | 167 | 0.1536 | [0.112, 0.195] | 0.2005 | 0.067 | 0.473 |
+| cls | Lung Opacity | 906 | 906 | 0.2729 | [0.243, 0.304] | 0.2729 | – | 0.603 |
+| cls | No Lung Opacity / Not Normal | 1773 | 0 | 0.0000 | [0.000, 0.000] | – | 0.142 | – |
+| cls | Normal | 1325 | 0 | – | [–, –] | – | 0.000 | – |
+| n_boxes | 0 | 3098 | 0 | 0.0000 | [0.000, 0.000] | – | 0.081 | – |
+| n_boxes | 1 | 393 | 393 | 0.1755 | [0.148, 0.206] | 0.1755 | – | 0.468 |
+| n_boxes | 2 | 491 | 491 | 0.3567 | [0.312, 0.400] | 0.3567 | – | 0.707 |
+| n_boxes | 3+ | 22 | 22 | 0.1443 | [0.082, 0.233] | 0.1443 | – | 0.682 |
+
+-> results/hw3_resplit2_s0/val_metrics.json
+[hw3 06:22:57]   done in 0 min 1 s
+[hw3 06:22:57] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_resplit2_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1531      1157           0.1531
+    0.8250 0.1500 0.1663      1157           0.1663
+    0.8500 0.1500 0.1779      1157           0.1779
+    0.8750 0.1500 0.1879      1157           0.1879
+    0.9000 0.1500 0.1961      1157           0.1961
+    0.9250 0.1500 0.2027      1157           0.2027
+    0.9500 0.1500 0.2088      1157           0.2088
+    0.9750 0.1500 0.2122      1157           0.2122
+    1.0000 0.1500 0.2137      1157           0.2137
+    1.0250 0.1500 0.2166      1157           0.2166
+    1.0500 0.1500 0.2141      1157           0.2141
+    1.0750 0.1500 0.2119      1157           0.2119
+    1.1000 0.1500 0.2079      1157           0.2079
+    1.1250 0.1500 0.2032      1157           0.2032
+    1.1500 0.1500 0.1968      1157           0.1968
+    1.1750 0.1500 0.1916      1157           0.1916
+    1.2000 0.1500 0.1837      1157           0.1837
+    1.2250 0.1500 0.1762      1157           0.1762
+    1.2500 0.1500 0.1679      1157           0.1679
+    1.2750 0.1500 0.1602      1157           0.1602
+    1.3000 0.1500 0.1518      1157           0.1518
+-> box_scale 1.025 (thr 0.15, val mAP 0.2166 vs 0.2137 at 1.0); cross-fitted gain +0.0029 -> results/hw3_resplit2_s0/posthoc/box_scale.json
+[hw3 06:23:02]   done in 0 min 5 s
+[hw3 06:23:02] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_resplit2_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_resplit2_s0:tuned — val
+
+mAP **0.2166** [0.1881, 0.2457] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4004, scored 1157
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8934 |
+| image_pr_auc | 0.7230 |
+| sensitivity | 0.6026 |
+| specificity | 0.9190 |
+| matched_iou | 0.6473 |
+| mAP on positives only | 0.2766 |
+| FP-image rate on negatives | 0.0810 (251/3098) |
+| loss: FP on negatives | 0.2169 |
+| loss: missed positives (no box) | 0.3111 |
+| loss: localization on positives | 0.2553 |
+| oracle gating @run thr | 0.2766 |
+| oracle gating @best thr (0.05) | 0.3278 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1829 | 703 | 0.2432 | [0.216, 0.278] | 0.3127 | 0.179 | 0.680 |
+| view | PA | 2175 | 203 | 0.1217 | [0.085, 0.155] | 0.1517 | 0.025 | 0.335 |
+| sex | F | 1724 | 376 | 0.2123 | [0.162, 0.257] | 0.2795 | 0.088 | 0.593 |
+| sex | M | 2280 | 530 | 0.2199 | [0.181, 0.252] | 0.2746 | 0.075 | 0.609 |
+| age_bucket | <20 | 241 | 78 | 0.3219 | [0.202, 0.423] | 0.3755 | 0.080 | 0.718 |
+| age_bucket | 20-40 | 1120 | 261 | 0.2202 | [0.175, 0.266] | 0.2792 | 0.081 | 0.625 |
+| age_bucket | 40-60 | 1711 | 400 | 0.2214 | [0.174, 0.267] | 0.2862 | 0.089 | 0.620 |
+| age_bucket | 60+ | 932 | 167 | 0.1560 | [0.114, 0.199] | 0.2036 | 0.067 | 0.473 |
+| cls | Lung Opacity | 906 | 906 | 0.2766 | [0.246, 0.309] | 0.2766 | – | 0.603 |
+| cls | No Lung Opacity / Not Normal | 1773 | 0 | 0.0000 | [0.000, 0.000] | – | 0.142 | – |
+| cls | Normal | 1325 | 0 | – | [–, –] | – | 0.000 | – |
+| n_boxes | 0 | 3098 | 0 | 0.0000 | [0.000, 0.000] | – | 0.081 | – |
+| n_boxes | 1 | 393 | 393 | 0.1741 | [0.147, 0.205] | 0.1741 | – | 0.468 |
+| n_boxes | 2 | 491 | 491 | 0.3647 | [0.320, 0.409] | 0.3647 | – | 0.707 |
+| n_boxes | 3+ | 22 | 22 | 0.1441 | [0.084, 0.238] | 0.1441 | – | 0.682 |
+
+-> results/hw3_resplit2_s0/posthoc/tuned/val_metrics.json
+[hw3 06:23:03]   done in 0 min 1 s
+[hw3 06:23:03] === hw3_frac10_s1 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/train_frac10.csv) ===
+[hw3 06:23:03] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 1 --run-name hw3_frac10_s1 --set data.split_file=data/splits/hw3/train_frac10.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_frac10_s1: device=mps train=1868 val=4002 steps/epoch=116 total=696 warmup=139
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=116 loss=5.5392 loss_hm=3.9595 loss_wh=7.2798 loss_off=0.3577 loss_cls=0.4940 val_map=0.0178 val_thr=0.0500 val_auc=0.8069 val_map_heatmap=0.0319 lr=0.0003 epoch_sec=29.5000 val_sec=17.6000 it_per_sec=3.9300
+[train]   step 200/696 loss=2.9448 3.80 it/s
+[train] epoch 2/6 epoch=2 steps=232 loss=3.0489 loss_hm=2.1051 loss_wh=2.7690 loss_off=0.2645 loss_cls=0.4023 val_map=0.1021 val_thr=0.0500 val_auc=0.8432 val_map_heatmap=0.1009 lr=0.0003 epoch_sec=30.5000 val_sec=17.6000 it_per_sec=3.8000
+[train] epoch 3/6 epoch=3 steps=348 loss=2.6260 loss_hm=1.7694 loss_wh=2.3639 loss_off=0.2480 loss_cls=0.3723 val_map=0.1275 val_thr=0.0500 val_auc=0.8581 val_map_heatmap=0.1334 lr=0.0002 epoch_sec=30.1000 val_sec=17.5000 it_per_sec=3.8500
+[train]   step 400/696 loss=2.4421 3.85 it/s
+[train] epoch 4/6 epoch=4 steps=464 loss=2.4212 loss_hm=1.5734 loss_wh=2.5697 loss_off=0.2499 loss_cls=0.3409 val_map=0.1420 val_thr=0.1000 val_auc=0.8634 val_map_heatmap=0.1491 lr=0.0001 epoch_sec=30.1000 val_sec=17.5000 it_per_sec=3.8500
+[train] epoch 5/6 epoch=5 steps=580 loss=2.2560 loss_hm=1.4671 loss_wh=2.3111 loss_off=0.2443 loss_cls=0.3135 val_map=0.1516 val_thr=0.1000 val_auc=0.8682 val_map_heatmap=0.1523 lr=0.0000 epoch_sec=30.2000 val_sec=17.5000 it_per_sec=3.8500
+[train]   step 600/696 loss=2.3872 3.94 it/s
+[train] epoch 6/6 epoch=6 steps=696 loss=2.1493 loss_hm=1.3961 loss_wh=2.2228 loss_off=0.2365 loss_cls=0.2944 val_map=0.1514 val_thr=0.1000 val_auc=0.8669 val_map_heatmap=0.1534 lr=0.0000 epoch_sec=30.0000 val_sec=17.4000 it_per_sec=3.8700
+[train] done: {"best_epoch": 5, "val_map": 0.15156, "val_thr": 0.1, "val_auc": 0.86823, "train_min": 3.01} -> results/hw3_frac10_s1
+[hw3 06:27:54]   trained in 4 min
+[hw3 06:27:55] $ .venv/bin/python -m rsna.evaluate --run results/hw3_frac10_s1 --split val
+### hw3_frac10_s1 — val
+
+mAP **0.1516** [0.1306, 0.1719] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1308
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8682 |
+| image_pr_auc | 0.6742 |
+| sensitivity | 0.6633 |
+| specificity | 0.8685 |
+| matched_iou | 0.5900 |
+| mAP on positives only | 0.2203 |
+| FP-image rate on negatives | 0.1315 (408/3102) |
+| loss: FP on negatives | 0.3119 |
+| loss: missed positives (no box) | 0.2317 |
+| loss: localization on positives | 0.3049 |
+| oracle gating @run thr | 0.2203 |
+| oracle gating @best thr (0.05) | 0.2426 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1703 | [0.148, 0.193] | 0.2500 | 0.290 | 0.748 |
+| view | PA | 2176 | 202 | 0.0838 | [0.055, 0.113] | 0.1174 | 0.041 | 0.371 |
+| sex | F | 1730 | 376 | 0.1606 | [0.125, 0.192] | 0.2379 | 0.134 | 0.668 |
+| sex | M | 2272 | 524 | 0.1448 | [0.121, 0.170] | 0.2076 | 0.130 | 0.660 |
+| age_bucket | <20 | 337 | 125 | 0.2259 | [0.145, 0.276] | 0.2873 | 0.160 | 0.768 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1585 | [0.124, 0.192] | 0.2243 | 0.134 | 0.638 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1545 | [0.122, 0.188] | 0.2261 | 0.123 | 0.677 |
+| age_bucket | 60+ | 980 | 176 | 0.0960 | [0.070, 0.118] | 0.1555 | 0.136 | 0.602 |
+| cls | Lung Opacity | 900 | 900 | 0.2203 | [0.194, 0.246] | 0.2203 | – | 0.663 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.225 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.007 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.132 | – |
+| n_boxes | 1 | 392 | 392 | 0.1146 | [0.095, 0.136] | 0.1146 | – | 0.487 |
+| n_boxes | 2 | 490 | 490 | 0.3081 | [0.274, 0.341] | 0.3081 | – | 0.798 |
+| n_boxes | 3+ | 18 | 18 | 0.1297 | [0.058, 0.210] | 0.1297 | – | 0.833 |
+
+-> results/hw3_frac10_s1/val_metrics.json
+[hw3 06:27:56]   done in 0 min 1 s
+[hw3 06:27:56] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_frac10_s1
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1188      1117           0.1158
+    0.8250 0.1500 0.1258      1117           0.1230
+    0.8500 0.1500 0.1320      1117           0.1300
+    0.8750 0.1500 0.1373      1117           0.1353
+    0.9000 0.1500 0.1418      1117           0.1404
+    0.9250 0.1500 0.1450      1117           0.1445
+    0.9500 0.1000 0.1482      1308           0.1482
+    0.9750 0.1000 0.1504      1308           0.1504
+    1.0000 0.1000 0.1516      1308           0.1516
+    1.0250 0.1000 0.1514      1308           0.1514
+    1.0500 0.1000 0.1506      1308           0.1506
+    1.0750 0.1000 0.1482      1308           0.1482
+    1.1000 0.1000 0.1455      1308           0.1455
+    1.1250 0.1000 0.1416      1308           0.1416
+    1.1500 0.1000 0.1392      1308           0.1392
+    1.1750 0.1000 0.1344      1308           0.1344
+    1.2000 0.1000 0.1303      1308           0.1303
+    1.2250 0.1000 0.1254      1308           0.1254
+    1.2500 0.1000 0.1209      1308           0.1209
+    1.2750 0.1000 0.1160      1308           0.1160
+    1.3000 0.1000 0.1109      1308           0.1109
+-> box_scale 1.0 (thr 0.10, val mAP 0.1516 vs 0.1516 at 1.0); cross-fitted gain +0.0000 -> results/hw3_frac10_s1/posthoc/box_scale.json
+[hw3 06:28:01]   done in 0 min 5 s
+[hw3 06:28:01] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_frac10_s1 --name tuned --box-scale tuned --score-mode keep
+### hw3_frac10_s1:tuned — val
+
+mAP **0.1516** [0.1306, 0.1719] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.10; images 4002, scored 1308
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8682 |
+| image_pr_auc | 0.6742 |
+| sensitivity | 0.6633 |
+| specificity | 0.8685 |
+| matched_iou | 0.5900 |
+| mAP on positives only | 0.2203 |
+| FP-image rate on negatives | 0.1315 (408/3102) |
+| loss: FP on negatives | 0.3119 |
+| loss: missed positives (no box) | 0.2317 |
+| loss: localization on positives | 0.3049 |
+| oracle gating @run thr | 0.2203 |
+| oracle gating @best thr (0.05) | 0.2426 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1826 | 698 | 0.1703 | [0.148, 0.193] | 0.2500 | 0.290 | 0.748 |
+| view | PA | 2176 | 202 | 0.0838 | [0.055, 0.113] | 0.1174 | 0.041 | 0.371 |
+| sex | F | 1730 | 376 | 0.1606 | [0.125, 0.192] | 0.2379 | 0.134 | 0.668 |
+| sex | M | 2272 | 524 | 0.1448 | [0.121, 0.170] | 0.2076 | 0.130 | 0.660 |
+| age_bucket | <20 | 337 | 125 | 0.2259 | [0.145, 0.276] | 0.2873 | 0.160 | 0.768 |
+| age_bucket | 20-40 | 1087 | 265 | 0.1585 | [0.124, 0.192] | 0.2243 | 0.134 | 0.638 |
+| age_bucket | 40-60 | 1598 | 334 | 0.1545 | [0.122, 0.188] | 0.2261 | 0.123 | 0.677 |
+| age_bucket | 60+ | 980 | 176 | 0.0960 | [0.070, 0.118] | 0.1555 | 0.136 | 0.602 |
+| cls | Lung Opacity | 900 | 900 | 0.2203 | [0.194, 0.246] | 0.2203 | – | 0.663 |
+| cls | No Lung Opacity / Not Normal | 1771 | 0 | 0.0000 | [0.000, 0.000] | – | 0.225 | – |
+| cls | Normal | 1331 | 0 | 0.0000 | [0.000, 0.000] | – | 0.007 | – |
+| n_boxes | 0 | 3102 | 0 | 0.0000 | [0.000, 0.000] | – | 0.132 | – |
+| n_boxes | 1 | 392 | 392 | 0.1146 | [0.095, 0.136] | 0.1146 | – | 0.487 |
+| n_boxes | 2 | 490 | 490 | 0.3081 | [0.274, 0.341] | 0.3081 | – | 0.798 |
+| n_boxes | 3+ | 18 | 18 | 0.1297 | [0.058, 0.210] | 0.1297 | – | 0.833 |
+
+-> results/hw3_frac10_s1/posthoc/tuned/val_metrics.json
+[hw3 06:28:02]   done in 0 min 1 s
+[hw3 06:28:02] === hw3_resplit3_s0 (configs/hw2/full.yaml, data.split_file=data/splits/hw3/resplit_s3.csv) ===
+[hw3 06:28:02] $ .venv/bin/python -m rsna.train --config configs/hw2/full.yaml --seed 0 --run-name hw3_resplit3_s0 --set data.split_file=data/splits/hw3/resplit_s3.csv --set meta.experiment=rsna-pneumonia-hw3 
+[train] hw3_resplit3_s0: device=mps train=18676 val=4004 steps/epoch=1167 total=7002 warmup=300
+[train]   step 200/7002 loss=3.1577 3.90 it/s
+[train]   step 400/7002 loss=2.8723 3.89 it/s
+[train]   step 600/7002 loss=2.5682 3.90 it/s
+[train]   step 800/7002 loss=2.6776 3.90 it/s
+[train]   step 1000/7002 loss=2.5235 3.90 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=1167 loss=3.1075 loss_hm=2.1286 loss_wh=3.1426 loss_off=0.2636 loss_cls=0.4011 val_map=0.1422 val_thr=0.0500 val_auc=0.8543 val_map_heatmap=0.1490 lr=0.0003 epoch_sec=299.0000 val_sec=17.3000 it_per_sec=3.9000
+[train]   step 1200/7002 loss=2.6208 3.88 it/s
+[train]   step 1400/7002 loss=2.4893 3.88 it/s
+[train]   step 1600/7002 loss=2.4966 3.88 it/s
+[train]   step 1800/7002 loss=2.3974 3.89 it/s
+[train]   step 2000/7002 loss=2.4372 3.89 it/s
+[train]   step 2200/7002 loss=2.3358 3.90 it/s
+[train] epoch 2/6 epoch=2 steps=2334 loss=2.4387 loss_hm=1.6141 loss_wh=2.1656 loss_off=0.2381 loss_cls=0.3699 val_map=0.1630 val_thr=0.1500 val_auc=0.8685 val_map_heatmap=0.1524 lr=0.0002 epoch_sec=299.4000 val_sec=17.4000 it_per_sec=3.9000
+[train]   step 2400/7002 loss=2.4453 3.91 it/s
+[train]   step 2600/7002 loss=2.4573 3.87 it/s
+[train]   step 2800/7002 loss=2.4139 3.88 it/s
+[train]   step 3000/7002 loss=2.3581 3.89 it/s
+[train]   step 3200/7002 loss=2.3364 3.89 it/s
+[train]   step 3400/7002 loss=2.2811 3.89 it/s
+[train] epoch 3/6 epoch=3 steps=3501 loss=2.3444 loss_hm=1.5612 loss_wh=1.9183 loss_off=0.2324 loss_cls=0.3590 val_map=0.1914 val_thr=0.1000 val_auc=0.8805 val_map_heatmap=0.1982 lr=0.0002 epoch_sec=300.1000 val_sec=17.5000 it_per_sec=3.8900
+[train]   step 3600/7002 loss=2.2539 3.83 it/s
+[train]   step 3800/7002 loss=2.3100 3.80 it/s
+[train]   step 4000/7002 loss=2.2699 3.81 it/s
+[train]   step 4200/7002 loss=2.2131 3.83 it/s
+[train]   step 4400/7002 loss=2.2009 3.85 it/s
+[train]   step 4600/7002 loss=2.1134 3.86 it/s
+[train] epoch 4/6 epoch=4 steps=4668 loss=2.2230 loss_hm=1.4773 loss_wh=1.7330 loss_off=0.2277 loss_cls=0.3447 val_map=0.2096 val_thr=0.1500 val_auc=0.8874 val_map_heatmap=0.2085 lr=0.0001 epoch_sec=302.3000 val_sec=17.4000 it_per_sec=3.8600
+[train]   step 4800/7002 loss=2.1376 3.85 it/s
+[train]   step 5000/7002 loss=2.2794 3.86 it/s
+[train]   step 5200/7002 loss=2.1068 3.87 it/s
+[train]   step 5400/7002 loss=2.1316 3.87 it/s
+[train]   step 5600/7002 loss=2.1421 3.88 it/s
+[train]   step 5800/7002 loss=2.0762 3.88 it/s
+[train] epoch 5/6 epoch=5 steps=5835 loss=2.1228 loss_hm=1.4062 loss_wh=1.6479 loss_off=0.2252 loss_cls=0.3267 val_map=0.2189 val_thr=0.1500 val_auc=0.8890 val_map_heatmap=0.2120 lr=0.0000 epoch_sec=300.6000 val_sec=17.2000 it_per_sec=3.8800
+[train]   step 6000/7002 loss=2.0755 3.85 it/s
+[train]   step 6200/7002 loss=2.0407 3.86 it/s
+[train]   step 6400/7002 loss=2.0398 3.87 it/s
+[train]   step 6600/7002 loss=2.0476 3.88 it/s
+[train]   step 6800/7002 loss=2.0450 3.89 it/s
+[train]   step 7000/7002 loss=2.0419 3.89 it/s
+[train] epoch 6/6 epoch=6 steps=7002 loss=2.0441 loss_hm=1.3495 loss_wh=1.5823 loss_off=0.2208 loss_cls=0.3156 val_map=0.2156 val_thr=0.1500 val_auc=0.8897 val_map_heatmap=0.2141 lr=0.0000 epoch_sec=300.2000 val_sec=17.4000 it_per_sec=3.8900
+[train] done: {"best_epoch": 5, "val_map": 0.21887, "val_thr": 0.15, "val_auc": 0.88905, "train_min": 30.03} -> results/hw3_resplit3_s0
+[hw3 06:59:54]   trained in 31 min
+[hw3 06:59:54] $ .venv/bin/python -m rsna.evaluate --run results/hw3_resplit3_s0 --split val
+### hw3_resplit3_s0 — val
+
+mAP **0.2189** [0.1910, 0.2464] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4004, scored 1184
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8890 |
+| image_pr_auc | 0.7089 |
+| sensitivity | 0.6144 |
+| specificity | 0.9100 |
+| matched_iou | 0.6565 |
+| mAP on positives only | 0.2864 |
+| FP-image rate on negatives | 0.0900 (279/3099) |
+| loss: FP on negatives | 0.2356 |
+| loss: missed positives (no box) | 0.2948 |
+| loss: localization on positives | 0.2507 |
+| oracle gating @run thr | 0.2864 |
+| oracle gating @best thr (0.05) | 0.3232 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1828 | 703 | 0.2378 | [0.204, 0.268] | 0.3109 | 0.192 | 0.683 |
+| view | PA | 2176 | 202 | 0.1532 | [0.117, 0.194] | 0.2010 | 0.032 | 0.376 |
+| sex | F | 1728 | 378 | 0.2314 | [0.181, 0.273] | 0.3030 | 0.087 | 0.611 |
+| sex | M | 2276 | 527 | 0.2099 | [0.174, 0.243] | 0.2744 | 0.093 | 0.617 |
+| age_bucket | <20 | 256 | 87 | 0.2840 | [0.128, 0.374] | 0.3264 | 0.077 | 0.724 |
+| age_bucket | 20-40 | 1106 | 255 | 0.2234 | [0.178, 0.269] | 0.2891 | 0.088 | 0.624 |
+| age_bucket | 40-60 | 1769 | 391 | 0.2193 | [0.174, 0.265] | 0.2978 | 0.102 | 0.632 |
+| age_bucket | 60+ | 872 | 172 | 0.1821 | [0.138, 0.232] | 0.2361 | 0.073 | 0.506 |
+| age_bucket | invalid | 1 | 0 | – | [–, –] | – | 0.000 | – |
+| cls | Lung Opacity | 905 | 905 | 0.2864 | [0.255, 0.319] | 0.2864 | – | 0.614 |
+| cls | No Lung Opacity / Not Normal | 1774 | 0 | 0.0000 | [0.000, 0.000] | – | 0.155 | – |
+| cls | Normal | 1325 | 0 | 0.0000 | [0.000, 0.000] | – | 0.003 | – |
+| n_boxes | 0 | 3099 | 0 | 0.0000 | [0.000, 0.000] | – | 0.090 | – |
+| n_boxes | 1 | 393 | 393 | 0.1836 | [0.148, 0.211] | 0.1836 | – | 0.473 |
+| n_boxes | 2 | 490 | 490 | 0.3756 | [0.322, 0.418] | 0.3756 | – | 0.729 |
+| n_boxes | 3+ | 22 | 22 | 0.1328 | [0.065, 0.209] | 0.1328 | – | 0.591 |
+
+-> results/hw3_resplit3_s0/val_metrics.json
+[hw3 06:59:56]   done in 0 min 2 s
+[hw3 06:59:56] $ .venv/bin/python -m rsna.posthoc tune --run results/hw3_resplit3_s0
+ box_scale    thr    map  n_scored  map_at_base_thr
+    0.8000 0.1500 0.1591      1184           0.1591
+    0.8250 0.1500 0.1710      1184           0.1710
+    0.8500 0.1500 0.1830      1184           0.1830
+    0.8750 0.1500 0.1942      1184           0.1942
+    0.9000 0.1500 0.2034      1184           0.2034
+    0.9250 0.1500 0.2100      1184           0.2100
+    0.9500 0.1500 0.2137      1184           0.2137
+    0.9750 0.1500 0.2168      1184           0.2168
+    1.0000 0.1500 0.2189      1184           0.2189
+    1.0250 0.1500 0.2190      1184           0.2190
+    1.0500 0.1500 0.2174      1184           0.2174
+    1.0750 0.1500 0.2148      1184           0.2148
+    1.1000 0.1500 0.2106      1184           0.2106
+    1.1250 0.1500 0.2050      1184           0.2050
+    1.1500 0.1500 0.1984      1184           0.1984
+    1.1750 0.1500 0.1928      1184           0.1928
+    1.2000 0.1500 0.1847      1184           0.1847
+    1.2250 0.1500 0.1757      1184           0.1757
+    1.2500 0.1500 0.1675      1184           0.1675
+    1.2750 0.1500 0.1580      1184           0.1580
+    1.3000 0.1500 0.1482      1184           0.1482
+-> box_scale 1.025 (thr 0.15, val mAP 0.2190 vs 0.2189 at 1.0); cross-fitted gain -0.0003 -> results/hw3_resplit3_s0/posthoc/box_scale.json
+[hw3 07:00:00]   done in 0 min 4 s
+[hw3 07:00:00] $ .venv/bin/python -m rsna.posthoc variant --run results/hw3_resplit3_s0 --name tuned --box-scale tuned --score-mode keep
+### hw3_resplit3_s0:tuned — val
+
+mAP **0.2190** [0.1914, 0.2464] (bootstrap 95% CI, resampling unit: nih_patient) at score thr 0.15; images 4004, scored 1184
+
+| metric | value |
+|---|---|
+| image_roc_auc | 0.8890 |
+| image_pr_auc | 0.7089 |
+| sensitivity | 0.6144 |
+| specificity | 0.9100 |
+| matched_iou | 0.6612 |
+| mAP on positives only | 0.2865 |
+| FP-image rate on negatives | 0.0900 (279/3099) |
+| loss: FP on negatives | 0.2356 |
+| loss: missed positives (no box) | 0.2948 |
+| loss: localization on positives | 0.2506 |
+| oracle gating @run thr | 0.2865 |
+| oracle gating @best thr (0.05) | 0.3251 |
+
+| slice | value | n | n_pos | mAP | 95% CI | mAP pos | FP-img rate | sens |
+|---|---|---|---|---|---|---|---|---|
+| view | AP | 1828 | 703 | 0.2382 | [0.204, 0.268] | 0.3114 | 0.192 | 0.683 |
+| view | PA | 2176 | 202 | 0.1524 | [0.116, 0.194] | 0.1999 | 0.032 | 0.376 |
+| sex | F | 1728 | 378 | 0.2324 | [0.182, 0.272] | 0.3043 | 0.087 | 0.611 |
+| sex | M | 2276 | 527 | 0.2094 | [0.174, 0.242] | 0.2738 | 0.093 | 0.617 |
+| age_bucket | <20 | 256 | 87 | 0.2823 | [0.126, 0.375] | 0.3245 | 0.077 | 0.724 |
+| age_bucket | 20-40 | 1106 | 255 | 0.2216 | [0.178, 0.266] | 0.2868 | 0.088 | 0.624 |
+| age_bucket | 40-60 | 1769 | 391 | 0.2200 | [0.175, 0.265] | 0.2988 | 0.102 | 0.632 |
+| age_bucket | 60+ | 872 | 172 | 0.1843 | [0.139, 0.236] | 0.2390 | 0.073 | 0.506 |
+| age_bucket | invalid | 1 | 0 | – | [–, –] | – | 0.000 | – |
+| cls | Lung Opacity | 905 | 905 | 0.2865 | [0.255, 0.319] | 0.2865 | – | 0.614 |
+| cls | No Lung Opacity / Not Normal | 1774 | 0 | 0.0000 | [0.000, 0.000] | – | 0.155 | – |
+| cls | Normal | 1325 | 0 | 0.0000 | [0.000, 0.000] | – | 0.003 | – |
+| n_boxes | 0 | 3099 | 0 | 0.0000 | [0.000, 0.000] | – | 0.090 | – |
+| n_boxes | 1 | 393 | 393 | 0.1797 | [0.144, 0.208] | 0.1797 | – | 0.473 |
+| n_boxes | 2 | 490 | 490 | 0.3794 | [0.328, 0.422] | 0.3794 | – | 0.729 |
+| n_boxes | 3+ | 22 | 22 | 0.1276 | [0.061, 0.203] | 0.1276 | – | 0.591 |
+
+-> results/hw3_resplit3_s0/posthoc/tuned/val_metrics.json
+[hw3 07:00:02]   done in 0 min 2 s
+[hw3 07:00:02] === analyses (val only) ===
+[hw3 07:00:02] $ .venv/bin/python scripts/analyze_hw3_errors.py
+scripts/analyze_hw3_errors.py:445: RuntimeWarning: Mean of empty slice
+  ap_mean = np.nanmean(ap, 0)
+# HW3 §1: типовые ошибки Full (tuned), v1 val
+
+_Генерируется `scripts/analyze_hw3_errors.py`. Прогоны full_s0, full_s1, full_s2 (вариант `tuned`), 4002 снимков val, порог и box_scale каждого сида выбраны на val в HW2. Среднее по сидам; 95 % CI — кластерный бутстрап по NIH-пациентам (2000 повторов, общий для сидов)._
+
+## 1. Где теряется mAP и насколько ошибки повторяются по сидам
+
+mAP по сидам: 0.2200, 0.2196, 0.2183 (среднее 0.2193); пороги 0.10, 0.15, 0.15.
+
+| категория снимка | снимков (мин–макс по сидам) | во всех 3 сидах | хотя бы в 1 | потеря mAP | доля разрыва 1 − mAP |
+|---|---|---|---|---|---|
+| FP на негативе | 225 (189–278) | 156 | 309 | 0.199 | 25.5 % |
+| пропуск позитива | 362 (318–387) | 299 | 420 | 0.323 | 41.4 % |
+| боксы есть, AP = 0 | 42 (39–46) | 22 | 67 | 0.037 | 4.8 % |
+| 0 < AP < 1 | 467 (443–511) | 380 | 549 | 0.221 | 28.3 % |
+| AP = 1 | 29 (25–33) | 9 | 57 | – | – |
+| верный негатив | 2877 (2824–2913) | 2793 | 2946 | – | – |
+
+«Во всех 3 сидах» / «хотя бы в 1» — мера систематичности: если отношение близко к 1, ошибка определяется снимком, а не случайностью обучения.
+
+## 2. E1 — FP на трудных негативах
+
+| негативы | n | FP-rate (снимков с ≥ 1 боксом) |
+|---|---|---|
+| Normal | 1331 | 0.002 [0.000, 0.004] |
+| No Lung Opacity / Not Normal | 1771 | 0.126 [0.104, 0.148] |
+
+Разность Not Normal − Normal: +0.124 [+0.103, +0.146]. FP-снимков во всех 3 сидах: 156, из них «Not Normal» 155 (99 %). Медиана cls_prob на FP-снимках по сидам: 0.52, 0.65, 0.66 — классификатор на них уверен, гейтинг их не снимает.
+
+FP-rate по исходным NIH-меткам (мульти-метка; строки с ≥ 25 негативами, внутри класса RSNA):
+
+| NIH-метка | класс RSNA | n негативов | FP-rate [95 % CI] |
+|---|---|---|---|
+| Consolidation | Not Normal | 194 | 0.204 [0.143, 0.268] |
+| Mass | Not Normal | 187 | 0.189 [0.132, 0.253] |
+| Infiltration | Not Normal | 694 | 0.187 [0.153, 0.222] |
+| Effusion | Not Normal | 403 | 0.160 [0.120, 0.202] |
+| Edema | Not Normal | 40 | 0.158 [0.060, 0.279] |
+| Pneumonia | Not Normal | 40 | 0.158 [0.068, 0.267] |
+| Nodule | Not Normal | 166 | 0.151 [0.103, 0.199] |
+| Pleural_Thickening | Not Normal | 93 | 0.129 [0.068, 0.198] |
+| Atelectasis | Not Normal | 382 | 0.117 [0.084, 0.151] |
+| Pneumothorax | Not Normal | 177 | 0.113 [0.053, 0.183] |
+| Cardiomegaly | Not Normal | 74 | 0.113 [0.038, 0.199] |
+| Fibrosis | Not Normal | 47 | 0.099 [0.029, 0.178] |
+| Emphysema | Not Normal | 92 | 0.065 [0.027, 0.113] |
+| No Finding | Not Normal | 273 | 0.057 [0.034, 0.084] |
+| Mass | Normal | 25 | 0.027 [0.000, 0.091] |
+| Infiltration | Normal | 471 | 0.005 [0.001, 0.011] |
+| Atelectasis | Normal | 77 | 0.000 [0.000, 0.049] |
+| Cardiomegaly | Normal | 38 | 0.000 [0.000, 0.097] |
+| Consolidation | Normal | 34 | 0.000 [0.000, 0.112] |
+| Effusion | Normal | 60 | 0.000 [0.000, 0.063] |
+| No Finding | Normal | 593 | 0.000 [0.000, 0.007] |
+| Nodule | Normal | 83 | 0.000 [0.000, 0.050] |
+| Pleural_Thickening | Normal | 31 | 0.000 [0.000, 0.116] |
+
+Уверенные систематические FP (во всех сидах, верхняя четверть по score, n = 39): доля NIH «pneumonia-like» (Pneumonia / Consolidation / Infiltration) 74 % против 44 % среди всех негативов val.
+
+## 3. E2 — пропущенные позитивы
+
+| сид | пропусков | детектор без гейтинга нашёл бы (raw ≥ thr no_gating) | gated score ≥ thr/2 | лучший бокс ниже порога на месте (IoU ≥ 0.4) | медиана cls_prob: пропуски / найденные |
+|---|---|---|---|---|---|
+| full_s0 | 318 | 69 (22 %) | 130 (41 %) | 206 (65 %) | 0.19 / 0.68 |
+| full_s1 | 382 | 23 (6 %) | 171 (45 %) | 262 (69 %) | 0.29 / 0.78 |
+| full_s2 | 387 | 138 (36 %) | 175 (45 %) | 264 (68 %) | 0.28 / 0.79 |
+
+Пропущены во всех 3 сидах: 299 позитивов из 900; из них у 10 детектор без гейтинга во всех сидах дал бы бокс.
+
+Чувствительность и mAP на позитивах по размеру очага (терцили √площади по train: 210 / 288 px на сетке 1024), числу GT-боксов и проекции:
+
+| срез | группа | n_pos | sensitivity [95 % CI] | mAP pos [95 % CI] |
+|---|---|---|---|---|
+| size | small | 313 | 0.431 [0.372, 0.491] | 0.120 [0.098, 0.144] |
+| size | medium | 293 | 0.608 [0.535, 0.674] | 0.277 [0.233, 0.319] |
+| size | large | 294 | 0.764 [0.690, 0.827] | 0.435 [0.373, 0.491] |
+| n_gt_cap | 1 | 392 | 0.444 [0.386, 0.504] | 0.165 [0.142, 0.190] |
+| n_gt_cap | 2 | 490 | 0.712 [0.646, 0.767] | 0.365 [0.313, 0.410] |
+| n_gt_cap | 3+ | 18 | 0.833 [0.694, 0.978] | 0.179 [0.096, 0.282] |
+| view | AP | 698 | 0.669 [0.610, 0.721] | 0.306 [0.266, 0.342] |
+| view | PA | 202 | 0.350 [0.281, 0.421] | 0.165 [0.128, 0.204] |
+
+## 4. E3 — локализация и число боксов (позитивы с ≥ 1 боксом)
+
+Пары предсказание–GT (жадно по score, IoU > 0.1): IoU < 0.4 (ноль на всех порогах метрики) — 11 %, 0.4–0.75 (частичный зачёт) — 70 %, ≥ 0.75 (зачёт на всех порогах) — 20 %; медиана IoU 0.625.
+
+| ситуация на позитиве | доля снимков | средний AP |
+|---|---|---|
+| предсказано больше боксов, чем в GT | 23 % | 0.273 |
+| предсказано меньше боксов, чем в GT | 11 % | 0.247 |
+| столько же боксов | 66 % | 0.561 |
+| один бокс накрывает ≥ 2 GT-бокса («слияние») | 1.4 % | 0.135 |
+| GT-бокс накрыт ≥ 2 боксами («дробление») | 6.1 % | – |
+
+Контрфакты (среднее по сидам; прирост mAP на той же val; вся потеря на локализации 0.258): убрать боксы, не касающиеся ни одного GT (IoU ≤ 0.1; есть на 105 позитивах) — **+0.022**; убрать дубли (касаются GT, уже занятого боксом с большим score; 35 боксов) — +0.002; дать каждому сопоставленному боксу точные границы его GT — **+0.175**; всё вместе — +0.229. GT-боксов, которых не касается ни один бокс (IoU ≤ 0.1), на позитивах с боксами: 64. Размер: медиана √(площадь pred / GT) по парам с IoU > 0.4 ×1.011, предсказание больше GT в 52 % пар.
+
+Матрица «число GT-боксов × число предсказанных» по всем позитивам (среднее по сидам, снимков):
+
+| GT \ pred | 0 | 1 | 2 | 3+ |
+|---|---|---|---|---|
+| 1 | 218 | 78 | 86 | 9 |
+| 2 | 141 | 46 | 272 | 31 |
+| 3+ | 3 | 4 | 9 | 2 |
+
+## 5. E4 — неоднозначность разметки: RSNA против исходных NIH-меток
+
+NIH-метки извлечены NLP из текстовых заключений (ChestX-ray14), в модели и при отборе не используются; здесь это независимый, тоже шумный, второй источник мнения о снимке.
+
+| NIH-группа \ RSNA | Normal | Not Normal | Opacity |
+|---|---|---|---|
+| No Finding | 593 | 273 | 85 |
+| other finding | 223 | 636 | 172 |
+| pneumonia-like | 515 | 862 | 643 |
+
+| NIH-группа | негативов RSNA | FP-rate [95 % CI] | позитивов RSNA | sensitivity [95 % CI] | mAP pos |
+|---|---|---|---|---|---|
+| No Finding | 866 | 0.018 [0.011, 0.027] | 85 | 0.490 [0.362, 0.606] | 0.221 [0.150, 0.289] |
+| pneumonia-like | 1377 | 0.116 [0.093, 0.138] | 643 | 0.639 [0.579, 0.691] | 0.297 [0.261, 0.331] |
+| other finding | 859 | 0.057 [0.040, 0.076] | 172 | 0.494 [0.406, 0.578] | 0.217 [0.166, 0.270] |
+
+Систематические пропуски (во всех сидах): NIH «No Finding» у 13 % против 9 % среди всех позитивов val.
+
+## 6. Срезы
+
+См. [`slices.md`](slices.md).
+
+# HW3 §2: диагностика по срезам, Full (tuned), v1 val
+
+_Генерируется `scripts/analyze_hw3_errors.py`; среднее по сидам 0/1/2, 95 % CI — кластерный бутстрап по NIH-пациентам. std-mAP = π·mAP_pos / (π + (1 − π)·FP-rate) при π = 0.225 (доля позитивов всей val): внутри группы RSNA mAP ровно равен n_pos·mAP_pos / (n_pos + n_neg·FP-rate), так что std-mAP — mAP, который был бы у группы при средней доле позитивов. AUC — ROC-AUC cls-вероятности внутри группы. ⚠ — n_pos < 50 или n < 100: оценка нестабильна._
+
+| срез | группа | n | n_pos | доля поз. | mAP | std-mAP | mAP pos | FP-rate | sens | AUC |
+|---|---|---|---|---|---|---|---|---|---|---|
+| проекция | AP | 1826 | 698 | 38 % | 0.244 [0.210, 0.275] | 0.198 [0.174, 0.222] | 0.306 [0.266, 0.342] | 0.158 [0.129, 0.186] | 0.669 [0.610, 0.721] | 0.850 |
+| проекция | PA | 2176 | 202 | 9 % | 0.134 [0.103, 0.165] | 0.153 [0.118, 0.187] | 0.165 [0.128, 0.204] | 0.024 [0.017, 0.032] | 0.350 [0.281, 0.421] | 0.875 |
+| пол | F | 1730 | 376 | 22 % | 0.224 [0.174, 0.268] | 0.226 [0.181, 0.266] | 0.284 [0.221, 0.338] | 0.074 [0.052, 0.097] | 0.594 [0.501, 0.669] | 0.887 |
+| пол | M | 2272 | 524 | 23 % | 0.216 [0.180, 0.251] | 0.215 [0.183, 0.246] | 0.267 [0.226, 0.306] | 0.071 [0.055, 0.088] | 0.600 [0.527, 0.663] | 0.899 |
+| возраст | <30 | 888 | 266 | 30 % | 0.247 [0.189, 0.296] | 0.227 [0.180, 0.270] | 0.304 [0.240, 0.362] | 0.100 [0.066, 0.133] | 0.663 [0.550, 0.750] | 0.902 |
+| возраст | 30–60 | 2134 | 458 | 21 % | 0.238 [0.195, 0.276] | 0.240 [0.202, 0.275] | 0.295 [0.243, 0.342] | 0.065 [0.049, 0.084] | 0.611 [0.535, 0.680] | 0.898 |
+| возраст | ≥60 | 980 | 176 | 18 % | 0.134 [0.095, 0.165] | 0.142 [0.104, 0.173] | 0.175 [0.123, 0.219] | 0.067 [0.040, 0.094] | 0.462 [0.326, 0.574] | 0.863 |
+| возраст | <18 | 281 | 115 | 41 % | 0.310 [0.202, 0.375] | 0.247 [0.180, 0.306] | 0.379 [0.262, 0.457] | 0.157 [0.071, 0.240] | 0.803 [0.620, 0.880] | 0.908 |
+| класс RSNA | Normal | 1331 | 0 | 0 % | 0.000 [0.000, 0.000] | – | – | 0.002 [0.000, 0.004] | – | – |
+| класс RSNA | No Lung Opacity / Not Normal | 1771 | 0 | 0 % | 0.000 [0.000, 0.000] | – | – | 0.126 [0.104, 0.148] | – | – |
+| класс RSNA | Lung Opacity | 900 | 900 | 100 % | 0.274 [0.240, 0.307] | – | 0.274 [0.240, 0.307] | – | 0.597 [0.543, 0.649] | – |
+| GT-боксов | 1 | 392 | 392 | 100 % | 0.165 [0.142, 0.190] | – | 0.165 [0.142, 0.190] | – | 0.444 [0.386, 0.504] | – |
+| GT-боксов | 2 | 490 | 490 | 100 % | 0.365 [0.313, 0.410] | – | 0.365 [0.313, 0.410] | – | 0.712 [0.646, 0.767] | – |
+| GT-боксов | 3+ ⚠ | 18 | 18 | 100 % | 0.179 [0.096, 0.282] | – | 0.179 [0.096, 0.282] | – | 0.833 [0.694, 0.978] | – |
+| размер очага | small | 313 | 313 | 100 % | 0.120 [0.098, 0.144] | – | 0.120 [0.098, 0.144] | – | 0.431 [0.372, 0.491] | – |
+| размер очага | medium | 293 | 293 | 100 % | 0.277 [0.233, 0.319] | – | 0.277 [0.233, 0.319] | – | 0.608 [0.535, 0.674] | – |
+| размер очага | large | 294 | 294 | 100 % | 0.435 [0.373, 0.491] | – | 0.435 [0.373, 0.491] | – | 0.764 [0.690, 0.827] | – |
+| NIH-метка | No Finding | 951 | 85 | 9 % | 0.187 [0.125, 0.249] | 0.208 [0.143, 0.274] | 0.221 [0.150, 0.292] | 0.018 [0.010, 0.027] | 0.490 [0.362, 0.603] | 0.935 |
+| NIH-метка | pneumonia-like | 2020 | 643 | 32 % | 0.237 [0.207, 0.267] | 0.212 [0.186, 0.237] | 0.297 [0.261, 0.331] | 0.116 [0.094, 0.140] | 0.639 [0.581, 0.693] | 0.871 |
+| NIH-метка | other finding | 1031 | 172 | 17 % | 0.168 [0.126, 0.213] | 0.181 [0.137, 0.225] | 0.217 [0.164, 0.270] | 0.057 [0.040, 0.076] | 0.494 [0.406, 0.575] | 0.859 |
+
+## Разности между группами (те же снимки, кластерный бутстрап)
+
+| контраст | метрика | Δ [95 % CI] |
+|---|---|---|
+| AP − PA | map | +0.110 [+0.064, +0.152] |
+| AP − PA | std_map | +0.046 [+0.002, +0.087] |
+| AP − PA | map_pos | +0.140 [+0.085, +0.190] |
+| AP − PA | fp_rate | +0.134 [+0.106, +0.162] |
+| AP − PA | sens | +0.319 [+0.230, +0.406] |
+| ≥60 − <30 | map | -0.113 [-0.171, -0.048] |
+| ≥60 − <30 | std_map | -0.085 [-0.139, -0.031] |
+| ≥60 − <30 | map_pos | -0.129 [-0.202, -0.053] |
+| ≥60 − <30 | fp_rate | -0.033 [-0.076, +0.010] |
+| ≥60 − <30 | sens | -0.201 [-0.355, -0.049] |
+| F − M | map | +0.008 [-0.050, +0.063] |
+| F − M | std_map | +0.011 [-0.043, +0.062] |
+| F − M | fp_rate | +0.003 [-0.024, +0.032] |
+| F − M | sens | -0.006 [-0.119, +0.101] |
+| small − large | map_pos | -0.315 [-0.376, -0.247] |
+| small − large | sens | -0.333 [-0.404, -0.260] |
+| 1 − 2 GT-бокса | map_pos | -0.199 [-0.249, -0.145] |
+| 1 − 2 GT-бокса | sens | -0.268 [-0.330, -0.199] |
+| Not Normal − Normal (негативы) | fp_rate | +0.124 [+0.103, +0.146] |
+| Not Normal: NIH pneumonia-like − No Finding | fp_rate | +0.126 [+0.088, +0.163] |
+| ≥60 − <30, только AP | map_pos | -0.135 [-0.219, -0.051] |
+| ≥60 − <30, только AP | sens | -0.191 [-0.374, -0.027] |
+| ≥60 − <30, только AP | fp_rate | -0.042 [-0.125, +0.033] |
+| ≥60 − <30, только PA | map_pos | -0.007 [-0.100, +0.095] |
+| ≥60 − <30, только PA | sens | +0.005 [-0.183, +0.198] |
+| ≥60 − <30, только PA | fp_rate | -0.002 [-0.024, +0.018] |
+
+Доля AP по возрастным группам: <30: AP 58 %; 30–60: AP 42 %; ≥60: AP 43 %. ROC-AUC cls-вероятности на всей val (среднее по сидам): 0.894; внутри AP и PA — см. колонку AUC выше.
+
+[hw3 07:00:20]   done in 0 min 18 s
+[hw3 07:00:20] $ .venv/bin/python scripts/analyze_hw3_shortcut.py

@@ -1,0 +1,15 @@
+{
+  "run": "hw3_resplit3_s0",
+  "name": "tuned",
+  "box_scale": 1.025,
+  "box_scale_source": "tuned on val (box_scale.json)",
+  "score_mode": "heatmap_x_cls",
+  "val_thr": 0.15,
+  "source": "val_predictions.csv (best epoch)",
+  "train_run": {
+    "start": "2026-11-24T06:28:04",
+    "mlflow_run_id": "c974f435ac0746d28c0881fe4c12bf36",
+    "git_sha": "35b43a3-dirty"
+  },
+  "created": "2026-11-24T07:00:01"
+}

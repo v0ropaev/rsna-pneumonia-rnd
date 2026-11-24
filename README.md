@@ -1,4 +1,4 @@
-# RSNA Pneumonia Detection — ML R&D (HW1: постановка, baseline, протокол оценки; HW2: улучшения и абляции)
+# RSNA Pneumonia Detection — ML R&D (HW1: постановка, baseline, протокол оценки; HW2: улучшения и абляции; HW3: ошибки, устойчивость, ограничения)
 
 Домашнее задание №1 курса «ML R&D», задача №16: [RSNA Pneumonia Detection Challenge](https://www.kaggle.com/competitions/rsna-pneumonia-detection-challenge).
 Нужно найти и обвести боксами очаги затемнения (opacity), подозрительные на пневмонию, на фронтальной
@@ -32,9 +32,19 @@ mAP по сидам); идеальный гейтинг поднял бы mAP н
 - лучшая конфигурация Full (как обучена): val 0.2192 ± 0.0009, test 0.2207 ± 0.0032;
 - заранее зарегистрированный контраст Full (`tuned`, test 0.2201) − B на test: +0.029 [+0.014, +0.044].
 
+**HW3 готово (тег `hw3`), отчёт — [`reports/HW3.md`](reports/HW3.md)**, план до переобучений —
+[`reports/HW3_plan.md`](reports/HW3_plan.md). Анализ Full только на val (test не открывался). Итог:
+- ошибки систематичны: крупнейшая статья — пропуски (41 % разрыва): малые и одиночные очаги, PA-снимки, пожилые;
+  FP — почти только на снимках с другой патологией;
+- вероятность пневмонии зависит от проекции AP/PA даже на здоровых (AUC ≈ 0.74); маскирование краёв кадра этот сигнал почти не убирает;
+- незаметный гауссов шум σ = 0.01 стоит −0.034 mAP; контраст и гамма в диапазоне аугментаций — до −0.007;
+- объём train: +0.020 mAP на удвоение, плато нет; на трёх новых разбиениях val mAP 0.205–0.219, в пределах шума (v1 val не нетипична по критерию плана);
+- утечка через пациента (RQ2) измерена: +0.006 [−0.012, +0.024], для этой модели мала.
+
 Этот README описывает HW1 (постановку, данные, baseline, протокол оценки). После HW2 он обновлён только там, где
 HW2 что-то изменил: заголовок, вводный абзац и статус, карта репозитория, Quickstart, упоминания test в §5.3,
-§5.4, §5.7 и §7, якоря разделов, пояснение к MDE в RQ4.
+§5.4, §5.7 и §7, якоря разделов, пояснение к MDE в RQ4. После HW3 — только заголовок, статус, карта
+репозитория и Quickstart; ответы на RQ2 и RQ3 из §8 — в [`reports/HW3.md`](reports/HW3.md) (§4.4 и §2.4).
 
 ---
 
@@ -66,14 +76,16 @@ HW2 что-то изменил: заголовок, вводный абзац и
 ├── pyproject.toml, uv.lock      # зависимости (Python 3.11, torch 2.15.0, torchvision 0.29.2, mlflow 3.18.0), lock-файл uv
 ├── configs/
 │   ├── baseline.yaml            # HW1 baseline: все гиперпараметры + гипотеза в meta
-│   └── hw2/{b_aug,b_cls,full}.yaml  # HW2: копии baseline, отличаются только целевыми ключами (проверяется тестом)
+│   └── hw2/{b_aug,b_cls,full}.yaml  # HW2: копии baseline, отличаются только целевыми ключами (проверяется тестом); HW3 переобучает full.yaml без изменений
 ├── scripts/
 │   ├── download_data.sh         # Kaggle CLI → fallback HF-зеркало; RSNA→NIH маппинг с проверкой SHA-256
 │   ├── prepare_data.sh          # DICOM → кэши 256/384 px, metadata, сплит (сверка с закоммиченным), EDA
 │   ├── run_baseline.sh          # тривиальные baseline + CenterNet-lite × 3 сида, всё на VAL; обученные run только переоценивает; test только с EVAL_TEST=1
 │   ├── run_hw2.sh               # HW2: план 2×2 + post-hoc варианты, возобновляемый; test только с EVAL_TEST=1
 │   ├── plot_hw2_errors.py       # HW2: декомпозиция ошибки и ROC (рисунок + results/hw2_summary/error_decomposition.md)
-│   └── analyze_hw2_mechanism.py # HW2: сравнения при равном FP-rate, ΔAUC, train loss, срезы → results/hw2_summary/mechanism.md
+│   ├── analyze_hw2_mechanism.py # HW2: сравнения при равном FP-rate, ΔAUC, train loss, срезы → results/hw2_summary/mechanism.md
+│   ├── run_hw3.sh               # HW3: переобучения R1/R2/утечка (меняется только data.split_file) + анализы; test не читается
+│   └── analyze_hw3_{errors,shortcut,noise,robustness,leakage}.py  # HW3: ошибки и срезы, RQ3, R3, R1/R2, RQ2 → results/hw3/
 ├── src/rsna/
 │   ├── prepare.py               # чтение DICOM/CSV, валидация разметки, area-resize, кэши images_{256,384}.npy
 │   ├── split.py                 # StratifiedGroupKFold по nih_patient → split_v1.csv (+5 CV-фолдов внутри train)
@@ -88,11 +100,14 @@ HW2 что-то изменил: заголовок, вводный абзац и
 │   ├── evaluate.py              # метрики run на val/test, срезы, декомпозиция ошибки, oracle gating, compare, summarize
 │   ├── baselines.py             # empty / prior_boxes / prior_boxes_ap
 │   ├── analysis.py              # анализ ошибок: галереи, калибровка, размеры боксов → reports/figures/hw1_*
-│   ├── posthoc.py, report.py    # HW2: офлайн box_scale/гейтинг, сводный отчёт
+│   ├── posthoc.py, report.py    # HW2: офлайн box_scale/гейтинг, сводный отчёт (прогоны hw3_* игнорирует)
+│   ├── split_variants.py        # HW3: подвыборки train, новые разбиения, контролируемая утечка → data/splits/hw3/
+│   ├── hw3.py, perturb.py       # HW3: метрики по группам с кластерным бутстрапом, инференс на искажённом входе
 │   └── tracking.py, utils.py, paths.py
-├── tests/                       # 123 теста pytest (метрика, сплит, цели/декодирование, evaluate, конфиги, ...)
+├── tests/                       # 130 тестов pytest (метрика, сплит, цели/декодирование, evaluate, конфиги, HW3, ...)
 ├── data/
 │   ├── splits/split_v1.csv      # ЗАКОММИЧЕННЫЙ сплит: patientId, split, cv_fold
+│   ├── splits/hw3/              # HW3: train_frac{50,20,10}, resplit_s{1,2,3}, leak_s0 (+roles), summary.json
 │   ├── external/nih_mapping.csv # RSNA patientId → NIH image/patient (закоммичен)
 │   └── raw/, processed/         # не версионируются (≈7.4 GB и ≈5.3 GB)
 ├── docs/research_notes.md       # разбор метрики, маппинга NIH, решений топ-команд, с источниками [S#]
@@ -100,19 +115,22 @@ HW2 что-то изменил: заголовок, вводный абзац и
 │   ├── eda_stats.json           # все числа EDA
 │   ├── prepare_report.json      # отчёт подготовки данных (валидация разметки, время)
 │   ├── HW2.md                   # отчёт HW2: гипотезы, таблица экспериментов, абляции, честность сравнения, выводы
-│   └── figures/                 # eda_*.png, hw1_*.png, hw1_baseline_s0_summary.md, hw2_*.png
+│   ├── HW3_plan.md, HW3.md      # HW3: план до переобучений; отчёт (ошибки, срезы, устойчивость, ограничения, утечка)
+│   └── figures/                 # eda_*.png, hw1_*.png, hw1_baseline_s0_summary.md, hw2_*.png, hw3_*.png
 ├── results/                     # маленькие артефакты прогонов (метрики, предсказания, кривые)
 │   ├── baseline_trivial/        # 3 тривиальных варианта + priors.json + val_summary.md
 │   ├── baseline_s{0,1,2}/       # config.yaml, meta.json, history.csv, val_metrics.{md,json}, threshold_sweep.csv, ...
 │   ├── baseline_summary/        # mean ± std по сидам
 │   ├── {b_aug,b_cls,full}_s*/   # HW2-прогоны (+ posthoc/{tuned,no_gating,no_boxscale}/), предсказания val и test
 │   ├── hw2_summary/             # mean ± std по сидам для каждого конфига и варианта (val, test); mechanism.md, error_decomposition.md
-│   ├── logs/                    # логи очереди HW2 и обучения (пути сделаны относительными)
+│   ├── hw3_*/                   # HW3-прогоны (posthoc/tuned/), только val
+│   ├── hw3/                     # HW3: errors.md, slices.md, robustness.md, leakage.md, noise/, shortcut/ (+ кэши предсказаний)
+│   ├── logs/                    # логи очередей HW2/HW3 и обучения (пути сделаны относительными)
 │   ├── comparisons/             # парные бутстрап-сравнения (в т. ч. сид против сида, Full против B на test)
 │   ├── experiments.csv          # реестр прогонов (run, git sha, конфиг, сид, гипотеза, итог)
 │   └── experiments.md, experiments_{summary,deltas,decision}.csv  # сводный отчёт rsna.report
 ├── runs/<run>/best.pt           # чекпойнты (gitignored)
-└── mlflow.db                    # MLflow tracking (sqlite), 10 прогонов HW1+HW2; артефакты MLflow (mlruns/) не версионируются
+└── mlflow.db                    # MLflow tracking (sqlite), 10 прогонов HW1+HW2 и 11 HW3 (эксперимент rsna-pneumonia-hw3); артефакты MLflow (mlruns/) не версионируются
 ```
 
 <a id="quickstart"></a>
@@ -131,9 +149,10 @@ bash scripts/run_baseline.sh              # тривиальные baseline + Ce
 #   EVAL_TEST=1 — однократная финальная оценка на test (в HW1 НЕ запускалась; нужны чекпойнты runs/<run>/best.pt)
 
 .venv/bin/python -m rsna.analysis --run results/baseline_s0 --split val --out reports/figures/hw1_baseline_s0
-.venv/bin/python -m pytest -q             # 123 passed (≈45 с на CPU)
-.venv/bin/mlflow ui --backend-store-uri sqlite:///mlflow.db   # закоммиченная база: 10 прогонов HW1 и HW2
+.venv/bin/python -m pytest -q             # 130 passed (≈45 с на CPU)
+.venv/bin/mlflow ui --backend-store-uri sqlite:///mlflow.db   # закоммиченная база: 10 прогонов HW1 и HW2, 11 HW3
 EVAL_TEST=1 bash scripts/run_hw2.sh       # HW2 (reports/HW2.md §12): на клоне ≈ 1 мин — сводки, rsna.report, анализы §7
+TRAIN=0 bash scripts/run_hw3.sh           # HW3 (reports/HW3.md §7): только анализы на val по закоммиченным кэшам; без TRAIN=0 — 11 переобучений ≈ 4.5 ч
 ```
 
 **Быстрая проверка без многочасового обучения** (после `download_data.sh` и `prepare_data.sh`):

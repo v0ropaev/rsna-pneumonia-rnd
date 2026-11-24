@@ -1,0 +1,77 @@
+meta:
+  experiment: rsna-pneumonia-hw3
+  parent: configs/baseline.yaml
+  changes:
+  - 'model.cls_head: false -> true (GAP(C5) -> Linear -> 1 logit)'
+  - 'loss.cls_weight: 1.0 (same value as baseline, now active)'
+  - 'decode.score_mode: heatmap -> heatmap_x_cls'
+  - 'aug.hflip: false -> true (p 0.5)'
+  - 'aug.affine: false -> true (scale ±0.1, translate ±0.05)'
+  - 'aug.rotate: 5.0 -> 0.0'
+  - 'aug.intensity: false -> true (brightness/contrast/gamma 0.1)'
+  hypothesis: 'Сочетание image-level головы с гейтингом score (I1) и лёгких аугментаций
+    (I2) даст наибольший val RSNA mAP из 2x2-плана, выше baseline примерно на +0.015…0.04,
+    и эффекты будут близки к аддитивным. Механизм: они бьют по разным источникам ошибки.
+    Гейтинг убирает FP-боксы на негативных снимках (77 % выборки; каждый такой снимок
+    даёт 0 в mAP), а аугментации улучшают обобщение и детектора, и классификатора;
+    классификатор, который переобучается легче детектора (один логит на снимок), от
+    аугментаций может выиграть особенно. Взаимодействие проверяется 2x2-планом (B,
+    B+aug, B+cls, Full); post-hoc абляции на тех же чекпойнтах: no_gating (score_mode=heatmap)
+    и no_boxscale (box_scale=1.0).'
+data:
+  image_size: 256
+  split_file: data/splits/hw3/resplit_s1.csv
+model:
+  arch: resnet18
+  pretrained: true
+  neck_channels: 128
+  head_channels: 128
+  cls_head: true
+loss:
+  hm_alpha: 2.0
+  hm_beta: 4.0
+  gaussian_min_overlap: 0.7
+  wh_weight: 0.1
+  off_weight: 1.0
+  cls_weight: 1.0
+train:
+  epochs: 6
+  batch_size: 16
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_steps: 300
+  grad_clip: 10.0
+  num_workers: 0
+  eval_batch_size: 64
+aug:
+  hflip: true
+  hflip_p: 0.5
+  affine: true
+  scale: 0.1
+  translate: 0.05
+  rotate: 0.0
+  intensity: true
+  brightness: 0.1
+  contrast: 0.1
+  gamma: 0.1
+decode:
+  topk: 10
+  nms_iou: 0.5
+  box_scale: 1.0
+  score_mode: heatmap_x_cls
+  min_score: 0.01
+run:
+  name: hw3_resplit1_s0
+  seed: 0
+  config_path: configs/hw2/full.yaml
+  overrides:
+  - data.split_file=data/splits/hw3/resplit_s1.csv
+  - meta.experiment=rsna-pneumonia-hw3
+  max_steps: null
+  limit_train: null
+  limit_val: null
+  smoke: false
+  n_train: 18677
+  n_val: 4003
+  total_steps: 7002

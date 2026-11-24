@@ -1,0 +1,255 @@
+{
+  "run": "hw3_frac10_s0:tuned",
+  "split": "val",
+  "variant": {
+    "name": "tuned",
+    "box_scale": 1.1,
+    "box_scale_source": "tuned on val (box_scale.json)",
+    "score_mode": "heatmap_x_cls",
+    "val_thr": 0.1
+  },
+  "threshold_source": "from_val (argmax of results/<run>/posthoc/tuned/threshold_sweep.csv)",
+  "limit": null,
+  "train_run": {
+    "start": "2026-11-24T04:47:33",
+    "mlflow_run_id": "93b6f58c0ead483994c6b3b2ae9314ca",
+    "git_sha": "35b43a3-dirty"
+  },
+  "note": "box_scale and threshold chosen on val: selection-biased",
+  "n_images": 4002,
+  "threshold": 0.1,
+  "map": 0.152668,
+  "ci_lo": 0.130961,
+  "ci_hi": 0.172602,
+  "bootstrap_unit": "nih_patient",
+  "n_scored": 1240,
+  "image_roc_auc": 0.869218,
+  "image_pr_auc": 0.674988,
+  "sensitivity": 0.627778,
+  "specificity": 0.890393,
+  "matched_iou": 0.590892,
+  "errors": {
+    "n_pos": 900,
+    "n_neg": 3102,
+    "n_fp_neg_images": 340,
+    "n_scored": 1240,
+    "fp_image_rate": 0.109607,
+    "pos_with_boxes_rate": 0.627778,
+    "map_pos": 0.210343,
+    "loss_fp_neg": 0.274194,
+    "loss_missed_pos": 0.270161,
+    "loss_loc_pos": 0.302977
+  },
+  "oracle_gating": {
+    "map_at_run_thr": 0.210343,
+    "best_thr": 0.05,
+    "map_at_best_thr": 0.234063
+  },
+  "slices": {
+    "view": [
+      {
+        "slice": "view",
+        "value": "AP",
+        "n": 1826,
+        "n_pos": 698,
+        "map": 0.172876,
+        "ci_lo": 0.148586,
+        "ci_hi": 0.1982,
+        "n_scored": 974,
+        "map_pos": 0.241234,
+        "fp_image_rate": 0.244681,
+        "sensitivity": 0.717765
+      },
+      {
+        "slice": "view",
+        "value": "PA",
+        "n": 2176,
+        "n_pos": 202,
+        "map": 0.078673,
+        "ci_lo": 0.052846,
+        "ci_hi": 0.10713,
+        "n_scored": 266,
+        "map_pos": 0.103599,
+        "fp_image_rate": 0.032421,
+        "sensitivity": 0.316832
+      }
+    ],
+    "sex": [
+      {
+        "slice": "sex",
+        "value": "F",
+        "n": 1730,
+        "n_pos": 376,
+        "map": 0.156943,
+        "ci_lo": 0.121337,
+        "ci_hi": 0.188278,
+        "n_scored": 532,
+        "map_pos": 0.222058,
+        "fp_image_rate": 0.115214,
+        "sensitivity": 0.646277
+      },
+      {
+        "slice": "sex",
+        "value": "M",
+        "n": 2272,
+        "n_pos": 524,
+        "map": 0.149456,
+        "ci_lo": 0.125516,
+        "ci_hi": 0.177953,
+        "n_scored": 708,
+        "map_pos": 0.201936,
+        "fp_image_rate": 0.105263,
+        "sensitivity": 0.614504
+      }
+    ],
+    "age_bucket": [
+      {
+        "slice": "age_bucket",
+        "value": "<20",
+        "n": 337,
+        "n_pos": 125,
+        "map": 0.218965,
+        "ci_lo": 0.145902,
+        "ci_hi": 0.276723,
+        "n_scored": 165,
+        "map_pos": 0.289033,
+        "fp_image_rate": 0.188679,
+        "sensitivity": 0.784
+      },
+      {
+        "slice": "age_bucket",
+        "value": "20-40",
+        "n": 1087,
+        "n_pos": 265,
+        "map": 0.150656,
+        "ci_lo": 0.115527,
+        "ci_hi": 0.187191,
+        "n_scored": 365,
+        "map_pos": 0.207508,
+        "fp_image_rate": 0.121655,
+        "sensitivity": 0.607547
+      },
+      {
+        "slice": "age_bucket",
+        "value": "40-60",
+        "n": 1598,
+        "n_pos": 334,
+        "map": 0.161474,
+        "ci_lo": 0.12755,
+        "ci_hi": 0.193043,
+        "n_scored": 455,
+        "map_pos": 0.219973,
+        "fp_image_rate": 0.095728,
+        "sensitivity": 0.637725
+      },
+      {
+        "slice": "age_bucket",
+        "value": "60+",
+        "n": 980,
+        "n_pos": 176,
+        "map": 0.096936,
+        "ci_lo": 0.066259,
+        "ci_hi": 0.122384,
+        "n_scored": 255,
+        "map_pos": 0.140447,
+        "fp_image_rate": 0.098259,
+        "sensitivity": 0.528409
+      }
+    ],
+    "cls": [
+      {
+        "slice": "cls",
+        "value": "Lung Opacity",
+        "n": 900,
+        "n_pos": 900,
+        "map": 0.210343,
+        "ci_lo": 0.183692,
+        "ci_hi": 0.236383,
+        "n_scored": 900,
+        "map_pos": 0.210343,
+        "fp_image_rate": null,
+        "sensitivity": 0.627778
+      },
+      {
+        "slice": "cls",
+        "value": "No Lung Opacity / Not Normal",
+        "n": 1771,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 334,
+        "map_pos": null,
+        "fp_image_rate": 0.188594,
+        "sensitivity": null
+      },
+      {
+        "slice": "cls",
+        "value": "Normal",
+        "n": 1331,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 6,
+        "map_pos": null,
+        "fp_image_rate": 0.004508,
+        "sensitivity": null
+      }
+    ],
+    "n_boxes": [
+      {
+        "slice": "n_boxes",
+        "value": "0",
+        "n": 3102,
+        "n_pos": 0,
+        "map": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "n_scored": 340,
+        "map_pos": null,
+        "fp_image_rate": 0.109607,
+        "sensitivity": null
+      },
+      {
+        "slice": "n_boxes",
+        "value": "1",
+        "n": 392,
+        "n_pos": 392,
+        "map": 0.102519,
+        "ci_lo": 0.079682,
+        "ci_hi": 0.124553,
+        "n_scored": 392,
+        "map_pos": 0.102519,
+        "fp_image_rate": null,
+        "sensitivity": 0.459184
+      },
+      {
+        "slice": "n_boxes",
+        "value": "2",
+        "n": 490,
+        "n_pos": 490,
+        "map": 0.300804,
+        "ci_lo": 0.26612,
+        "ci_hi": 0.332882,
+        "n_scored": 490,
+        "map_pos": 0.300804,
+        "fp_image_rate": null,
+        "sensitivity": 0.759184
+      },
+      {
+        "slice": "n_boxes",
+        "value": "3+",
+        "n": 18,
+        "n_pos": 18,
+        "map": 0.095949,
+        "ci_lo": 0.044119,
+        "ci_hi": 0.159418,
+        "n_scored": 18,
+        "map_pos": 0.095949,
+        "fp_image_rate": null,
+        "sensitivity": 0.722222
+      }
+    ]
+  }
+}

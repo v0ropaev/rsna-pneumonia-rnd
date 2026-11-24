@@ -1,0 +1,13 @@
+[train] hw3_frac10_s1: device=mps train=1868 val=4002 steps/epoch=116 total=696 warmup=139
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=116 loss=5.5392 loss_hm=3.9595 loss_wh=7.2798 loss_off=0.3577 loss_cls=0.4940 val_map=0.0178 val_thr=0.0500 val_auc=0.8069 val_map_heatmap=0.0319 lr=0.0003 epoch_sec=29.5000 val_sec=17.6000 it_per_sec=3.9300
+[train]   step 200/696 loss=2.9448 3.80 it/s
+[train] epoch 2/6 epoch=2 steps=232 loss=3.0489 loss_hm=2.1051 loss_wh=2.7690 loss_off=0.2645 loss_cls=0.4023 val_map=0.1021 val_thr=0.0500 val_auc=0.8432 val_map_heatmap=0.1009 lr=0.0003 epoch_sec=30.5000 val_sec=17.6000 it_per_sec=3.8000
+[train] epoch 3/6 epoch=3 steps=348 loss=2.6260 loss_hm=1.7694 loss_wh=2.3639 loss_off=0.2480 loss_cls=0.3723 val_map=0.1275 val_thr=0.0500 val_auc=0.8581 val_map_heatmap=0.1334 lr=0.0002 epoch_sec=30.1000 val_sec=17.5000 it_per_sec=3.8500
+[train]   step 400/696 loss=2.4421 3.85 it/s
+[train] epoch 4/6 epoch=4 steps=464 loss=2.4212 loss_hm=1.5734 loss_wh=2.5697 loss_off=0.2499 loss_cls=0.3409 val_map=0.1420 val_thr=0.1000 val_auc=0.8634 val_map_heatmap=0.1491 lr=0.0001 epoch_sec=30.1000 val_sec=17.5000 it_per_sec=3.8500
+[train] epoch 5/6 epoch=5 steps=580 loss=2.2560 loss_hm=1.4671 loss_wh=2.3111 loss_off=0.2443 loss_cls=0.3135 val_map=0.1516 val_thr=0.1000 val_auc=0.8682 val_map_heatmap=0.1523 lr=0.0000 epoch_sec=30.2000 val_sec=17.5000 it_per_sec=3.8500
+[train]   step 600/696 loss=2.3872 3.94 it/s
+[train] epoch 6/6 epoch=6 steps=696 loss=2.1493 loss_hm=1.3961 loss_wh=2.2228 loss_off=0.2365 loss_cls=0.2944 val_map=0.1514 val_thr=0.1000 val_auc=0.8669 val_map_heatmap=0.1534 lr=0.0000 epoch_sec=30.0000 val_sec=17.4000 it_per_sec=3.8700
+[train] done: {"best_epoch": 5, "val_map": 0.15156, "val_thr": 0.1, "val_auc": 0.86823, "train_min": 3.01} -> results/hw3_frac10_s1

@@ -1,0 +1,23 @@
+{
+  "run_name": "hw3_resplit2_s0",
+  "git_sha": "35b43a3-dirty",
+  "seed": 0,
+  "device": "mps",
+  "torch": "2.15.0",
+  "python": "3.11.15",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "start": "2026-11-24T05:50:59",
+  "end": "2026-11-24T06:22:55",
+  "train_seconds": 1806.5,
+  "wall_seconds": 1915.8,
+  "n_train": 18676,
+  "n_val": 4004,
+  "total_steps": 7002,
+  "mlflow_run_id": "ae10e9d8a69a42a88b98c35706a789cf",
+  "best_epoch": 5,
+  "val_map": 0.21372,
+  "val_thr": 0.15,
+  "val_auc": 0.89339,
+  "train_min": 30.11,
+  "determinism": "MPS kernels are not bit-deterministic; same-seed reruns match only approximately"
+}

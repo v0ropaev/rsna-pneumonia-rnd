@@ -17,7 +17,7 @@
 #   scripts/analyze_hw3_robustness.py  (§3.1 train size, §3.2 re-split)
 #   scripts/analyze_hw3_leakage.py     (§4.4 / RQ2 controlled leakage)
 # Env: QUEUE="frac20:0 ..." (replace the queue), DRY_RUN=0|1, TRAIN=0 (analyses only), RSNA_DEVICE (cpu|mps|cuda),
-#      ANALYSIS_DEVICE (device of the inference-only analyses; default cpu, so they can run next to training).
+#      ANALYSIS_DEVICE (device of the inference-only analyses; default mps if available, else cpu).
 # Logs: logs/run_hw3_<timestamp>.log + logs/<run>.train.log (gitignored); copies in results/logs/hw3/. Resumable.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -27,7 +27,9 @@ CFG=configs/hw2/full.yaml
 QUEUE=${QUEUE:-"frac20:0 frac50:0 resplit1:0 leak:0 frac10:0 frac20:1 frac50:1 leak:1 resplit2:0 frac10:1 resplit3:0"}
 DRY_RUN=${DRY_RUN:-0}
 TRAIN=${TRAIN:-1}
-ANALYSIS_DEVICE=${ANALYSIS_DEVICE:-cpu}
+# default: mps when available -- the committed prediction caches (results/hw3/{noise,shortcut}/cache) were made on MPS
+# and are only reused on the same device; on cpu they are recomputed (≈ 5 h for R3)
+ANALYSIS_DEVICE=${ANALYSIS_DEVICE:-$($PY -c "import torch; print('mps' if torch.backends.mps.is_available() else 'cpu')")}
 PRIMARY=tuned
 mkdir -p logs results/logs/hw3
 LOG="logs/run_hw3_$(date +%Y%m%d_%H%M%S).log"

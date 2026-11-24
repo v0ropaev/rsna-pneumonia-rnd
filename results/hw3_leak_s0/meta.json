@@ -1,0 +1,23 @@
+{
+  "run_name": "hw3_leak_s0",
+  "git_sha": "35b43a3-dirty",
+  "seed": 0,
+  "device": "mps",
+  "torch": "2.15.0",
+  "python": "3.11.15",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "start": "2026-11-24T04:13:08",
+  "end": "2026-11-24T04:47:23",
+  "train_seconds": 1959.6,
+  "wall_seconds": 2055.3,
+  "n_train": 18678,
+  "n_val": 3308,
+  "total_steps": 7002,
+  "mlflow_run_id": "0ab37c5b8e9943a6b96cb11eadf04f75",
+  "best_epoch": 6,
+  "val_map": 0.21188,
+  "val_thr": 0.15,
+  "val_auc": 0.89585,
+  "train_min": 32.66,
+  "determinism": "MPS kernels are not bit-deterministic; same-seed reruns match only approximately"
+}

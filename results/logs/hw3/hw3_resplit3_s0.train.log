@@ -1,0 +1,45 @@
+[train] hw3_resplit3_s0: device=mps train=18676 val=4004 steps/epoch=1167 total=7002 warmup=300
+[train]   step 200/7002 loss=3.1577 3.90 it/s
+[train]   step 400/7002 loss=2.8723 3.89 it/s
+[train]   step 600/7002 loss=2.5682 3.90 it/s
+[train]   step 800/7002 loss=2.6776 3.90 it/s
+[train]   step 1000/7002 loss=2.5235 3.90 it/s
+src/rsna/train.py:97: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:214.)
+  pred_df, img_df, raw_df = predict_frames(model, data.images[torch.from_numpy(idx)], ids, cfg, device,
+[train] epoch 1/6 epoch=1 steps=1167 loss=3.1075 loss_hm=2.1286 loss_wh=3.1426 loss_off=0.2636 loss_cls=0.4011 val_map=0.1422 val_thr=0.0500 val_auc=0.8543 val_map_heatmap=0.1490 lr=0.0003 epoch_sec=299.0000 val_sec=17.3000 it_per_sec=3.9000
+[train]   step 1200/7002 loss=2.6208 3.88 it/s
+[train]   step 1400/7002 loss=2.4893 3.88 it/s
+[train]   step 1600/7002 loss=2.4966 3.88 it/s
+[train]   step 1800/7002 loss=2.3974 3.89 it/s
+[train]   step 2000/7002 loss=2.4372 3.89 it/s
+[train]   step 2200/7002 loss=2.3358 3.90 it/s
+[train] epoch 2/6 epoch=2 steps=2334 loss=2.4387 loss_hm=1.6141 loss_wh=2.1656 loss_off=0.2381 loss_cls=0.3699 val_map=0.1630 val_thr=0.1500 val_auc=0.8685 val_map_heatmap=0.1524 lr=0.0002 epoch_sec=299.4000 val_sec=17.4000 it_per_sec=3.9000
+[train]   step 2400/7002 loss=2.4453 3.91 it/s
+[train]   step 2600/7002 loss=2.4573 3.87 it/s
+[train]   step 2800/7002 loss=2.4139 3.88 it/s
+[train]   step 3000/7002 loss=2.3581 3.89 it/s
+[train]   step 3200/7002 loss=2.3364 3.89 it/s
+[train]   step 3400/7002 loss=2.2811 3.89 it/s
+[train] epoch 3/6 epoch=3 steps=3501 loss=2.3444 loss_hm=1.5612 loss_wh=1.9183 loss_off=0.2324 loss_cls=0.3590 val_map=0.1914 val_thr=0.1000 val_auc=0.8805 val_map_heatmap=0.1982 lr=0.0002 epoch_sec=300.1000 val_sec=17.5000 it_per_sec=3.8900
+[train]   step 3600/7002 loss=2.2539 3.83 it/s
+[train]   step 3800/7002 loss=2.3100 3.80 it/s
+[train]   step 4000/7002 loss=2.2699 3.81 it/s
+[train]   step 4200/7002 loss=2.2131 3.83 it/s
+[train]   step 4400/7002 loss=2.2009 3.85 it/s
+[train]   step 4600/7002 loss=2.1134 3.86 it/s
+[train] epoch 4/6 epoch=4 steps=4668 loss=2.2230 loss_hm=1.4773 loss_wh=1.7330 loss_off=0.2277 loss_cls=0.3447 val_map=0.2096 val_thr=0.1500 val_auc=0.8874 val_map_heatmap=0.2085 lr=0.0001 epoch_sec=302.3000 val_sec=17.4000 it_per_sec=3.8600
+[train]   step 4800/7002 loss=2.1376 3.85 it/s
+[train]   step 5000/7002 loss=2.2794 3.86 it/s
+[train]   step 5200/7002 loss=2.1068 3.87 it/s
+[train]   step 5400/7002 loss=2.1316 3.87 it/s
+[train]   step 5600/7002 loss=2.1421 3.88 it/s
+[train]   step 5800/7002 loss=2.0762 3.88 it/s
+[train] epoch 5/6 epoch=5 steps=5835 loss=2.1228 loss_hm=1.4062 loss_wh=1.6479 loss_off=0.2252 loss_cls=0.3267 val_map=0.2189 val_thr=0.1500 val_auc=0.8890 val_map_heatmap=0.2120 lr=0.0000 epoch_sec=300.6000 val_sec=17.2000 it_per_sec=3.8800
+[train]   step 6000/7002 loss=2.0755 3.85 it/s
+[train]   step 6200/7002 loss=2.0407 3.86 it/s
+[train]   step 6400/7002 loss=2.0398 3.87 it/s
+[train]   step 6600/7002 loss=2.0476 3.88 it/s
+[train]   step 6800/7002 loss=2.0450 3.89 it/s
+[train]   step 7000/7002 loss=2.0419 3.89 it/s
+[train] epoch 6/6 epoch=6 steps=7002 loss=2.0441 loss_hm=1.3495 loss_wh=1.5823 loss_off=0.2208 loss_cls=0.3156 val_map=0.2156 val_thr=0.1500 val_auc=0.8897 val_map_heatmap=0.2141 lr=0.0000 epoch_sec=300.2000 val_sec=17.4000 it_per_sec=3.8900
+[train] done: {"best_epoch": 5, "val_map": 0.21887, "val_thr": 0.15, "val_auc": 0.88905, "train_min": 30.03} -> results/hw3_resplit3_s0

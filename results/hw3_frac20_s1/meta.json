@@ -1,0 +1,23 @@
+{
+  "run_name": "hw3_frac20_s1",
+  "git_sha": "35b43a3-dirty",
+  "seed": 1,
+  "device": "mps",
+  "torch": "2.15.0",
+  "python": "3.11.15",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "start": "2026-11-24T04:53:20",
+  "end": "2026-11-24T05:01:33",
+  "train_seconds": 381.5,
+  "wall_seconds": 493.0,
+  "n_train": 3736,
+  "n_val": 4002,
+  "total_steps": 1398,
+  "mlflow_run_id": "5657fa2d24474cf6a1321c72a8926787",
+  "best_epoch": 5,
+  "val_map": 0.17063,
+  "val_thr": 0.1,
+  "val_auc": 0.87611,
+  "train_min": 6.36,
+  "determinism": "MPS kernels are not bit-deterministic; same-seed reruns match only approximately"
+}

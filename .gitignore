@@ -27,3 +27,6 @@ logs_local/
 # HW2: copies of the queue/training logs are versioned as evidence for reports/HW2.md (§4, §8)
 !results/logs/
 !results/logs/*.log
+# HW3: the same for the HW3 queue (reports/HW3.md §7)
+!results/logs/hw3/
+!results/logs/hw3/*.log
